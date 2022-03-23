@@ -66,6 +66,66 @@
             .links ul a {
                 font-size: 1.8rem;
             }
+            .prototype {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                transform: translateY(-100%);
+                z-index: 100;
+                transition: all .25s ease;
+            }
+            .prototype.active {
+                transform: none;
+            }
+            #cesiumContainer {
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+                z-index: 10;
+			}
+            .cesium-viewer-bottom,
+            .cesium-viewer-animationContainer,
+            .cesium-viewer-timelineContainer {
+                display: none;
+            }
+            .cesium-viewer-fullscreenContainer {
+                bottom: auto;
+                right: auto;
+                left: 0;
+                top: 0;
+            }
+            .location,
+            .view button {
+				background: #000;
+				color: #fff;
+				padding: 1rem;
+				border-radius: 1rem;
+                border: 0;
+                font-family: inherit;
+				font-weight: 700;
+                font-size: 1.6rem;
+                line-height: 1;
+            }
+			.location {
+				position: absolute;
+				top: 6rem;
+				right: 1rem;
+                z-index: 20;
+			}
+            .view {
+                position: absolute;
+                right: 1rem;
+                bottom: 1rem;
+                z-index: 500;
+            }
+            .view button {
+                cursor: pointer;
+                padding: 1rem 2rem;
+            }
         </style>
     </head>
 
@@ -75,9 +135,6 @@
             <div class="links">
                 <div class="section">
                     <a target="_blank" href="https://iu.instructure.com/courses/2048051">Canvas Course Home</a>
-                </div>
-                <div class="section">
-                    <a target="_blank" href="prototype/index.html">Prototype</a>
                 </div>
                 <div class="section">
                     <a target="_blank" href="https://drive.google.com/drive/u/3/folders/177KtjruEB9WTdIsRjeKSuNwm9_DF30Rd"><span style="font-variant:small-caps;font-style:italic;">[In Progress]</span> AR Incident Command Project</a>
@@ -142,8 +199,24 @@
                 </div>
             </div>
         </div>
+
+        <div id="view" class="view">
+            <button type="button" 
+                onclick="let proto = document.getElementById('prototype'); let action = document.getElementById('action'); proto.classList.toggle('active');proto.classList.contains('active') ? action.innerText = 'Hide' : action.innerText = 'View'">
+                <span id="action">View</span> Prototype
+            </button>
+        </div>
+
         <div class="blur"></div>
         <div class="bg"></div>
+
+        <div id="prototype" class="prototype">
+            <div id="cesiumContainer"></div>
+            <div id="location" class="location">0.0, 0.0</div>
+            <div id="root"></div>
+        </div>
+		<script type="module" src="/src/main.tsx"></script>
+
     </body>
 
 </html>
