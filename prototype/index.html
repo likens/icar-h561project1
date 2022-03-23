@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Vite App</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  		<link href="https://cesium.com/downloads/cesiumjs/releases/1.90/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+		<style>
+			html {
+				font-family: 'IBM Plex Sans', sans-serif;
+				font-size: 62.5%;
+			}
+			body {
+				font-size: 1.6rem;
+				margin: 0;
+				padding: 0;
+			}
+			#cesiumContainer {
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+			}
+			.location {
+				position: fixed;
+				font-weight: 700;
+				top: 6rem;
+				right: 1rem;
+				background: black;
+				color: white;
+				padding: .5rem 1rem;
+				border-radius: 1rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="cesiumContainer"></div>
+		<div id="location" class="location">0.0, 0.0</div>
+
+		<div id="root"></div>
+		<script type="module" src="/src/main.tsx"></script>
+
+	</body>
+</html>
