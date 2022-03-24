@@ -5,128 +5,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-        <style>
-            html {
-                font-family: 'IBM Plex Sans', sans-serif;
-                font-size: 62.5%;
-                -webkit-text-size-adjust: 100%;
-            }
-            body {
-                margin: 0;
-                padding: 0;
-                font-size: 1.6rem;
-                line-height: 1.25;
-            }
-            .master {
-                max-width: 100rem;
-                margin: 0 auto;
-                padding: 5rem;
-                position: relative;
-                z-index: 30;
-            }
-            .blur,
-            .bg {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-            }
-            .blur {
-                z-index: 20;
-                backdrop-filter: blur(1rem);
-            }
-            .bg {
-                z-index: 10;
-                background: url(resources/bg.jpg) #d9eaf6 no-repeat;
-                background-position: bottom right;
-                background-size: cover;
-                opacity: .75;
-            }
-            .title {
-                font-size: 3rem;
-                font-weight: 700;
-            }
-            .links {
-                font-size: 2rem;
-                display: grid;
-                grid-gap: 3rem;
-                padding-top: 4rem;
-            }
-            .links a {
-                color: #000;
-                font-weight: 600;
-                text-decoration: none;
-                font-size: 2.4rem;
-            }
-            .links a:hover {
-                font-weight: 700;
-                text-decoration: underline;
-            }
-            .links ul a {
-                font-size: 1.8rem;
-            }
-            .prototype {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                transform: translateY(-100%);
-                z-index: 100;
-                transition: all .25s ease;
-            }
-            .prototype.active {
-                transform: none;
-            }
-            #cesiumContainer {
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-                z-index: 10;
-            }
-            .cesium-viewer-bottom,
-            .cesium-viewer-animationContainer,
-            .cesium-viewer-timelineContainer {
-                display: none;
-            }
-            .cesium-viewer-fullscreenContainer {
-                bottom: auto;
-                right: auto;
-                left: 0;
-                top: 0;
-            }
-            .location,
-            .view button {
-                background: #000;
-                color: #fff;
-                padding: 1rem;
-                border-radius: 1rem;
-                border: 0;
-                font-family: inherit;
-                font-weight: 700;
-                font-size: 1.6rem;
-                line-height: 1;
-            }
-            .location {
-                position: absolute;
-                bottom: 6rem;
-                right: 1rem;
-                z-index: 20;
-            }
-            .view {
-                position: absolute;
-                right: 1rem;
-                bottom: 1rem;
-                z-index: 500;
-            }
-            .view button {
-                cursor: pointer;
-                padding: 1rem 2rem;
-            }
-        </style>
+        <link href="./src/styles.css" rel="stylesheet">
     </head>
 
     <body>
@@ -213,6 +92,17 @@
         <div id="prototype" class="prototype">
             <div id="cesiumContainer"></div>
             <div id="location" class="location">0.0, 0.0</div>
+            <div class="legend">
+                <div style="background:cyan;color:black;">apartments/residential</div>
+                <div style="background:blue;">civic</div>
+                <div style="background:yellow;color:black;">office</div>
+                <div style="background:green;">commercial/retail</div>
+                <div style="background:red;">hospital</div>
+                <div style="background:orange;">construction</div>
+                <div style="background:purple;">school</div>
+                <div style="background:pink;color:black;">parking</div>
+                <div style="background:white;color:black;">other/unknown</div>
+            </div>
             <div id="root"></div>
         </div>
 		<script type="module" src="/src/main.tsx"></script>

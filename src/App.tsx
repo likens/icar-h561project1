@@ -1,16 +1,13 @@
 import { RefObject, useState } from 'react'
-import { Cartesian3, createWorldTerrain, Math, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType } from "cesium";
+import { Cartesian3, createWorldTerrain, Math, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2 } from "cesium";
 
 const locationDiv = document.getElementById("location");
 const terrainProvider = createWorldTerrain();
 const osmBuildings = createOsmBuildings();
 
 const viewer = new Viewer("cesiumContainer", {
-    terrainProvider: createWorldTerrain(),
+    terrainProvider: terrainProvider,
 });
-
-const position = Cartesian3.fromDegrees(-86.15797, 39.77999, 300);
-const orientation = {heading: Math.toRadians(20), pitch: Math.toRadians(-30)};
 
 const scene = viewer.scene;
 scene.primitives.add(osmBuildings);
@@ -39,37 +36,37 @@ osmBuildings.style = new Cesium3DTileStyle({
         conditions: [
             [
                 "${feature['building']} === 'apartments' || ${feature['building']} === 'residential'",
-                "color('cyan', 0.9)",
+                "color('cyan', .9)",
             ],
             [
                 "${feature['building']} === 'civic'",
-                "color('blue', 0.9)",
+                "color('blue', .9)",
             ],
             [
                 "${feature['building']} === 'office'",
-                "color('yellow', 0.9)",
+                "color('yellow', .9)",
             ],
             [
                 "${feature['building']} === 'commercial' || ${feature['building']} === 'retail'",
-                "color('green', 0.9)",
+                "color('green', .9)",
             ],
             [
                 "${feature['building']} === 'hospital'",
-                "color('red', 0.9)",
+                "color('red', .9)",
             ],
             [
                 "${feature['building']} === 'construction'",
-                "color('orange', 0.9)",
+                "color('orange', .9)",
             ],
             [
                 "${feature['building']} === 'school'",
-                "color('purple', 0.9)",
+                "color('purple', .9)",
             ],
             [
                 "${feature['building']} === 'parking'",
-                "color('pink', 0.9)",
+                "color('pink', .9)",
             ],
-            [true, "color('white')"],
+            [true, "color('white', .9)"],
         ],
     }
 });
@@ -103,23 +100,61 @@ const redRectangle = viewer.entities.add({
     // },
 });
 
+viewer.entities.add({
+    position: Cartesian3.fromDegrees(-86.157534, 39.781117, 1.75),
+    point: {
+        pixelSize: 10,
+        color: Color.WHITE,
+        outlineColor: Color.BLACK,
+        outlineWidth: 1,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        heightReference : HeightReference.RELATIVE_TO_GROUND
+    },
+    label: {
+        show: true,
+        text: "hello world",
+        font: "20px monospace",
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        heightReference : HeightReference.RELATIVE_TO_GROUND,
+        eyeOffset: new Cartesian3(0, 3, 0)
+    }
+});
+
+viewer.entities.add({
+    id: 'mouse',
+    label: {
+        show: true,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY
+    }
+});
+
 // Mouse over the globe to see the cartographic position
 const handler = new ScreenSpaceEventHandler(scene.canvas);
 
 handler.setInputAction(function (movement) {
+    const locationMouse: any = viewer.entities.getById('mouse');
+    const ellipsoid = viewer.scene.globe.ellipsoid;
     const cartesian = viewer.camera.pickEllipsoid(
         movement.endPosition,
-        scene.globe.ellipsoid
+        ellipsoid
     );
     if (cartesian) {
         const cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
         const longitudeString = Math.toDegrees(cartographic.longitude).toFixed(6);
         const latitudeString = Math.toDegrees(cartographic.latitude).toFixed(6);
+        const locationString = `${longitudeString}, ${latitudeString}`;
+        locationMouse.position = cartesian;
+        locationMouse.label.show = true;
+        locationMouse.label.font = "20px monospace";
+        locationMouse.label.text = locationString;
 		if (locationDiv) {
-			locationDiv.innerHTML = `${longitudeString}, ${latitudeString}`;
+			locationDiv.innerHTML = locationString;
 		}
+    } else {
+        locationMouse.label.show = false;
     }
 }, ScreenSpaceEventType.MOUSE_MOVE);
+
 
 // const landmarkCenterLabel = viewer.entities.add({
 //     id: "landmark",
