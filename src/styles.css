@@ -30,7 +30,7 @@ body {
 }
 .bg {
     z-index: 10;
-    background: url(resources/bg.jpg) #d9eaf6 no-repeat;
+    background: url(bg.jpg) #d9eaf6 no-repeat;
     background-position: bottom right;
     background-size: cover;
     opacity: .75;
