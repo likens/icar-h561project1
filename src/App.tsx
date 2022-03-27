@@ -1,5 +1,5 @@
 import { RefObject, useState } from 'react'
-import { Cartesian3, createWorldTerrain, Math, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2 } from "cesium";
+import { Cartesian3, createWorldTerrain, Math, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle } from "cesium";
 
 const locationDiv = document.getElementById("location");
 const terrainProvider = createWorldTerrain();
@@ -7,7 +7,13 @@ const osmBuildings = createOsmBuildings();
 
 const viewer = new Viewer("cesiumContainer", {
     terrainProvider: terrainProvider,
+    animation: false,
+    timeline: false,
 });
+
+const layer = viewer.imageryLayers.addImageryProvider(
+    new IonImageryProvider({ assetId: 3 })
+);
 
 const scene = viewer.scene;
 scene.primitives.add(osmBuildings);
@@ -21,102 +27,99 @@ scene.camera.setView({
     },
 }); 
 
-osmBuildings.initialTilesLoaded.addEventListener(() => {
-    console.log("initial osm buildings loaded");
+osmBuildings.initialTilesLoaded.addEventListener((tiles) => {
+    console.log("initial osm buildings loaded", tiles);
 });
 
-osmBuildings.allTilesLoaded.addEventListener(() => {
-    console.log("all osm buildings loaded");
+osmBuildings.allTilesLoaded.addEventListener((tile) => {
+    console.log("all osm buildings loaded", tile);
 });
 
-console.log(osmBuildings);
+osmBuildings.tileLoad.addEventListener((tile: Cesium3DTile) => {
+    const content = tile.content;
+    const featuresLength = content.featuresLength;
+    for (let i = 0; i < featuresLength; i++) {
+        const name = content.getFeature(i).getProperty("name");
+        if (name === "The Landmark Center") {
+            const lng = content.getFeature(i).getProperty("cesium#longitude");
+            const lat = content.getFeature(i).getProperty("cesium#latitude");
+            const alt = parseInt(content.getFeature(i).getProperty("cesium#estimatedHeight"));
+            const str = `${lng}:${lat}:${alt}`;
+            const ent = viewer.entities.getById(str);
+            if (!ent) {
+                viewer.entities.add({
+                    id: str,
+                    position: Cartesian3.fromDegrees(lng, lat, alt + 10),
+                    // polyline: {
+                    //     show: true,
+                    //     positions: [positionEnd, positionStart],
+                    //     width: 2,
+                    //     arcType: ArcType.NONE,
+                    //     material: new PolylineOutlineMaterialProperty({
+                    //         color: Color.BLACK,
+                    //     }),
+                    // },
+                    label: {
+                        show: true,
+                        text: name,
+                        font: "14px monospace",
+                        fillColor: Color.WHITE,
+                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                        heightReference: HeightReference.RELATIVE_TO_GROUND,
+                        showBackground: true,
+                        backgroundColor: Color.BLACK,
+                        translucencyByDistance: new NearFarScalar(1.0e1, 1.0, 3.0e3, 0.0)
+                    }
+                });
+            }
+        }
+    }
+});
 
 osmBuildings.style = new Cesium3DTileStyle({
     color: {
         conditions: [
-            [
-                "${feature['building']} === 'apartments' || ${feature['building']} === 'residential'",
-                "color('cyan', .9)",
-            ],
-            [
-                "${feature['building']} === 'civic'",
-                "color('blue', .9)",
-            ],
-            [
-                "${feature['building']} === 'office'",
-                "color('yellow', .9)",
-            ],
-            [
-                "${feature['building']} === 'commercial' || ${feature['building']} === 'retail'",
-                "color('green', .9)",
-            ],
-            [
-                "${feature['building']} === 'hospital'",
-                "color('red', .9)",
-            ],
-            [
-                "${feature['building']} === 'construction'",
-                "color('orange', .9)",
-            ],
-            [
-                "${feature['building']} === 'school'",
-                "color('purple', .9)",
-            ],
-            [
-                "${feature['building']} === 'parking'",
-                "color('pink', .9)",
-            ],
-            [true, "color('white', .9)"],
+            ["${feature['building']} === 'apartments' || ${feature['building']} === 'residential'", "color('cyan', 1)",],
+            ["${feature['building']} === 'civic'","color('blue', 1)",],
+            ["${feature['building']} === 'office'","color('yellow', 1)",],
+            ["${feature['building']} === 'commercial' || ${feature['building']} === 'retail'","color('green', 1)",],
+            ["${feature['building']} === 'hospital'","color('red', 1)",],
+            ["${feature['building']} === 'construction'","color('orange', 1)",],
+            ["${feature['building']} === 'school'","color('purple', 1)",],
+            ["${feature['building']} === 'parking'","color('pink', 1)",],
+            [true, "color('white', 1)"],
         ],
     }
 });
 
-const redRectangle = viewer.entities.add({
-    name: "AOR",
-    // 	rectangle: {
-    // 		coordinates: Cesium.Rectangle.fromDegrees(
-    // 			-86.157800,
-    // 			39.780870,
-    // 			-86.155650,
-    // 			39.782690
-    // 		),
-    // 		outlineColor: "black",
-    // 		material: Cesium.Color.RED.withAlpha(0.5),
-    // 	},
-    // polygon: {
-    //     hierarchy: Cartesian3.fromDegreesArray([
-    //         -86.157512,
-    //         39.782360,
-    //         -86.155555,
-    //         39.782360,
-    //         -86.155555,
-    //         39.7811111,
-    //         -86.157512,
-    //         39.7811111
-    //     ]),
-    //     material: Color.RED.withAlpha(0.5),
-    //     outline: true,
-    //     outlineColor: Color.BLACK,
-    // },
-});
+// https://sandcastle.cesium.com/?src=Drawing%20on%20Terrain.html
+//https://sandcastle.cesium.com/index.html?src=HeadingPitchRoll.html&label=Tutorials
+
+addBasicPoint(-86.157534, 39.781117, 0, "Red Car", Color.RED);
+addBasicPoint(-86.157565, 39.782405, 0, "White Truck", Color.WHITE);
+addBasicPoint(-86.156474, 39.781180, 0, "Silver Van", Color.SILVER);
+addBasicPoint(-86.155948, 39.781284, 0, "Blue SUV", Color.BLUE, Color.WHITE);
 
 viewer.entities.add({
-    position: Cartesian3.fromDegrees(-86.157534, 39.781117, 1.75),
-    point: {
-        pixelSize: 10,
-        color: Color.WHITE,
+    rectangle: {
+        coordinates: Rectangle.fromDegrees(-86.157423, 39.781252, -86.156713, 39.781454), // west lon, south lat, east lon, north lat
+        material: Color.RED.withAlpha(0.25),
+        height: 1,
+        extrudedHeight: 2,
+        heightReference: HeightReference.RELATIVE_TO_GROUND,
+        extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
+        outline: true,
         outlineColor: Color.BLACK,
-        outlineWidth: 1,
-        disableDepthTestDistance: Number.POSITIVE_INFINITY,
-        heightReference : HeightReference.RELATIVE_TO_GROUND
     },
     label: {
         show: true,
-        text: "hello world",
-        font: "20px monospace",
+        text: "Staging Area Alpha",
+        font: "14px monospace",
+        fillColor: Color.WHITE,
         disableDepthTestDistance: Number.POSITIVE_INFINITY,
-        heightReference : HeightReference.RELATIVE_TO_GROUND,
-        eyeOffset: new Cartesian3(0, 3, 0)
+        heightReference: HeightReference.CLAMP_TO_GROUND,
+        showBackground: true,
+        backgroundColor: Color.RED.withAlpha(0.5)
     }
 });
 
@@ -124,65 +127,93 @@ viewer.entities.add({
     id: 'mouse',
     label: {
         show: true,
-        disableDepthTestDistance: Number.POSITIVE_INFINITY
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        font: "14px monospace",
+        fillColor: Color.WHITE,
+        showBackground: true,
+        backgroundColor: Color.BLACK.withAlpha(0.75),
+        horizontalOrigin: HorizontalOrigin.LEFT,
+        verticalOrigin: VerticalOrigin.BASELINE,
+        pixelOffset: new Cartesian2(10, 0)
     }
 });
 
 // Mouse over the globe to see the cartographic position
 const handler = new ScreenSpaceEventHandler(scene.canvas);
 
-handler.setInputAction(function (movement) {
+handler.setInputAction(function onMouseMove(movement) {
     const locationMouse: any = viewer.entities.getById('mouse');
-    const ellipsoid = viewer.scene.globe.ellipsoid;
-    const cartesian = viewer.camera.pickEllipsoid(
-        movement.endPosition,
-        ellipsoid
-    );
+    const cartesian = scene.pickPosition(movement.endPosition)
     if (cartesian) {
-        const cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
+        const cartographic = Cartographic.fromCartesian(cartesian);
         const longitudeString = Math.toDegrees(cartographic.longitude).toFixed(6);
         const latitudeString = Math.toDegrees(cartographic.latitude).toFixed(6);
-        const locationString = `${longitudeString}, ${latitudeString}`;
+        const heightString = Math.toDegrees(cartographic.height).toFixed(2);
         locationMouse.position = cartesian;
+		// if (locationDiv) {
+		// 	locationDiv.innerHTML = `${longitudeString}, ${latitudeString} | ${heightString}m`;
+		// }
+        // const feature = scene.pick(movement.endPosition);
+        // if (defined(feature)) {
+        //     const name = feature.getProperty("name");
+        //     if (name) {
+        //         locationString = `${name}, ${locationString}`;
+        //     }
+        // }
         locationMouse.label.show = true;
-        locationMouse.label.font = "20px monospace";
-        locationMouse.label.text = locationString;
-		if (locationDiv) {
-			locationDiv.innerHTML = locationString;
-		}
+        locationMouse.label.text = `Lon: ${longitudeString}\u00B0\nLat: ${latitudeString}\u00B0\nAlt: ${heightString}m`;
     } else {
         locationMouse.label.show = false;
     }
 }, ScreenSpaceEventType.MOUSE_MOVE);
 
 
-// const landmarkCenterLabel = viewer.entities.add({
-//     id: "landmark",
-//     position: Cartesian3.fromDegrees(-86.157, 39.78187, 230),
-//     disableDepthTestDistance: Number.POSITIVE_INFINITY,
-//     heightReference: HeightReference.CLAMP_TO_GROUND,
-//     billboard: {
-//         position: Cartesian3.fromDegrees(-75.1641667,39.9522222),
-//         scaleByDistance: new NearFarScalar(
-//             1.5e2,
-//             5.0,
-//             1.5e7,
-//             0.5
-//         )
-//     },
-//     label: {
-//         text: "The Landmark Center",
-//         font: "20px sans-serif",
-//         showBackground: true,
-//         horizontalOrigin: HorizontalOrigin.CENTER,
-//         pixelOffsetScaleByDistance: new NearFarScalar(
-//             1.5e2,
-//             3.0,
-//             1.5e7,
-//             0.5
-//         ),
-//     },
-// });
+function addBasicPoint(lat: number, lng: number, alt: number = 0, text: string, color = Color.WHITE, outlineColor = Color.BLACK) {
+
+    const basicPoint = {
+        pixelSize: 10,
+        color: color,
+        outlineColor: outlineColor,
+        outlineWidth: 1,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        heightReference : HeightReference.CLAMP_TO_GROUND
+    };
+
+    // const basicLine = {
+    //     positions: Cartesian3.fromDegreesArrayHeights([lng, lat, alt, lng, lat, 50,]),
+    //     width: 5,
+    //     material: new PolylineOutlineMaterialProperty({
+    //         color: color,
+    //         outlineWidth: 2,
+    //         outlineColor: outlineColor,
+    //     }),
+    // }
+
+    const basicLabel = {
+        show: true,
+        font: "14px monospace",
+        outlineColor: outlineColor,
+        outlineWidth: 20,
+        fillColor: outlineColor,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        heightReference : HeightReference.RELATIVE_TO_GROUND,
+        showBackground: true,
+        backgroundColor: color,
+        horizontalOrigin: HorizontalOrigin.CENTER,
+        verticalOrigin: VerticalOrigin.BASELINE,
+        pixelOffset: new Cartesian2(7, -30)
+    }
+
+    viewer.entities.add({
+        position: Cartesian3.fromDegrees(lat, lng, alt),
+        point: basicPoint,
+        // polyline: basicLine,
+        label: {
+            ...basicLabel,
+            text: text
+        }
+    });
+}
 
 function App() {
 	const [count, setCount] = useState(0)
