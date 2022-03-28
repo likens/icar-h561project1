@@ -1,19 +1,27 @@
 import { RefObject, useState } from 'react'
-import { Cartesian3, createWorldTerrain, Math, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle } from "cesium";
+import { Cartesian3, createWorldTerrain, Math, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange } from "cesium";
 
 const locationDiv = document.getElementById("location");
 const terrainProvider = createWorldTerrain();
 const osmBuildings = createOsmBuildings();
 
 const viewer = new Viewer("cesiumContainer", {
-    terrainProvider: terrainProvider,
-    animation: false,
-    timeline: false,
+    terrainProvider: terrainProvider
 });
-
-const layer = viewer.imageryLayers.addImageryProvider(
+viewer.imageryLayers.addImageryProvider(
     new IonImageryProvider({ assetId: 3 })
 );
+
+// //Set bounds of our simulation time
+// const start = JulianDate.fromDate(new Date(2015, 2, 25, 16));
+// const stop = JulianDate.addSeconds(start, 360, new JulianDate());
+
+// //Make sure viewer is at the desired time.
+// viewer.clock.startTime = start.clone();
+// viewer.clock.stopTime = stop.clone();
+// viewer.clock.currentTime = start.clone();
+// viewer.clock.clockRange = ClockRange.LOOP_STOP; //Loop at the end
+// viewer.clock.multiplier = 10;
 
 const scene = viewer.scene;
 scene.primitives.add(osmBuildings);
@@ -93,7 +101,8 @@ osmBuildings.style = new Cesium3DTileStyle({
 });
 
 // https://sandcastle.cesium.com/?src=Drawing%20on%20Terrain.html
-//https://sandcastle.cesium.com/index.html?src=HeadingPitchRoll.html&label=Tutorials
+// https://sandcastle.cesium.com/index.html?src=HeadingPitchRoll.html&label=Tutorials
+// https://sandcastle.cesium.com/?src=Interpolation.html
 
 addBasicPoint(-86.157534, 39.781117, 0, "Red Car", Color.RED);
 addBasicPoint(-86.157565, 39.782405, 0, "White Truck", Color.WHITE);
@@ -101,9 +110,10 @@ addBasicPoint(-86.156474, 39.781180, 0, "Silver Van", Color.SILVER);
 addBasicPoint(-86.155948, 39.781284, 0, "Blue SUV", Color.BLUE, Color.WHITE);
 
 viewer.entities.add({
+    position: Cartesian3.fromDegrees(-86.157077, 39.781357, 0),
     rectangle: {
         coordinates: Rectangle.fromDegrees(-86.157423, 39.781252, -86.156713, 39.781454), // west lon, south lat, east lon, north lat
-        material: Color.RED.withAlpha(0.25),
+        material: Color.WHITE.withAlpha(0.5),
         height: 1,
         extrudedHeight: 2,
         heightReference: HeightReference.RELATIVE_TO_GROUND,
@@ -113,15 +123,27 @@ viewer.entities.add({
     },
     label: {
         show: true,
-        text: "Staging Area Alpha",
+        text: "STAGING AREA ALPHA",
         font: "14px monospace",
-        fillColor: Color.WHITE,
+        fillColor: Color.BLACK,
         disableDepthTestDistance: Number.POSITIVE_INFINITY,
         heightReference: HeightReference.CLAMP_TO_GROUND,
         showBackground: true,
-        backgroundColor: Color.RED.withAlpha(0.5)
+        backgroundColor: Color.WHITE,
+        horizontalOrigin: HorizontalOrigin.CENTER,
+        verticalOrigin: VerticalOrigin.BASELINE,
+        pixelOffset: new Cartesian2(0, -30)
     }
 });
+
+
+addBillboard(-86.156500, 39.781500, 0, "../src/img/fire_single.png");
+addBillboard(-86.156630, 39.781150, 0, "../src/img/fire_vehicle.png");
+addBillboard(-86.157446, 39.783739, 0, "../src/img/police_vehicle.png");
+addBillboard(-86.157261, 39.781358, 0, "../src/img/ems_single.png");
+addBillboard(-86.156826, 39.781351, 0, "../src/img/ems_single.png");
+addBillboard(-86.157542, 39.782290, 0, "../src/img/police_vehicle.png");
+addBillboard(-86.157523, 39.782254, 0, "../src/img/police_single.png");
 
 viewer.entities.add({
     id: 'mouse',
@@ -166,6 +188,16 @@ handler.setInputAction(function onMouseMove(movement) {
         locationMouse.label.show = false;
     }
 }, ScreenSpaceEventType.MOUSE_MOVE);
+
+handler.setInputAction(function onMouseMove(movement) {
+    const cartesian = scene.pickPosition(movement.position)
+    if (cartesian) {
+        const cartographic = Cartographic.fromCartesian(cartesian);
+        const longitudeString = Math.toDegrees(cartographic.longitude).toFixed(6);
+        const latitudeString = Math.toDegrees(cartographic.latitude).toFixed(6);
+        console.log(`${longitudeString}, ${latitudeString}`);
+    }
+}, ScreenSpaceEventType.LEFT_CLICK);
 
 
 function addBasicPoint(lat: number, lng: number, alt: number = 0, text: string, color = Color.WHITE, outlineColor = Color.BLACK) {
@@ -212,6 +244,18 @@ function addBasicPoint(lat: number, lng: number, alt: number = 0, text: string, 
             ...basicLabel,
             text: text
         }
+    });
+}
+
+function addBillboard(lat: number, lng: number, alt: number = 0, image: string,) {
+    viewer.entities.add({
+        position: Cartesian3.fromDegrees(lat, lng, alt),
+        billboard: {
+            image: image,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            heightReference: HeightReference.CLAMP_TO_GROUND,
+            pixelOffset: new Cartesian2(0, -60)
+        },
     });
 }
 

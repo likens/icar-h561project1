@@ -79,11 +79,11 @@ body {
     left: 0;
     z-index: 10;
 }
-.cesium-viewer-bottom,
+/* .cesium-viewer-bottom,
 .cesium-viewer-animationContainer,
 .cesium-viewer-timelineContainer {
     display: none;
-}
+} */
 .cesium-viewer-fullscreenContainer {
     bottom: auto;
     right: auto;
@@ -122,9 +122,21 @@ body {
 
 .legend {
     position: absolute;
-    right: 1rem;
-    bottom: 6rem;
+    left: 1rem;
+    bottom: 12rem;
     z-index: 20;
     display: grid;
-    grid-gap: .5rem;
+    grid-gap: .75rem;
+}
+
+.legenditem {
+    display: flex;
+    align-items: center;
+}
+
+.legenditem span {
+    display: inline-block;
+    width: 1.6rem;
+    height: 1.6rem;
+    margin-right: .75rem;
 }
