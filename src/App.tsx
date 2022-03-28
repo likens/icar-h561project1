@@ -137,13 +137,13 @@ viewer.entities.add({
 });
 
 
-addBillboard(-86.156500, 39.781500, 0, "../src/img/fire_single.png");
-addBillboard(-86.156630, 39.781150, 0, "../src/img/fire_vehicle.png");
-addBillboard(-86.157446, 39.783739, 0, "../src/img/police_vehicle.png");
-addBillboard(-86.157261, 39.781358, 0, "../src/img/ems_single.png");
-addBillboard(-86.156826, 39.781351, 0, "../src/img/ems_single.png");
-addBillboard(-86.157542, 39.782290, 0, "../src/img/police_vehicle.png");
-addBillboard(-86.157523, 39.782254, 0, "../src/img/police_single.png");
+addBillboard(-86.156500, 39.781500, 0, "fire_single.png");
+addBillboard(-86.156630, 39.781150, 0, "fire_vehicle.png");
+addBillboard(-86.157446, 39.783739, 0, "police_vehicle.png");
+addBillboard(-86.157261, 39.781358, 0, "ems_single.png");
+addBillboard(-86.156826, 39.781351, 0, "ems_single.png");
+addBillboard(-86.157542, 39.782290, 0, "police_vehicle.png");
+addBillboard(-86.157523, 39.782254, 0, "police_single.png");
 
 viewer.entities.add({
     id: 'mouse',
