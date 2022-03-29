@@ -1,5 +1,18 @@
 import { RefObject, useState } from 'react'
 import { Cartesian3, createWorldTerrain, Math, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange } from "cesium";
+import fireSingle from "./assets/img/fire_single.png";
+import fireVehicle from "./assets/img/fire_vehicle.png";
+import policeSingle from "./assets/img/police_single.png";
+import policeVehicle from "./assets/img/police_vehicle.png";
+import emsSingle from "./assets/img/ems_single.png";
+
+// addBillboard(-86.156500, 39.781500, 0, "fire_single.png");
+// addBillboard(-86.156630, 39.781150, 0, "fire_vehicle.png");
+// addBillboard(-86.157446, 39.783739, 0, "police_vehicle.png");
+// addBillboard(-86.157261, 39.781358, 0, "ems_single.png");
+// addBillboard(-86.156826, 39.781351, 0, "ems_single.png");
+// addBillboard(-86.157542, 39.782290, 0, "police_vehicle.png");
+// addBillboard(-86.157523, 39.782254, 0, "police_single.png");
 
 const locationDiv = document.getElementById("location");
 const terrainProvider = createWorldTerrain();
@@ -104,9 +117,8 @@ osmBuildings.style = new Cesium3DTileStyle({
 // https://sandcastle.cesium.com/index.html?src=HeadingPitchRoll.html&label=Tutorials
 // https://sandcastle.cesium.com/?src=Interpolation.html
 
-addBasicPoint(-86.157534, 39.781117, 0, "Red Car", Color.RED);
-addBasicPoint(-86.157565, 39.782405, 0, "White Truck", Color.WHITE);
-addBasicPoint(-86.156474, 39.781180, 0, "Silver Van", Color.SILVER);
+addBasicPoint(-86.155112, 39.781147, 0, "Red Car", Color.RED);
+addBasicPoint(-86.155534, 39.781028, 0, "White Truck", Color.WHITE);
 addBasicPoint(-86.155948, 39.781284, 0, "Blue SUV", Color.BLUE, Color.WHITE);
 
 viewer.entities.add({
@@ -137,13 +149,15 @@ viewer.entities.add({
 });
 
 
-addBillboard(-86.156500, 39.781500, 0, "fire_single.png");
-addBillboard(-86.156630, 39.781150, 0, "fire_vehicle.png");
-addBillboard(-86.157446, 39.783739, 0, "police_vehicle.png");
-addBillboard(-86.157261, 39.781358, 0, "ems_single.png");
-addBillboard(-86.156826, 39.781351, 0, "ems_single.png");
-addBillboard(-86.157542, 39.782290, 0, "police_vehicle.png");
-addBillboard(-86.157523, 39.782254, 0, "police_single.png");
+addBillboard(-86.156500, 39.781500, 0, fireSingle);
+addBillboard(-86.156630, 39.781150, 0, fireVehicle);
+addBillboard(-86.157446, 39.783739, 0, policeVehicle);
+addBillboard(-86.157261, 39.781358, 0, emsSingle);
+addBillboard(-86.156826, 39.781351, 0, emsSingle);
+addBillboard(-86.157523, 39.782254, 0, policeSingle);
+addBillboard(-86.157503, 39.782246, 0, policeSingle);
+addBillboard(-86.157493, 39.782332, 0, policeSingle);
+addBillboard(-86.157542, 39.782290, 0, policeVehicle);
 
 viewer.entities.add({
     id: 'mouse',
