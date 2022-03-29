@@ -5,14 +5,7 @@ import fireVehicle from "./assets/img/fire_vehicle.png";
 import policeSingle from "./assets/img/police_single.png";
 import policeVehicle from "./assets/img/police_vehicle.png";
 import emsSingle from "./assets/img/ems_single.png";
-
-// addBillboard(-86.156500, 39.781500, 0, "fire_single.png");
-// addBillboard(-86.156630, 39.781150, 0, "fire_vehicle.png");
-// addBillboard(-86.157446, 39.783739, 0, "police_vehicle.png");
-// addBillboard(-86.157261, 39.781358, 0, "ems_single.png");
-// addBillboard(-86.156826, 39.781351, 0, "ems_single.png");
-// addBillboard(-86.157542, 39.782290, 0, "police_vehicle.png");
-// addBillboard(-86.157523, 39.782254, 0, "police_single.png");
+import emsVehicle from "./assets/img/ems_vehicle.png";
 
 const locationDiv = document.getElementById("location");
 const terrainProvider = createWorldTerrain();
@@ -70,7 +63,7 @@ osmBuildings.tileLoad.addEventListener((tile: Cesium3DTile) => {
             if (!ent) {
                 viewer.entities.add({
                     id: str,
-                    position: Cartesian3.fromDegrees(lng, lat, alt + 10),
+                    position: Cartesian3.fromDegrees(lng, lat, alt),
                     // polyline: {
                     //     show: true,
                     //     positions: [positionEnd, positionStart],
@@ -83,13 +76,13 @@ osmBuildings.tileLoad.addEventListener((tile: Cesium3DTile) => {
                     label: {
                         show: true,
                         text: name,
-                        font: "14px monospace",
+                        font: "20px monospace",
                         fillColor: Color.WHITE,
                         disableDepthTestDistance: Number.POSITIVE_INFINITY,
                         heightReference: HeightReference.RELATIVE_TO_GROUND,
                         showBackground: true,
                         backgroundColor: Color.BLACK,
-                        translucencyByDistance: new NearFarScalar(1.0e1, 1.0, 3.0e3, 0.0)
+                        // translucencyByDistance: new NearFarScalar(1.0e1, 1.0, 3.0e3, 0.0)
                     }
                 });
             }
@@ -119,52 +112,42 @@ osmBuildings.style = new Cesium3DTileStyle({
 
 addBasicPoint(-86.155112, 39.781147, 0, "Red Car", Color.RED);
 addBasicPoint(-86.155534, 39.781028, 0, "White Truck", Color.WHITE);
-addBasicPoint(-86.155948, 39.781284, 0, "Blue SUV", Color.BLUE, Color.WHITE);
 
-viewer.entities.add({
-    position: Cartesian3.fromDegrees(-86.157077, 39.781357, 0),
-    rectangle: {
-        coordinates: Rectangle.fromDegrees(-86.157423, 39.781252, -86.156713, 39.781454), // west lon, south lat, east lon, north lat
-        material: Color.WHITE.withAlpha(0.5),
-        height: 1,
-        extrudedHeight: 2,
-        heightReference: HeightReference.RELATIVE_TO_GROUND,
-        extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
-        outline: true,
-        outlineColor: Color.BLACK,
-    },
-    label: {
-        show: true,
-        text: "STAGING AREA ALPHA",
-        font: "14px monospace",
-        fillColor: Color.BLACK,
-        disableDepthTestDistance: Number.POSITIVE_INFINITY,
-        heightReference: HeightReference.CLAMP_TO_GROUND,
-        showBackground: true,
-        backgroundColor: Color.WHITE,
-        horizontalOrigin: HorizontalOrigin.CENTER,
-        verticalOrigin: VerticalOrigin.BASELINE,
-        pixelOffset: new Cartesian2(0, -30)
-    }
-});
+// Fire
+addBillboard(-86.156922, 39.781387, 0, fireSingle);
+addBillboard(-86.156886, 39.781286, 0, fireSingle);
+addBillboard(-86.156737, 39.781397, 0, fireSingle);
+addBillboard(-86.157261, 39.781358, 0, fireVehicle);
+addBillboard(-86.156826, 39.781351, 0, fireSingle);
+addRectangle(-86.157423, 39.781252, -86.156713, 39.781454, -86.157077, 39.781357, 0, "FIRE STAGING", Color.fromCssColorString('rgba(215, 48, 39, .5)'));
 
-
-addBillboard(-86.156500, 39.781500, 0, fireSingle);
-addBillboard(-86.156630, 39.781150, 0, fireVehicle);
+// Police
 addBillboard(-86.157446, 39.783739, 0, policeVehicle);
-addBillboard(-86.157261, 39.781358, 0, emsSingle);
-addBillboard(-86.156826, 39.781351, 0, emsSingle);
 addBillboard(-86.157523, 39.782254, 0, policeSingle);
 addBillboard(-86.157503, 39.782246, 0, policeSingle);
 addBillboard(-86.157493, 39.782332, 0, policeSingle);
 addBillboard(-86.157542, 39.782290, 0, policeVehicle);
+addRectangle(-86.157633, 39.782218, -86.157388, 39.782385, -86.157504, 39.782292, 0, "BARRICADE", Color.fromCssColorString('rgba(116, 173, 209, .5)'));
+addBillboard(-86.157512, 39.781206, 0, policeVehicle);
+addBillboard(-86.157586, 39.781204, 0, policeSingle);
+addBillboard(-86.157519, 39.781100, 0, policeSingle);
+addRectangle(-86.157697, 39.781040, -86.157388, 39.781265, -86.157549, 39.781160, 0, "BARRICADE", Color.fromCssColorString('rgba(116, 173, 209, .5)'));
+
+// EMS
+addBillboard(-86.156478, 39.781398, 0, emsSingle);
+addBillboard(-86.156508, 39.781335, 0, emsSingle);
+addBillboard(-86.156307, 39.781426, 0, emsSingle);
+addBillboard(-86.156350, 39.781364, 0, emsSingle);
+addBillboard(-86.156092, 39.781399, 0, emsVehicle);
+addBillboard(-86.155975, 39.781365, 0, emsVehicle);
+addRectangle(-86.156576, 39.781257, -86.155908, 39.781443, -86.156255, 39.781350, 0, "EMS STAGING", Color.fromCssColorString('rgba(127, 188, 65, .5)'));
 
 viewer.entities.add({
     id: 'mouse',
     label: {
         show: true,
         disableDepthTestDistance: Number.POSITIVE_INFINITY,
-        font: "14px monospace",
+        font: "12px monospace",
         fillColor: Color.WHITE,
         showBackground: true,
         backgroundColor: Color.BLACK.withAlpha(0.75),
@@ -270,6 +253,30 @@ function addBillboard(lat: number, lng: number, alt: number = 0, image: string,)
             heightReference: HeightReference.CLAMP_TO_GROUND,
             pixelOffset: new Cartesian2(0, -60)
         },
+    });
+}
+
+function addRectangle(west: number, south: number, east: number, north: number, lng: number, lat: number, alt: number, text: string, color: Color) {
+    viewer.entities.add({
+        position: Cartesian3.fromDegrees(lng, lat, alt),
+        rectangle: {
+            coordinates: Rectangle.fromDegrees(west, south, east, north), // left middle, bot middle, right middle, top middle
+            material: color,
+            heightReference: HeightReference.CLAMP_TO_GROUND
+        },
+        label: {
+            show: true,
+            text: text,
+            font: "20px monospace",
+            fillColor: Color.BLACK,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            heightReference: HeightReference.CLAMP_TO_GROUND,
+            showBackground: true,
+            backgroundColor: color,
+            horizontalOrigin: HorizontalOrigin.CENTER,
+            verticalOrigin: VerticalOrigin.BASELINE,
+            pixelOffset: new Cartesian2(0, -30)
+        }
     });
 }
 
