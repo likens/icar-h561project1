@@ -64,12 +64,12 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    /* transform: translateY(-100%); */
+    transform: translateY(-100%);
     z-index: 100;
     transition: all .25s ease;
 }
 .prototype.active {
-    /* transform: none; */
+    transform: none;
 }
 #cesiumContainer {
     position: absolute;
@@ -79,11 +79,6 @@ body {
     left: 0;
     z-index: 10;
 }
-/* .cesium-viewer-bottom,
-.cesium-viewer-animationContainer,
-.cesium-viewer-timelineContainer {
-    display: none;
-} */
 .cesium-viewer-fullscreenContainer {
     bottom: auto;
     right: auto;
