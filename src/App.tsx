@@ -7,6 +7,25 @@ import policeVehicle from "./assets/img/police_vehicle.png";
 import emsSingle from "./assets/img/ems_single.png";
 import emsVehicle from "./assets/img/ems_vehicle.png";
 
+const FIRE = "fire";
+const fireRedR = 215;
+const fireRedG = 48;
+const fireRedB = 39;
+const fireRedRGB = Color.fromCssColorString(`rgb(${fireRedR}, ${fireRedG}, ${fireRedB})`);
+const fireRedRGBa = Color.fromCssColorString(`rgba(${fireRedR}, ${fireRedG}, ${fireRedB}, .5)`);
+const POLICE = "police";
+const policeBlueR = 116;
+const policeBlueG = 173;
+const policeBlueB = 209;
+const policeBlueRGB = Color.fromCssColorString(`rgb(${policeBlueR}, ${policeBlueG}, ${policeBlueB})`);
+const policeBlueRGBa = Color.fromCssColorString(`rgb(${policeBlueR}, ${policeBlueG}, ${policeBlueB}, .5)`);
+const EMS = "ems";
+const emsGreenR = 127;
+const emsGreenG = 188;
+const emsGreenB = 65;
+const emsGreenRGB = Color.fromCssColorString(`rgb(${emsGreenR}, ${emsGreenG}, ${emsGreenB})`);
+const emsGreenRGBa = Color.fromCssColorString(`rgb(${emsGreenR}, ${emsGreenG}, ${emsGreenB}, .5)`);
+
 const locationDiv = document.getElementById("location");
 const terrainProvider = createWorldTerrain();
 const osmBuildings = createOsmBuildings();
@@ -114,33 +133,33 @@ addBasicPoint(-86.155112, 39.781147, 0, "Red Car", Color.RED);
 addBasicPoint(-86.155534, 39.781028, 0, "White Truck", Color.WHITE);
 
 // Fire
-addBillboard(-86.156922, 39.781387, 0, fireSingle);
-addBillboard(-86.156886, 39.781286, 0, fireSingle);
-addBillboard(-86.156737, 39.781397, 0, fireSingle);
-addBillboard(-86.157261, 39.781358, 0, fireVehicle);
-addBillboard(-86.156826, 39.781351, 0, fireSingle);
-addRectangle(-86.157423, 39.781252, -86.156713, 39.781454, -86.157077, 39.781357, 0, "FIRE STAGING", Color.fromCssColorString('rgba(215, 48, 39, .5)'));
+addBillboard(-86.156922, 39.781387, 0, "single", FIRE);
+addBillboard(-86.156886, 39.781286, 0, "single", FIRE);
+addBillboard(-86.156737, 39.781397, 0, "single", FIRE);
+addBillboard(-86.157261, 39.781358, 0, "vehicle", FIRE);
+addBillboard(-86.156826, 39.781351, 0, "single", FIRE);
+addRectangle(-86.157423, 39.781252, -86.156713, 39.781454, -86.157077, 39.781357, 0, "FIRE STAGING", fireRedRGBa);
 
 // Police
-addBillboard(-86.157446, 39.783739, 0, policeVehicle);
-addBillboard(-86.157523, 39.782254, 0, policeSingle);
-addBillboard(-86.157503, 39.782246, 0, policeSingle);
-addBillboard(-86.157493, 39.782332, 0, policeSingle);
-addBillboard(-86.157542, 39.782290, 0, policeVehicle);
-addRectangle(-86.157633, 39.782218, -86.157388, 39.782385, -86.157504, 39.782292, 0, "BARRICADE", Color.fromCssColorString('rgba(116, 173, 209, .5)'));
-addBillboard(-86.157512, 39.781206, 0, policeVehicle);
-addBillboard(-86.157586, 39.781204, 0, policeSingle);
-addBillboard(-86.157519, 39.781100, 0, policeSingle);
-addRectangle(-86.157697, 39.781040, -86.157388, 39.781265, -86.157549, 39.781160, 0, "BARRICADE", Color.fromCssColorString('rgba(116, 173, 209, .5)'));
+addBillboard(-86.157446, 39.783739, 0, "vehicle", POLICE);
+addBillboard(-86.157523, 39.782254, 0, "single", POLICE);
+addBillboard(-86.157503, 39.782246, 0, "single", POLICE);
+addBillboard(-86.157493, 39.782332, 0, "single", POLICE);
+addBillboard(-86.157542, 39.782290, 0, "vehicle", POLICE);
+addRectangle(-86.157633, 39.782218, -86.157388, 39.782385, -86.157504, 39.782292, 0, "BARRICADE", policeBlueRGBa);
+addBillboard(-86.157512, 39.781206, 0, "vehicle", POLICE);
+addBillboard(-86.157586, 39.781204, 0, "single", POLICE);
+addBillboard(-86.157519, 39.781100, 0, "single", POLICE);
+addRectangle(-86.157697, 39.781040, -86.157388, 39.781265, -86.157549, 39.781160, 0, "BARRICADE", policeBlueRGBa);
 
 // EMS
-addBillboard(-86.156478, 39.781398, 0, emsSingle);
-addBillboard(-86.156508, 39.781335, 0, emsSingle);
-addBillboard(-86.156307, 39.781426, 0, emsSingle);
-addBillboard(-86.156350, 39.781364, 0, emsSingle);
-addBillboard(-86.156092, 39.781399, 0, emsVehicle);
-addBillboard(-86.155975, 39.781365, 0, emsVehicle);
-addRectangle(-86.156576, 39.781257, -86.155908, 39.781443, -86.156255, 39.781350, 0, "EMS STAGING", Color.fromCssColorString('rgba(127, 188, 65, .5)'));
+addBillboard(-86.156478, 39.781398, 0, "single", EMS);
+addBillboard(-86.156508, 39.781335, 0, "single", EMS);
+addBillboard(-86.156307, 39.781426, 0, "single", EMS);
+addBillboard(-86.156350, 39.781364, 0, "single", EMS);
+addBillboard(-86.156092, 39.781399, 0, "vehicle", EMS);
+addBillboard(-86.155975, 39.781365, 0, "vehicle", EMS);
+addRectangle(-86.156576, 39.781257, -86.155908, 39.781443, -86.156255, 39.781350, 0, "EMS STAGING", emsGreenRGBa);
 
 viewer.entities.add({
     id: 'mouse',
@@ -244,7 +263,30 @@ function addBasicPoint(lat: number, lng: number, alt: number = 0, text: string, 
     });
 }
 
-function addBillboard(lat: number, lng: number, alt: number = 0, image: string,) {
+function addBillboard(lat: number, lng: number, alt: number = 0, type: string, org: string) {
+    
+    let image = "";
+    if (org === FIRE) {
+        if (type === "vehicle") {
+            image = fireVehicle;
+        } else {
+            image = fireSingle;
+        }
+    }
+    if (org === POLICE) {
+        if (type === "vehicle") {
+            image = policeVehicle;
+        } else {
+            image = policeSingle;
+        }
+    } else if (org === EMS) {
+        if (type === "vehicle") {
+            image = emsVehicle;
+        } else {
+            image = emsSingle;
+        }
+    }
+
     viewer.entities.add({
         position: Cartesian3.fromDegrees(lat, lng, alt),
         billboard: {
@@ -253,7 +295,21 @@ function addBillboard(lat: number, lng: number, alt: number = 0, image: string,)
             heightReference: HeightReference.CLAMP_TO_GROUND,
             pixelOffset: new Cartesian2(0, -60)
         },
+        label: {
+            text: type,
+            show: true,
+            font: "16px 'IBM Plex Sans'",
+            fillColor: Color.BLACK,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            heightReference: HeightReference.CLAMP_TO_GROUND,
+            showBackground: true,
+            backgroundColor: Color.fromCssColorString(`rgba(255, 255, 255, .6)`),
+            horizontalOrigin: HorizontalOrigin.LEFT,
+            verticalOrigin: VerticalOrigin.BASELINE,
+            pixelOffset: type === "vehicle" ? new Cartesian2(-10, -93) : new Cartesian2(5, -95)
+        }
     });
+
 }
 
 function addRectangle(west: number, south: number, east: number, north: number, lng: number, lat: number, alt: number, text: string, color: Color) {
