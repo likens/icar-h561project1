@@ -6,25 +6,9 @@ import policeSingle from "./assets/img/police_single.png";
 import policeVehicle from "./assets/img/police_vehicle.png";
 import emsSingle from "./assets/img/ems_single.png";
 import emsVehicle from "./assets/img/ems_vehicle.png";
-
-const FIRE = "fire";
-const fireRedR = 215;
-const fireRedG = 48;
-const fireRedB = 39;
-const fireRedRGB = Color.fromCssColorString(`rgb(${fireRedR}, ${fireRedG}, ${fireRedB})`);
-const fireRedRGBa = Color.fromCssColorString(`rgba(${fireRedR}, ${fireRedG}, ${fireRedB}, .5)`);
-const POLICE = "police";
-const policeBlueR = 116;
-const policeBlueG = 173;
-const policeBlueB = 209;
-const policeBlueRGB = Color.fromCssColorString(`rgb(${policeBlueR}, ${policeBlueG}, ${policeBlueB})`);
-const policeBlueRGBa = Color.fromCssColorString(`rgb(${policeBlueR}, ${policeBlueG}, ${policeBlueB}, .5)`);
-const EMS = "ems";
-const emsGreenR = 127;
-const emsGreenG = 188;
-const emsGreenB = 65;
-const emsGreenRGB = Color.fromCssColorString(`rgb(${emsGreenR}, ${emsGreenG}, ${emsGreenB})`);
-const emsGreenRGBa = Color.fromCssColorString(`rgb(${emsGreenR}, ${emsGreenG}, ${emsGreenB}, .5)`);
+import fireIncident from "./assets/img/fire_incident.png";
+import incidentCommandPost from "./assets/img/incident_command_post.png";
+import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, UNIT_ORG_FIRE, UNIT_ORG_EMS, UNIT_ORG_POLICE, FIRE_RED, EMS_GREEN, POLICE_BLUE } from "./Utils";
 
 const locationDiv = document.getElementById("location");
 const terrainProvider = createWorldTerrain();
@@ -51,6 +35,7 @@ viewer.imageryLayers.addImageryProvider(
 const scene = viewer.scene;
 scene.primitives.add(osmBuildings);
 scene.globe.depthTestAgainstTerrain = true;
+scene.requestRenderMode = true;
 
 scene.camera.setView({
     destination: Cartesian3.fromDegrees(-86.15797, 39.77999, 300),
@@ -83,19 +68,28 @@ osmBuildings.tileLoad.addEventListener((tile: Cesium3DTile) => {
                 viewer.entities.add({
                     id: str,
                     position: Cartesian3.fromDegrees(lng, lat, alt),
-                    // polyline: {
-                    //     show: true,
-                    //     positions: [positionEnd, positionStart],
-                    //     width: 2,
-                    //     arcType: ArcType.NONE,
-                    //     material: new PolylineOutlineMaterialProperty({
-                    //         color: Color.BLACK,
-                    //     }),
-                    // },
+                    billboard: {
+                        image: fireIncident,
+                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                        heightReference: HeightReference.RELATIVE_TO_GROUND,
+                        pixelOffset: new Cartesian2(0, -60)
+                    },
+                    ellipse: {
+                        semiMinorAxis: 35,
+                        semiMajorAxis: 35,
+                        heightReference: HeightReference.CLAMP_TO_GROUND,
+                        material: Color.fromCssColorString("rgba(165, 0, 38, .3)"),
+                        height: 2,
+                        extrudedHeight: 1,
+                        outline: true,
+                        outlineColor: Color.fromCssColorString("#A50026"),
+                        outlineWidth: 3,
+                        zIndex: 2
+                    },
                     label: {
                         show: true,
                         text: name,
-                        font: "20px monospace",
+                        font: "16px 'IBM Plex Sans'",
                         fillColor: Color.WHITE,
                         disableDepthTestDistance: Number.POSITIVE_INFINITY,
                         heightReference: HeightReference.RELATIVE_TO_GROUND,
@@ -104,6 +98,20 @@ osmBuildings.tileLoad.addEventListener((tile: Cesium3DTile) => {
                         // translucencyByDistance: new NearFarScalar(1.0e1, 1.0, 3.0e3, 0.0)
                     }
                 });
+                viewer.entities.add({
+                    position: Cartesian3.fromDegrees(lng, lat, alt),
+                    ellipse: {
+                        semiMinorAxis: 40,
+                        semiMajorAxis: 40,
+                        height: 1,
+                        extrudedHeight: 1,
+                        heightReference: HeightReference.CLAMP_TO_GROUND,
+                        material: Color.fromCssColorString("rgba(254, 224, 144, .5)"),
+                        outline: true,
+                        outlineColor: Color.fromCssColorString("#FEE090"),
+                        outlineWidth: 3
+                    },
+                })
             }
         }
     }
@@ -112,19 +120,20 @@ osmBuildings.tileLoad.addEventListener((tile: Cesium3DTile) => {
 osmBuildings.style = new Cesium3DTileStyle({
     color: {
         conditions: [
-            ["${feature['building']} === 'apartments' || ${feature['building']} === 'residential'", "color('cyan', 1)",],
-            ["${feature['building']} === 'civic'","color('blue', 1)",],
-            ["${feature['building']} === 'office'","color('yellow', 1)",],
-            ["${feature['building']} === 'commercial' || ${feature['building']} === 'retail'","color('green', 1)",],
-            ["${feature['building']} === 'hospital'","color('red', 1)",],
-            ["${feature['building']} === 'construction'","color('orange', 1)",],
-            ["${feature['building']} === 'school'","color('purple', 1)",],
-            ["${feature['building']} === 'parking'","color('pink', 1)",],
+            // ["${feature['building']} === 'apartments' || ${feature['building']} === 'residential'", "color('cyan', 1)",],
+            // ["${feature['building']} === 'civic'","color('blue', 1)",],
+            // ["${feature['building']} === 'office'","color('yellow', 1)",],
+            // ["${feature['building']} === 'commercial' || ${feature['building']} === 'retail'","color('green', 1)",],
+            // ["${feature['building']} === 'hospital'","color('red', 1)",],
+            // ["${feature['building']} === 'construction'","color('orange', 1)",],
+            // ["${feature['building']} === 'school'","color('purple', 1)",],
+            // ["${feature['building']} === 'parking'","color('pink', 1)",],
             [true, "color('white', 1)"],
         ],
     }
 });
 
+// https://napsg-web.s3.amazonaws.com/symbology/index.html#/
 // https://sandcastle.cesium.com/?src=Drawing%20on%20Terrain.html
 // https://sandcastle.cesium.com/index.html?src=HeadingPitchRoll.html&label=Tutorials
 // https://sandcastle.cesium.com/?src=Interpolation.html
@@ -132,34 +141,20 @@ osmBuildings.style = new Cesium3DTileStyle({
 addBasicPoint(-86.155112, 39.781147, 0, "Red Car", Color.RED);
 addBasicPoint(-86.155534, 39.781028, 0, "White Truck", Color.WHITE);
 
-// Fire
-addBillboard(-86.156922, 39.781387, 0, "single", FIRE);
-addBillboard(-86.156886, 39.781286, 0, "single", FIRE);
-addBillboard(-86.156737, 39.781397, 0, "single", FIRE);
-addBillboard(-86.157261, 39.781358, 0, "vehicle", FIRE);
-addBillboard(-86.156826, 39.781351, 0, "single", FIRE);
-addRectangle(-86.157423, 39.781252, -86.156713, 39.781454, -86.157077, 39.781357, 0, "FIRE STAGING", fireRedRGBa);
+UNITS_SINGLE_FIRE.forEach((unit: any) => addUnitBillboard(UNIT_ORG_FIRE, UNIT_TYPE_SINGLE, Cartesian3.fromDegrees(unit.lng, unit.lat)));
+UNITS_VEHICLE_FIRE.forEach((unit: any) => addUnitBillboard(UNIT_ORG_FIRE, UNIT_TYPE_VEHICLE, Cartesian3.fromDegrees(unit.lng, unit.lat)));
+addRectangle(-86.157423, 39.781252, -86.156713, 39.781454, -86.157077, 39.781357, 0, "FIRE STAGING", Color.fromCssColorString(FIRE_RED));
+UNITS_SINGLE_POLICE.forEach((unit: any) => addUnitBillboard(UNIT_ORG_POLICE, UNIT_TYPE_SINGLE, Cartesian3.fromDegrees(unit.lng, unit.lat)));
+UNITS_VEHICLE_POLICE.forEach((unit: any) => addUnitBillboard(UNIT_ORG_POLICE, UNIT_TYPE_VEHICLE, Cartesian3.fromDegrees(unit.lng, unit.lat)));
+addRectangle(-86.157633, 39.782218, -86.157388, 39.782385, -86.157504, 39.782292, 0, "BARRICADE NW", Color.fromCssColorString(POLICE_BLUE));
+addRectangle(-86.157697, 39.781040, -86.157388, 39.781265, -86.157549, 39.781160, 0, "BARRICADE SW", Color.fromCssColorString(POLICE_BLUE));
+addRectangle(-86.155905, 39.782153, -86.155651, 39.782332, -86.155735, 39.782249, 0, "BARRICADE NE", Color.fromCssColorString(POLICE_BLUE));
+addRectangle(-86.155953, 39.780997, -86.155668, 39.781199, -86.155745, 39.781099, 0, "BARRICADE SE", Color.fromCssColorString(POLICE_BLUE));
+UNITS_SINGLE_EMS.forEach((unit: any) => addUnitBillboard(UNIT_ORG_EMS, UNIT_TYPE_SINGLE, Cartesian3.fromDegrees(unit.lng, unit.lat)));
+UNITS_VEHICLE_EMS.forEach((unit: any) => addUnitBillboard(UNIT_ORG_EMS, UNIT_TYPE_VEHICLE, Cartesian3.fromDegrees(unit.lng, unit.lat)));
+addRectangle(-86.156576, 39.781257, -86.155908, 39.781443, -86.156255, 39.781350, 0, "EMS STAGING", Color.fromCssColorString(EMS_GREEN));
 
-// Police
-addBillboard(-86.157446, 39.783739, 0, "vehicle", POLICE);
-addBillboard(-86.157523, 39.782254, 0, "single", POLICE);
-addBillboard(-86.157503, 39.782246, 0, "single", POLICE);
-addBillboard(-86.157493, 39.782332, 0, "single", POLICE);
-addBillboard(-86.157542, 39.782290, 0, "vehicle", POLICE);
-addRectangle(-86.157633, 39.782218, -86.157388, 39.782385, -86.157504, 39.782292, 0, "BARRICADE", policeBlueRGBa);
-addBillboard(-86.157512, 39.781206, 0, "vehicle", POLICE);
-addBillboard(-86.157586, 39.781204, 0, "single", POLICE);
-addBillboard(-86.157519, 39.781100, 0, "single", POLICE);
-addRectangle(-86.157697, 39.781040, -86.157388, 39.781265, -86.157549, 39.781160, 0, "BARRICADE", policeBlueRGBa);
-
-// EMS
-addBillboard(-86.156478, 39.781398, 0, "single", EMS);
-addBillboard(-86.156508, 39.781335, 0, "single", EMS);
-addBillboard(-86.156307, 39.781426, 0, "single", EMS);
-addBillboard(-86.156350, 39.781364, 0, "single", EMS);
-addBillboard(-86.156092, 39.781399, 0, "vehicle", EMS);
-addBillboard(-86.155975, 39.781365, 0, "vehicle", EMS);
-addRectangle(-86.156576, 39.781257, -86.155908, 39.781443, -86.156255, 39.781350, 0, "EMS STAGING", emsGreenRGBa);
+addBillboard(incidentCommandPost, "Incident Command Post", Cartesian3.fromDegrees(-86.156652, 39.781150));
 
 viewer.entities.add({
     id: 'mouse',
@@ -188,21 +183,12 @@ handler.setInputAction(function onMouseMove(movement) {
         const latitudeString = Math.toDegrees(cartographic.latitude).toFixed(6);
         const heightString = Math.toDegrees(cartographic.height).toFixed(2);
         locationMouse.position = cartesian;
-		// if (locationDiv) {
-		// 	locationDiv.innerHTML = `${longitudeString}, ${latitudeString} | ${heightString}m`;
-		// }
-        // const feature = scene.pick(movement.endPosition);
-        // if (defined(feature)) {
-        //     const name = feature.getProperty("name");
-        //     if (name) {
-        //         locationString = `${name}, ${locationString}`;
-        //     }
-        // }
         locationMouse.label.show = true;
         locationMouse.label.text = `Lon: ${longitudeString}\u00B0\nLat: ${latitudeString}\u00B0\nAlt: ${heightString}m`;
     } else {
         locationMouse.label.show = false;
     }
+    scene.requestRender();
 }, ScreenSpaceEventType.MOUSE_MOVE);
 
 handler.setInputAction(function onMouseMove(movement) {
@@ -263,32 +249,45 @@ function addBasicPoint(lat: number, lng: number, alt: number = 0, text: string, 
     });
 }
 
-function addBillboard(lat: number, lng: number, alt: number = 0, type: string, org: string) {
+function addBillboard(image: string, label: string, position: Cartesian3) {
+
+    viewer.entities.add({
+        position: position,
+        billboard: {
+            image: image,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            heightReference: HeightReference.CLAMP_TO_GROUND
+        },
+        label: {
+            text: label,
+            show: true,
+            font: "12px 'IBM Plex Sans'",
+            fillColor: Color.WHITE,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            heightReference: HeightReference.CLAMP_TO_GROUND,
+            showBackground: true,
+            backgroundColor: Color.BLACK,
+            horizontalOrigin: HorizontalOrigin.CENTER,
+            verticalOrigin: VerticalOrigin.BOTTOM,
+            pixelOffset: new Cartesian2(0, 60)
+        }
+    });
+
+}
+
+function addUnitBillboard(org: string, type: string, position: Cartesian3) {
     
     let image = "";
-    if (org === FIRE) {
-        if (type === "vehicle") {
-            image = fireVehicle;
-        } else {
-            image = fireSingle;
-        }
-    }
-    if (org === POLICE) {
-        if (type === "vehicle") {
-            image = policeVehicle;
-        } else {
-            image = policeSingle;
-        }
-    } else if (org === EMS) {
-        if (type === "vehicle") {
-            image = emsVehicle;
-        } else {
-            image = emsSingle;
-        }
+    if (org === UNIT_ORG_FIRE) {
+        image = type === UNIT_TYPE_VEHICLE ? fireVehicle : fireSingle;
+    } else if (org === UNIT_ORG_POLICE) {
+        image = type === UNIT_TYPE_VEHICLE ? policeVehicle : policeSingle;
+    } else if (org === UNIT_ORG_EMS) {
+        image = type === UNIT_TYPE_VEHICLE ? emsVehicle : emsSingle;
     }
 
     viewer.entities.add({
-        position: Cartesian3.fromDegrees(lat, lng, alt),
+        position: position,
         billboard: {
             image: image,
             disableDepthTestDistance: Number.POSITIVE_INFINITY,
@@ -318,12 +317,17 @@ function addRectangle(west: number, south: number, east: number, north: number, 
         rectangle: {
             coordinates: Rectangle.fromDegrees(west, south, east, north), // left middle, bot middle, right middle, top middle
             material: color,
-            heightReference: HeightReference.CLAMP_TO_GROUND
+            heightReference: HeightReference.CLAMP_TO_GROUND,
+            // height: 1,
+            // extrudedHeight: 1,
+            // outline: true,
+            // outlineColor: color,
+            // outlineWidth: 10
         },
         label: {
             show: true,
             text: text,
-            font: "20px monospace",
+            font: "16px 'IBM Plex Sans'",
             fillColor: Color.BLACK,
             disableDepthTestDistance: Number.POSITIVE_INFINITY,
             heightReference: HeightReference.CLAMP_TO_GROUND,
