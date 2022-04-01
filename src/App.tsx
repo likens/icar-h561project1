@@ -1,5 +1,5 @@
 import { RefObject, useState } from 'react'
-import { Cartesian3, createWorldTerrain, Math, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange } from "cesium";
+import { Cartesian3, createWorldTerrain, Math, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange, Billboard, GroundPrimitive } from "cesium";
 import fireSingle from "./assets/img/fire_single.png";
 import fireVehicle from "./assets/img/fire_vehicle.png";
 import policeSingle from "./assets/img/police_single.png";
@@ -15,7 +15,7 @@ import fireStaging from "./assets/img/fire_staging.png";
 import emsStaging from "./assets/img/ems_staging.png";
 import media from "./assets/img/media.png";
 import fireHydrant from "./assets/img/fire_hydrant.png";
-import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, UNIT_ORG_FIRE, UNIT_ORG_EMS, UNIT_ORG_POLICE, FIRE_RED, EMS_GREEN, POLICE_BLUE, AREAS } from "./Utils";
+import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, UNIT_ORG_FIRE, UNIT_ORG_EMS, UNIT_ORG_POLICE, FIRE_RED, EMS_GREEN, POLICE_BLUE, AREAS_RECTANGLE } from "./Utils";
 
 const locationDiv = document.getElementById("location");
 const terrainProvider = createWorldTerrain();
@@ -50,14 +50,6 @@ scene.camera.setView({
         heading: Math.toRadians(20),
         pitch: Math.toRadians(-30),
     },
-}); 
-
-osmBuildings.initialTilesLoaded.addEventListener((tiles) => {
-    console.log("initial osm buildings loaded", tiles);
-});
-
-osmBuildings.allTilesLoaded.addEventListener((tile) => {
-    console.log("all osm buildings loaded", tile);
 });
 
 osmBuildings.tileLoad.addEventListener((tile: Cesium3DTile) => {
@@ -148,7 +140,7 @@ osmBuildings.style = new Cesium3DTileStyle({
 addBasicPoint(-86.155112, 39.781147, 0, "Red Car", Color.RED);
 addBasicPoint(-86.155534, 39.781028, 0, "White Truck", Color.WHITE);
 
-AREAS.forEach((area: any) => addRectangle(area[0], area[1], area[2], area[3], area[4], area[5]));
+AREAS_RECTANGLE.forEach((area: any) => addRectangle(area[0], area[1], area[2], area[3], area[4], area[5]));
 UNITS_SINGLE_FIRE.forEach((unit: any) => addUnitBillboard(UNIT_ORG_FIRE, UNIT_TYPE_SINGLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name));
 UNITS_VEHICLE_FIRE.forEach((unit: any) => addUnitBillboard(UNIT_ORG_FIRE, UNIT_TYPE_VEHICLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name));
 UNITS_SINGLE_POLICE.forEach((unit: any) => addUnitBillboard(UNIT_ORG_POLICE, UNIT_TYPE_SINGLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name));
@@ -170,15 +162,13 @@ addBillboard(media, "Media", Cartesian3.fromDegrees(-86.157086, 39.780803));
 viewer.entities.add({
     id: 'mouse',
     label: {
-        show: true,
         disableDepthTestDistance: Number.POSITIVE_INFINITY,
-        font: "12px monospace",
         fillColor: Color.WHITE,
         showBackground: true,
         backgroundColor: Color.BLACK.withAlpha(0.75),
         horizontalOrigin: HorizontalOrigin.LEFT,
         verticalOrigin: VerticalOrigin.BASELINE,
-        pixelOffset: new Cartesian2(10, 0)
+        pixelOffset: new Cartesian2(20, 0)
     }
 });
 
@@ -187,7 +177,8 @@ const handler = new ScreenSpaceEventHandler(scene.canvas);
 
 handler.setInputAction(function onMouseMove(movement) {
     const locationMouse: any = viewer.entities.getById('mouse');
-    const cartesian = scene.pickPosition(movement.endPosition)
+    const cartesian = scene.pickPosition(movement.endPosition);
+    const pick = scene.pick(movement.endPosition);
     if (cartesian) {
         const cartographic = Cartographic.fromCartesian(cartesian);
         const longitudeString = Math.toDegrees(cartographic.longitude).toFixed(6);
@@ -196,6 +187,12 @@ handler.setInputAction(function onMouseMove(movement) {
         locationMouse.position = cartesian;
         locationMouse.label.show = true;
         locationMouse.label.text = `Lon: ${longitudeString}\u00B0\nLat: ${latitudeString}\u00B0\nAlt: ${heightString}m`;
+        locationMouse.label.font = "12px monospace";
+    } else if (pick?.id?.label?.text) {
+        locationMouse.position = scene.globe.pick(viewer.camera.getPickRay(movement.endPosition), scene);
+        locationMouse.label.show = true;
+        locationMouse.label.text = pick.id.label.text;
+        locationMouse.label.font = "20px monospace";
     } else {
         locationMouse.label.show = false;
     }
@@ -267,11 +264,12 @@ function addBillboard(image: string, label: string, position: Cartesian3) {
         billboard: {
             image: image,
             disableDepthTestDistance: Number.POSITIVE_INFINITY,
-            heightReference: HeightReference.CLAMP_TO_GROUND
+            heightReference: HeightReference.CLAMP_TO_GROUND,
+            scale: .75
         },
         label: {
             text: label,
-            show: true,
+            show: false,
             font: "12px monospace",
             fillColor: Color.WHITE,
             disableDepthTestDistance: Number.POSITIVE_INFINITY,
@@ -341,7 +339,7 @@ function addRectangle(west: number, south: number, east: number, north: number, 
             // outlineWidth: 10
         },
         label: {
-            show: true,
+            show: false,
             text: text,
             font: "14px monospace",
             fillColor: Color.WHITE,

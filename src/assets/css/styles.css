@@ -79,6 +79,9 @@ body {
     left: 0;
     z-index: 10;
 }
+.cesium-viewer-toolbar {
+    display: none;
+}
 .cesium-viewer-fullscreenContainer {
     bottom: auto;
     right: auto;
@@ -95,7 +98,7 @@ body {
     border: 0;
     font-family: inherit;
     font-weight: 700;
-    font-size: 1.6rem;
+    font-size: 2rem;
     line-height: 1;
 }
 .location {
@@ -107,7 +110,7 @@ body {
 .view {
     position: absolute;
     right: 1rem;
-    bottom: 1rem;
+    top: 1rem;
     z-index: 500;
 }
 .view button {
