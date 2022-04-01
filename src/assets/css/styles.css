@@ -79,9 +79,9 @@ body {
     left: 0;
     z-index: 10;
 }
-.cesium-viewer-toolbar {
+/* .cesium-viewer-toolbar {
     display: none;
-}
+} */
 .cesium-viewer-fullscreenContainer {
     bottom: auto;
     right: auto;
@@ -110,7 +110,7 @@ body {
 .view {
     position: absolute;
     right: 1rem;
-    top: 1rem;
+    top: 5rem;
     z-index: 500;
 }
 .view button {

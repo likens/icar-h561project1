@@ -22,11 +22,11 @@ const terrainProvider = createWorldTerrain();
 const osmBuildings = createOsmBuildings();
 
 const viewer = new Viewer("cesiumContainer", {
-    terrainProvider: terrainProvider
+    // terrainProvider: terrainProvider
 });
-viewer.imageryLayers.addImageryProvider(
-    new IonImageryProvider({ assetId: 3 })
-);
+// viewer.imageryLayers.addImageryProvider(
+//     new IonImageryProvider({ assetId: 3 })
+// );
 
 // //Set bounds of our simulation time
 // const start = JulianDate.fromDate(new Date(2015, 2, 25, 16));
@@ -40,7 +40,7 @@ viewer.imageryLayers.addImageryProvider(
 // viewer.clock.multiplier = 10;
 
 const scene = viewer.scene;
-scene.primitives.add(osmBuildings);
+// scene.primitives.add(osmBuildings);
 scene.globe.depthTestAgainstTerrain = true;
 scene.requestRenderMode = true;
 

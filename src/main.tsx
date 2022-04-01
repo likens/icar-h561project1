@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import { Ion } from "cesium"
 
-Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhYzBlNWQ2My1jMjk1LTQxOWQtYmZmNC1kYjQwOWIyMDU0MDciLCJpZCI6ODM5MjksImlhdCI6MTY0NTk4MzM1OH0.m0c3i42EidYlImKwNh6E2Ylvy2XnTGj7L2Nmu7QBLJM";
+Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwYTE4OWQ5Yi1iZGRiLTRkNzItYTlhOC1kNmZlZWMyM2MwMTYiLCJpZCI6ODM5MjksImlhdCI6MTY0NTk4MTU2NH0.W5C6MZMkNTrPlTXFs42_F_yR8QjSlVR8OCgAWjtUagA";
 
 ReactDOM.render(
 	<React.StrictMode>
