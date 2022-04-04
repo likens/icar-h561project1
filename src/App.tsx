@@ -26,9 +26,9 @@ const osmBuildings = createOsmBuildings();
 const viewer = new Viewer("cesiumContainer", {
     terrainProvider: terrainProvider
 });
-viewer.imageryLayers.addImageryProvider(
-    new IonImageryProvider({ assetId: 3 })
-);
+// viewer.imageryLayers.addImageryProvider(
+//     new IonImageryProvider({ assetId: 3 })
+// );
 
 // //Set bounds of our simulation time
 // const start = JulianDate.fromDate(new Date(2015, 2, 25, 16));
@@ -129,7 +129,7 @@ osmBuildings.style = new Cesium3DTileStyle({
             // ["${feature['building']} === 'construction'","color('orange', 1)",],
             // ["${feature['building']} === 'school'","color('purple', 1)",],
             // ["${feature['building']} === 'parking'","color('pink', 1)",],
-            [true, "color('white', 1)"],
+            [true, "color('white', .9)"],
         ],
     }
 });
