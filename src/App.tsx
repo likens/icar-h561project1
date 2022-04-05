@@ -1,23 +1,23 @@
 import { RefObject, useState } from 'react'
 import { Cartesian3, createWorldTerrain, Math, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange, Billboard, GroundPrimitive, Ion } from "cesium";
-import fireSingle from "./assets/img/fire_single.png";
-import fireVehicle from "./assets/img/fire_vehicle.png";
-import policeSingle from "./assets/img/police_single.png";
-import policeVehicle from "./assets/img/police_vehicle.png";
-import emsSingle from "./assets/img/ems_single.png";
-import emsVehicle from "./assets/img/ems_vehicle.png";
-import fireIncident from "./assets/img/fire_incident.png";
-import incidentCommandPost from "./assets/img/incident_command_post.png";
-import triage from "./assets/img/triage.png";
-import casualtyCollectionPoint from "./assets/img/casualty_collection_point.png";
-import accessBlocked from "./assets/img/access_blocked.png";
-import fireStaging from "./assets/img/fire_staging.png";
-import emsStaging from "./assets/img/ems_staging.png";
-import media from "./assets/img/media.png";
-import fireHydrant from "./assets/img/fire_hydrant.png";
+import fireSingle from "./assets/img/hci/fire_single.png";
+import fireVehicle from "./assets/img/hci/fire_vehicle.png";
+import policeSingle from "./assets/img/hci/police_single.png";
+import policeVehicle from "./assets/img/hci/police_vehicle.png";
+import emsSingle from "./assets/img/hci/ems_single.png";
+import emsVehicle from "./assets/img/hci/ems_vehicle.png";
+import fireCommercial from "./assets/img/napsg/fire_commercial.png";
+import incidentCommandPost from "./assets/img/napsg/incident_command_post.png";
+import triage from "./assets/img/napsg/triage.png";
+import casualtyCollectionPoint from "./assets/img/napsg/casualty_collection_point.png";
+import accessBlocked from "./assets/img/napsg/access_blocked.png";
+import fireStaging from "./assets/img/napsg/fire_staging.png";
+import emsStaging from "./assets/img/napsg/ems_staging.png";
+import media from "./assets/img/napsg/media.png";
+import fireHydrant from "./assets/img/napsg/fire_hydrant.png";
 import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, UNIT_ORG_FIRE, UNIT_ORG_EMS, UNIT_ORG_POLICE, FIRE_RED, EMS_GREEN, POLICE_BLUE, AREAS_RECTANGLE } from "./Utils";
 
-Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhYzBlNWQ2My1jMjk1LTQxOWQtYmZmNC1kYjQwOWIyMDU0MDciLCJpZCI6ODM5MjksImlhdCI6MTY0NTk4MzM1OH0.m0c3i42EidYlImKwNh6E2Ylvy2XnTGj7L2Nmu7QBLJM";
+Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwZWI3MDRlMi1hMGMyLTQzYjUtYTYxMy0zOGNlYjViOTdjMGIiLCJpZCI6ODM5MjksImlhdCI6MTY0OTExOTQ3MX0.j_tC4ZO5-0FDV4_n-edMAlcQK5EyuV9WyRhfv_4yjEU";
 
 const locationDiv = document.getElementById("location");
 const terrainProvider = createWorldTerrain();
@@ -26,9 +26,11 @@ const osmBuildings = createOsmBuildings();
 const viewer = new Viewer("cesiumContainer", {
     terrainProvider: terrainProvider
 });
-// viewer.imageryLayers.addImageryProvider(
-//     new IonImageryProvider({ assetId: 3 })
-// );
+
+const layer = viewer.imageryLayers.addImageryProvider(
+    new IonImageryProvider({ assetId: 3 })
+);
+  
 
 // //Set bounds of our simulation time
 // const start = JulianDate.fromDate(new Date(2015, 2, 25, 16));
@@ -70,7 +72,7 @@ osmBuildings.tileLoad.addEventListener((tile: Cesium3DTile) => {
                     id: str,
                     position: Cartesian3.fromDegrees(lng, lat, alt),
                     billboard: {
-                        image: fireIncident,
+                        image: fireCommercial,
                         disableDepthTestDistance: Number.POSITIVE_INFINITY,
                         heightReference: HeightReference.RELATIVE_TO_GROUND,
                         pixelOffset: new Cartesian2(0, -60)
