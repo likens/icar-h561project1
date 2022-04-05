@@ -1,11 +1,5 @@
 import { RefObject, useState } from 'react'
 import { Cartesian3, createWorldTerrain, Math, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange, Billboard, GroundPrimitive, Ion } from "cesium";
-import fireSingle from "./assets/img/hci/fire_single.png";
-import fireVehicle from "./assets/img/hci/fire_vehicle.png";
-import policeSingle from "./assets/img/hci/police_single.png";
-import policeVehicle from "./assets/img/hci/police_vehicle.png";
-import emsSingle from "./assets/img/hci/ems_single.png";
-import emsVehicle from "./assets/img/hci/ems_vehicle.png";
 import fireCommercial from "./assets/img/napsg/fire_commercial.png";
 import incidentCommandPost from "./assets/img/napsg/incident_command_post.png";
 import triage from "./assets/img/napsg/triage.png";
@@ -15,7 +9,15 @@ import fireStaging from "./assets/img/napsg/fire_staging.png";
 import emsStaging from "./assets/img/napsg/ems_staging.png";
 import media from "./assets/img/napsg/media.png";
 import fireHydrant from "./assets/img/napsg/fire_hydrant.png";
-import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, UNIT_ORG_FIRE, UNIT_ORG_EMS, UNIT_ORG_POLICE, FIRE_RED, EMS_GREEN, POLICE_BLUE, AREAS_RECTANGLE } from "./Utils";
+import noWaterSupply from "./assets/img/napsg/fire_no_water_supply.png";
+import emergencyOperationsCenter from "./assets/img/napsg/emergency_operations_center.png";
+import jointOperationsCenter from "./assets/img/napsg/joint_operations_center.png";
+import usarTaskForce from "./assets/img/napsg/search_and_rescue_task_force.png";
+import evacTeam from "./assets/img/napsg/evacuation_coordination_team.png";
+import doNotEnter from "./assets/img/napsg/fire_do_not_enter.png";
+import hazardousEntry from "./assets/img/napsg/fire_hazardous_entry.png";
+import fireLadder from "./assets/img/napsg/fire_ladder.png";
+import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, AREAS_RECTANGLE } from "./Utils";
 
 Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwZWI3MDRlMi1hMGMyLTQzYjUtYTYxMy0zOGNlYjViOTdjMGIiLCJpZCI6ODM5MjksImlhdCI6MTY0OTExOTQ3MX0.j_tC4ZO5-0FDV4_n-edMAlcQK5EyuV9WyRhfv_4yjEU";
 
@@ -145,12 +147,15 @@ addBasicPoint(-86.155112, 39.781147, 0, "Red Car", Color.RED);
 addBasicPoint(-86.155534, 39.781028, 0, "White Truck", Color.WHITE);
 
 AREAS_RECTANGLE.forEach((area: any) => addRectangle(area[0], area[1], area[2], area[3], area[4], area[5]));
-UNITS_SINGLE_FIRE.forEach((unit: any) => addUnitBillboard(UNIT_ORG_FIRE, UNIT_TYPE_SINGLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name));
-UNITS_VEHICLE_FIRE.forEach((unit: any) => addUnitBillboard(UNIT_ORG_FIRE, UNIT_TYPE_VEHICLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name));
-UNITS_SINGLE_POLICE.forEach((unit: any) => addUnitBillboard(UNIT_ORG_POLICE, UNIT_TYPE_SINGLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name));
-UNITS_VEHICLE_POLICE.forEach((unit: any) => addUnitBillboard(UNIT_ORG_POLICE, UNIT_TYPE_VEHICLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name));
-UNITS_SINGLE_EMS.forEach((unit: any) => addUnitBillboard(UNIT_ORG_EMS, UNIT_TYPE_SINGLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name));
-UNITS_VEHICLE_EMS.forEach((unit: any) => addUnitBillboard(UNIT_ORG_EMS, UNIT_TYPE_VEHICLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name));
+UNITS_SINGLE_FIRE.forEach((unit: any) => addUnitBillboard(UNIT_TYPE_SINGLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name, unit.symbol));
+UNITS_VEHICLE_FIRE.forEach((unit: any) => {
+    addUnitBillboard(UNIT_TYPE_VEHICLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name, unit.symbol);
+    // addBillboard(fireLadder, unit.name, Cartesian3.fromDegrees(unit.lng, unit.lat));
+});
+UNITS_SINGLE_POLICE.forEach((unit: any) => addUnitBillboard(UNIT_TYPE_SINGLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name, unit.symbol));
+UNITS_VEHICLE_POLICE.forEach((unit: any) => addUnitBillboard(UNIT_TYPE_VEHICLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name, unit.symbol));
+UNITS_SINGLE_EMS.forEach((unit: any) => addUnitBillboard(UNIT_TYPE_SINGLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name, unit.symbol));
+UNITS_VEHICLE_EMS.forEach((unit: any) => addUnitBillboard(UNIT_TYPE_VEHICLE, Cartesian3.fromDegrees(unit.lng, unit.lat), unit.name, unit.symbol));
 
 addBillboard(incidentCommandPost, "Incident Command Post", Cartesian3.fromDegrees(-86.156652, 39.781150));
 addBillboard(triage, "Triage", Cartesian3.fromDegrees(-86.156185, 39.781510));
@@ -162,6 +167,13 @@ addBillboard(fireHydrant, "Hydrant", Cartesian3.fromDegrees(-86.157402, 39.78212
 addBillboard(accessBlocked, "Access Blocked", Cartesian3.fromDegrees(-86.157016, 39.781600));
 addBillboard(accessBlocked, "Access Blocked", Cartesian3.fromDegrees(-86.157358, 39.781812));
 addBillboard(media, "Media", Cartesian3.fromDegrees(-86.157086, 39.780803));
+addBillboard(noWaterSupply, "No Water Supply", Cartesian3.fromDegrees(-86.156536, 39.782215));
+addBillboard(emergencyOperationsCenter, "Emergency Operations Center", Cartesian3.fromDegrees(-86.157625, 39.781609));
+addBillboard(jointOperationsCenter, "Joint Operations Center", Cartesian3.fromDegrees(-86.156554, 39.781168));
+addBillboard(usarTaskForce, "Search and Rescue Task Force", Cartesian3.fromDegrees(-86.156691, 39.782050));
+addBillboard(evacTeam, "Evacuation Coordination Team", Cartesian3.fromDegrees(-86.156442, 39.781821));
+addBillboard(doNotEnter, "Do Not Enter", Cartesian3.fromDegrees(-86.157211, 39.781712));
+addBillboard(hazardousEntry, "Hazardous Entry", Cartesian3.fromDegrees(-86.156781, 39.781999));
 
 viewer.entities.add({
     id: 'mouse',
@@ -261,12 +273,12 @@ function addBasicPoint(lat: number, lng: number, alt: number = 0, text: string, 
     });
 }
 
-function addBillboard(image: string, label: string, position: Cartesian3) {
+function addBillboard(symbol: string, label: string, position: Cartesian3) {
 
     viewer.entities.add({
         position: position,
         billboard: {
-            image: image,
+            image: symbol,
             disableDepthTestDistance: Number.POSITIVE_INFINITY,
             heightReference: HeightReference.CLAMP_TO_GROUND,
             scale: .75
@@ -288,22 +300,13 @@ function addBillboard(image: string, label: string, position: Cartesian3) {
 
 }
 
-function addUnitBillboard(org: string, type: string, position: Cartesian3, name?: string) {
-    
-    let image = "";
-    if (org === UNIT_ORG_FIRE) {
-        image = type === UNIT_TYPE_VEHICLE ? fireVehicle : fireSingle;
-    } else if (org === UNIT_ORG_POLICE) {
-        image = type === UNIT_TYPE_VEHICLE ? policeVehicle : policeSingle;
-    } else if (org === UNIT_ORG_EMS) {
-        image = type === UNIT_TYPE_VEHICLE ? emsVehicle : emsSingle;
-    }
+function addUnitBillboard(type: string, position: Cartesian3, name?: string, symbol?: string) {
 
     viewer.entities.add({
         id: name,
         position: position,
         billboard: {
-            image: image,
+            image: symbol,
             disableDepthTestDistance: Number.POSITIVE_INFINITY,
             heightReference: HeightReference.CLAMP_TO_GROUND,
             pixelOffset: new Cartesian2(0, -60)
