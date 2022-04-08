@@ -249,7 +249,10 @@ function startCesium() {
             },
             polygon: {
                 show: pointerEnabled,
-                hierarchy: polygonPoints,
+                hierarchy: {
+                    positions: polygonPoints,
+                    holes: []
+                },
                 material: Color.fromCssColorString(color),
                 height: 0,
                 heightReference: HeightReference.CLAMP_TO_GROUND,
@@ -311,7 +314,10 @@ function startCesium() {
             },
             polygon: {
                 show: pointerEnabled,
-                hierarchy: polygonPoints,
+                hierarchy: {
+                    positions: polygonPoints,
+                    holes: []
+                },
                 material: Color.fromCssColorString(color),
                 height: 0,
                 heightReference: HeightReference.CLAMP_TO_GROUND,
