@@ -21,6 +21,9 @@ import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_
 
 Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwZWI3MDRlMi1hMGMyLTQzYjUtYTYxMy0zOGNlYjViOTdjMGIiLCJpZCI6ODM5MjksImlhdCI6MTY0OTExOTQ3MX0.j_tC4ZO5-0FDV4_n-edMAlcQK5EyuV9WyRhfv_4yjEU";
 
+let viewer: any = undefined;
+let pointerEnabled = true;
+
 function startCesium() {
 
     // https://napsg-web.s3.amazonaws.com/symbology/index.html#/
@@ -38,12 +41,10 @@ function startCesium() {
     // viewer.clock.currentTime = start.clone();
     // viewer.clock.clockRange = ClockRange.LOOP_STOP; //Loop at the end
     // viewer.clock.multiplier = 10;
-
-    const pointerEnabled = true;
     const terrainProvider = createWorldTerrain();
     const osmBuildings = createOsmBuildings();
     
-    const viewer = new Viewer("cesiumContainer", {
+    viewer = new Viewer("cesiumContainer", {
         terrainProvider: terrainProvider
     });
     
@@ -85,6 +86,7 @@ function startCesium() {
         for (let i = 0; i < featuresLength; i++) {
             const name = content.getFeature(i).getProperty("name");
             if (name === "The Landmark Center") {
+                console.log(content.getFeature(i));
                 const lng = content.getFeature(i).getProperty("cesium#longitude");
                 const lat = content.getFeature(i).getProperty("cesium#latitude");
                 const alt = parseInt(content.getFeature(i).getProperty("cesium#estimatedHeight"));
@@ -94,6 +96,7 @@ function startCesium() {
                     viewer.entities.add({
                         id: str,
                         position: Cartesian3.fromDegrees(lng, lat, alt),
+                        name: name,
                         billboard: {
                             image: fireCommercial,
                             disableDepthTestDistance: Number.POSITIVE_INFINITY,
@@ -159,7 +162,10 @@ function startCesium() {
         }
     });
 
-    AREAS_RECTANGLE.forEach((area: any) => addRectangle(area[0], area[1], area[2], area[3], area[4], area[5]));
+    AREAS_RECTANGLE.forEach((area: any) => {
+        addRectangle(area[0], area[1], area[2], area[3], area[4], area[5]);
+    });
+
     UNITS_SINGLE_FIRE.forEach((unit: any) => {
         generateUnitPointer(unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
     });
@@ -177,6 +183,39 @@ function startCesium() {
     });
     UNITS_VEHICLE_EMS.forEach((unit: any) => {
         generateVehiclePointer(unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
+    });
+
+    const landMarkCenterPolygon = Cartesian3.fromDegreesArray([
+        -86.156989, 39.782047,
+        -86.157047, 39.782091,
+        -86.157261, 39.781942,
+        -86.157196, 39.781887,
+        -86.157258, 39.781838,
+        -86.157090, 39.781702,
+        -86.157040, 39.781735,
+        -86.156919, 39.781690,
+        -86.156737, 39.781820,
+        -86.156771, 39.781852,
+        -86.156697, 39.781919,
+        -86.156927, 39.782097
+    ]);
+
+    viewer.entities.add({
+        position: Cartesian3.fromDegrees(-86.157, 39.78187, 0),
+        polygon: {
+            hierarchy: {
+                positions: landMarkCenterPolygon,
+                holes: []
+            },
+            material: Color.fromCssColorString("#FFFFFF"),
+            height: .5,
+            heightReference: HeightReference.RELATIVE_TO_GROUND,
+            extrudedHeight: 1,
+            extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
+            outline: true,
+            outlineColor: Color.BLACK,
+            outlineWidth: 1
+        },
     });
 
     addBillboard(incidentCommandPost, "Incident Command Post", Cartesian3.fromDegrees(-86.156652, 39.781150));
@@ -225,30 +264,11 @@ function startCesium() {
         ]);
 
         viewer.entities.add({
-            id: `pointer_${label}`,
-            billboard: {
-                show: !pointerEnabled,
-                image: symbol,
-                disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
-                pixelOffset: new Cartesian2(0, -60)
-            },
+            id: `pointer_vehicle_${label}`,
+            name: label,
             position: Cartesian3.fromDegrees(lng, lat, 0),
-            label: {
-                text: label,
-                show: !pointerEnabled,
-                font: "11px monospace",
-                fillColor: Color.BLACK,
-                disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
-                showBackground: true,
-                backgroundColor: Color.fromCssColorString(`rgba(255, 255, 255, .6)`),
-                horizontalOrigin: HorizontalOrigin.LEFT,
-                verticalOrigin: VerticalOrigin.BASELINE,
-                pixelOffset: new Cartesian2(-10, -100)
-            },
+            show: pointerEnabled,
             polygon: {
-                show: pointerEnabled,
                 hierarchy: {
                     positions: polygonPoints,
                     holes: []
@@ -261,6 +281,46 @@ function startCesium() {
                 outline: true,
                 outlineColor: Color.BLACK,
                 outlineWidth: 1
+            },
+            // label: {
+            //     text: label,
+            //     show: pointerEnabled,
+            //     font: "12px monospace",
+            //     fillColor: Color.BLACK,
+            //     backgroundColor: Color.fromCssColorString(color),
+            //     showBackground: true,
+            //     horizontalOrigin: HorizontalOrigin.CENTER,
+            //     verticalOrigin: VerticalOrigin.CENTER,
+            //     disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            //     heightReference: HeightReference.RELATIVE_TO_GROUND,
+            //     eyeOffset: new Cartesian3(0, 1, 0),
+            //     outlineColor: Color.BLACK,
+            //     outlineWidth: 1
+            // },
+        });
+
+        viewer.entities.add({
+            id: `billboard_vehicle_${label}`,
+            name: label,
+            position: Cartesian3.fromDegrees(lng, lat, 0),
+            show: !pointerEnabled,
+            billboard: {
+                image: symbol,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                heightReference: HeightReference.CLAMP_TO_GROUND,
+                pixelOffset: new Cartesian2(0, -60)
+            },
+            label: {
+                text: label,
+                font: "11px monospace",
+                fillColor: Color.BLACK,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                heightReference: HeightReference.CLAMP_TO_GROUND,
+                showBackground: true,
+                backgroundColor: Color.fromCssColorString(`rgba(255, 255, 255, .6)`),
+                horizontalOrigin: HorizontalOrigin.LEFT,
+                verticalOrigin: VerticalOrigin.BASELINE,
+                pixelOffset: new Cartesian2(-10, -100)
             },
         });
 
@@ -290,30 +350,11 @@ function startCesium() {
         ]);
 
         viewer.entities.add({
-            id: `pointer_${label}`,
-            billboard: {
-                show: !pointerEnabled,
-                image: symbol,
-                disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
-                pixelOffset: new Cartesian2(0, -60)
-            },
+            id: `pointer_unit_${label}`,
+            name: label,
             position: Cartesian3.fromDegrees(lng, lat, 0),
-            label: {
-                text: label,
-                show: !pointerEnabled,
-                font: "11px monospace",
-                fillColor: Color.BLACK,
-                disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
-                showBackground: true,
-                backgroundColor: Color.fromCssColorString(`rgba(255, 255, 255, .6)`),
-                horizontalOrigin: HorizontalOrigin.LEFT,
-                verticalOrigin: VerticalOrigin.BASELINE,
-                pixelOffset: new Cartesian2(5, -95)
-            },
+            show: pointerEnabled,
             polygon: {
-                show: pointerEnabled,
                 hierarchy: {
                     positions: polygonPoints,
                     holes: []
@@ -327,7 +368,46 @@ function startCesium() {
                 outlineColor: Color.BLACK,
                 outlineWidth: 1
             },
+            // label: {
+            //     text: label,
+            //     font: "12px monospace",
+            //     fillColor: Color.BLACK,
+            //     backgroundColor: Color.fromCssColorString(color),
+            //     showBackground: true,
+            //     horizontalOrigin: HorizontalOrigin.CENTER,
+            //     verticalOrigin: VerticalOrigin.CENTER,
+            //     disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            //     heightReference: HeightReference.RELATIVE_TO_GROUND,
+            //     eyeOffset: new Cartesian3(0, 1, 0),
+            //     outlineColor: Color.BLACK,
+            //     outlineWidth: 1
+            // }
         });
+
+        viewer.entities.add({
+            id: `billboard_unit_${label}`,
+            name: label,
+            position: Cartesian3.fromDegrees(lng, lat, 0),
+            show: !pointerEnabled,
+            billboard: {
+                image: symbol,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                heightReference: HeightReference.CLAMP_TO_GROUND,
+                pixelOffset: new Cartesian2(0, -60)
+            },
+            label: {
+                text: label,
+                font: "11px monospace",
+                fillColor: Color.BLACK,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                heightReference: HeightReference.CLAMP_TO_GROUND,
+                showBackground: true,
+                backgroundColor: Color.fromCssColorString(`rgba(255, 255, 255, .6)`),
+                horizontalOrigin: HorizontalOrigin.LEFT,
+                verticalOrigin: VerticalOrigin.BASELINE,
+                pixelOffset: new Cartesian2(5, -95)
+            },
+        })
 
     };
 
@@ -339,8 +419,8 @@ function startCesium() {
             showBackground: true,
             backgroundColor: Color.BLACK.withAlpha(0.75),
             horizontalOrigin: HorizontalOrigin.LEFT,
-            verticalOrigin: VerticalOrigin.BASELINE,
-            pixelOffset: new Cartesian2(20, 0)
+            verticalOrigin: VerticalOrigin.CENTER,
+            pixelOffset: new Cartesian2(15, 30)
         }
     });
 
@@ -351,10 +431,10 @@ function startCesium() {
         const locationMouse: any = viewer.entities.getById('mouse');
         const cartesian = scene.pickPosition(movement.endPosition);
         const pick = scene.pick(movement.endPosition);
-        if (pick?.id?.label) {
+        if (pick?.id?.name) {
             locationMouse.position = cartesian ? cartesian : scene.globe.pick(viewer.camera.getPickRay(movement.endPosition), scene);
             locationMouse.label.show = true;
-            locationMouse.label.text = pick.id.label.text;
+            locationMouse.label.text = pick.id.name;
             locationMouse.label.font = "20px monospace";
         } else if (cartesian) {
             const cartographic = Cartographic.fromCartesian(cartesian);
@@ -422,11 +502,12 @@ function startCesium() {
 
         viewer.entities.add({
             position: position,
+            name: label,
             billboard: {
                 image: symbol,
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
                 heightReference: HeightReference.CLAMP_TO_GROUND,
-                scale: .75
+                scale: .5
             },
             label: {
                 text: label,
@@ -476,16 +557,27 @@ function startCesium() {
             }
         });
     }
+}
 
-    const currentEntities = viewer.entities.values;
-    viewer.entities.values.map((entity) => {
+function showPointers(threeD: boolean) {
+
+    viewer.entities.values.forEach((entity: Entity) => {
         const id = entity.id;
         if (id.startsWith("pointer")) {
-
+            entity.show = threeD;
+        } else if (id.startsWith("billboard")) {
+            entity.show = !threeD;
         }
     });
 }
 
+function show3DPointers() {
+    showPointers(true);
+}
+
+function show2DPointers() {
+    showPointers(false);
+}
 
 function App() {
     
@@ -496,7 +588,29 @@ function App() {
     });
 
 	return (
-        <div id="cesiumContainer"></div>
+        <div className='app'>
+            <div className='actions'>
+                <div className='action'>
+                    <button onClick={show3DPointers}>View 3D Pointers</button>
+                </div>
+                <div className='action'>
+                    <button onClick={show2DPointers}>View 2D Pointers</button>
+                </div>
+            </div>
+            <div className='tab-buttons'>
+                <button><span>Fire</span></button>
+                <button><span>Police</span></button>
+                <button><span>Medical</span></button>
+                <button><span>Public Works</span></button>
+            </div>
+            <div className='tab-content'>
+                <div className='tab'></div>
+                <div className='tab'></div>
+                <div className='tab'></div>
+                <div className='tab'></div>
+            </div>
+            <div id="cesiumContainer"></div>
+        </div>
 	)
 }
 

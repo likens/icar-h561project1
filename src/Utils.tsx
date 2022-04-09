@@ -52,7 +52,7 @@ export const UNITS_VEHICLE_EMS = [
 ]
 export const UNITS_SINGLE_POLICE = [
     { lng: -86.157523, lat: 39.782254, brng: getRandomBearing(), name: "Metcalfe, T.", color: POLICE_BLUE, symbol: policeSingle },
-    { lng: -86.157503, lat: 39.782246, brng: getRandomBearing(), name: "Holman, E.", color: POLICE_BLUE, symbol: policeSingle },
+    { lng: -86.157456, lat: 39.782287, brng: getRandomBearing(), name: "Holman, E.", color: POLICE_BLUE, symbol: policeSingle },
     { lng: -86.157493, lat: 39.782332, brng: getRandomBearing(), name: "Hills, N.", color: POLICE_BLUE, symbol: policeSingle },
     { lng: -86.157586, lat: 39.781204, brng: getRandomBearing(), name: "Bates, C.", color: POLICE_BLUE, symbol: policeSingle },
     { lng: -86.157519, lat: 39.781100, brng: getRandomBearing(), name: "Monaghan, K.", color: POLICE_BLUE, symbol: policeSingle },
