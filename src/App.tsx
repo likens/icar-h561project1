@@ -53,7 +53,7 @@ function startCesium() {
 
     const scene = viewer.scene;
     scene.primitives.add(osmBuildings);
-    scene.globe.depthTestAgainstTerrain = true;
+    // scene.globe.depthTestAgainstTerrain = true;
 
     // scene.camera.flyTo({
     //     destination: Cartesian3.fromDegrees(-86.15797, 39.77999, 300),
@@ -254,29 +254,29 @@ function startCesium() {
                     holes: []
                 },
                 material: Color.fromCssColorString(color),
-                height: 0,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
-                extrudedHeight: .5,
+                height: .5,
+                heightReference: HeightReference.RELATIVE_TO_GROUND,
+                extrudedHeight: 1,
+                extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
                 outline: true,
                 outlineColor: Color.BLACK,
-                outlineWidth: 1,
-                zIndex: 10
+                outlineWidth: 1
             },
         });
 
     };
 
-    function generateUnitPointer(label: string, symbol: string, lng: number, lat: number, brng: number, color: string = "#ffffff", scale = 2) {
+    function generateUnitPointer(label: string, symbol: string, lng: number, lat: number, brng: number, color: string = "#ffffff", scale = 1.5) {
 
         const east = 90;
         const south = 180;
         const west = 270;
 
-        const centerTop = vincentyDirection(lng, lat, brng, 0);
+        const centerTop = vincentyDirection(lng, lat, brng, scale * -.75);
         const centerBot = vincentyDirection(lng, lat, south + brng, scale);
         const centerPoint = vincentyDirection(lng, lat, brng, scale);
-        const cornerBotLeft = vincentyDirection(centerBot.lng, centerBot.lat, west + brng, scale * .5);
-        const cornerBotRight = vincentyDirection(centerBot.lng, centerBot.lat, east + brng, scale * .5);
+        const cornerBotLeft = vincentyDirection(centerBot.lng, centerBot.lat, west + brng, scale * .75);
+        const cornerBotRight = vincentyDirection(centerBot.lng, centerBot.lat, east + brng, scale * .75);
         
         const polygonPoints = Cartesian3.fromDegreesArray([
             centerTop.lng,
@@ -319,9 +319,10 @@ function startCesium() {
                     holes: []
                 },
                 material: Color.fromCssColorString(color),
-                height: 0,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
-                extrudedHeight: .5,
+                height: .5,
+                heightReference: HeightReference.RELATIVE_TO_GROUND,
+                extrudedHeight: 1,
+                extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
                 outline: true,
                 outlineColor: Color.BLACK,
                 outlineWidth: 1
