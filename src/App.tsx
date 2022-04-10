@@ -26,7 +26,7 @@ function startCesium() {
   
     // //Set bounds of our simulation time
     const start = JulianDate.fromDate(new Date(2015, 2, 25, 16));
-    const stop = JulianDate.addSeconds(start, 180, new JulianDate());
+    const stop = JulianDate.addSeconds(start, 240, new JulianDate());
 
     // Make sure viewer is at the desired time.
     viewer.clock.startTime = start.clone();
