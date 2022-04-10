@@ -4,6 +4,22 @@ import emsSingle from "./assets/img/hci/ems_single.png";
 import emsVehicle from "./assets/img/hci/ems_vehicle.png";
 import policeSingle from "./assets/img/hci/police_single.png";
 import policeVehicle from "./assets/img/hci/police_vehicle.png";
+import incidentCommandPost from "./assets/img/napsg/incident_command_post.png";
+import triage from "./assets/img/napsg/triage.png";
+import casualtyCollectionPoint from "./assets/img/napsg/casualty_collection_point.png";
+import accessBlocked from "./assets/img/napsg/access_blocked.png";
+import fireStaging from "./assets/img/napsg/fire_staging.png";
+import emsStaging from "./assets/img/napsg/ems_staging.png";
+import media from "./assets/img/napsg/media.png";
+import fireHydrant from "./assets/img/napsg/fire_hydrant.png";
+import noWaterSupply from "./assets/img/napsg/fire_no_water_supply.png";
+import emergencyOperationsCenter from "./assets/img/napsg/emergency_operations_center.png";
+import jointOperationsCenter from "./assets/img/napsg/joint_operations_center.png";
+import usarTaskForce from "./assets/img/napsg/search_and_rescue_task_force.png";
+import evacTeam from "./assets/img/napsg/evacuation_coordination_team.png";
+import doNotEnter from "./assets/img/napsg/fire_do_not_enter.png";
+import hazardousEntry from "./assets/img/napsg/fire_hazardous_entry.png";
+import fireLadder from "./assets/img/napsg/fire_ladder.png";
 
 // need person unit (fire/ems/police)
 // need drones
@@ -19,6 +35,26 @@ export const UNIT_ORG_POLICE = "police";
 export const FIRE_RED = `rgba(215, 48, 39)`;
 export const EMS_GREEN = `rgba(127, 188, 65)`;
 export const POLICE_BLUE = `rgba(116, 173, 209)`;
+
+export const BILLBOARDS = [
+    { lng: -86.156652, lat: 39.781150, name: "Incident Command Post", symbol: incidentCommandPost },
+    { lng: -86.156185, lat: 39.781510, name: "Triage", symbol: triage },
+    { lng: -86.155900, lat: 39.781635, name: "Casualty Collection Point", symbol: casualtyCollectionPoint },
+    { lng: -86.157074, lat: 39.781336, name: "Fire Staging", symbol: fireStaging },
+    { lng: -86.156249, lat: 39.781334, name: "EMS Staging", symbol: emsStaging },
+    { lng: -86.157441, lat: 39.781357, name: "Hydrant", symbol: fireHydrant },
+    { lng: -86.157402, lat: 39.782125, name: "Hydrant", symbol: fireHydrant },
+    { lng: -86.157016, lat: 39.781600, name: "Access Blocked", symbol: accessBlocked },
+    { lng: -86.157358, lat: 39.781812, name: "Access Blocked", symbol: accessBlocked },
+    { lng: -86.157086, lat: 39.780803, name: "Media", symbol: media },
+    { lng: -86.156536, lat: 39.782215, name: "No Water Supply", symbol: noWaterSupply },
+    { lng: -86.157625, lat: 39.781609, name: "Emergency Operations Center", symbol: emergencyOperationsCenter },
+    { lng: -86.156554, lat: 39.781168, name: "Joint Operations Center", symbol: jointOperationsCenter },
+    { lng: -86.156691, lat: 39.782050, name: "Search and Rescue Task Force", symbol: usarTaskForce },
+    { lng: -86.156442, lat: 39.781821, name: "Evacuation Coordination Team", symbol: evacTeam },
+    { lng: -86.157211, lat: 39.781712, name: "Do Not Enter", symbol: doNotEnter },
+    { lng: -86.156781, lat: 39.781999, name: "Hazardous Entry", symbol: hazardousEntry },
+]
 
 export const UNITS_SINGLE_FIRE = [
     { lng: -86.156922, lat: 39.781387, brng: getRandomBearing(), name: "Fleming, K.", color: FIRE_RED, symbol: fireSingle },
