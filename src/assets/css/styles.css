@@ -79,20 +79,12 @@ body {
     left: 0;
     z-index: 10;
 }
-.cesium-viewer-toolbar {
-    top: 1rem;    
-    right: 23.5rem;
-}
-.cesium-viewer-fullscreenContainer {
-    bottom: auto;
-    right: auto;
-    left: 0;
-    top: 0;
-}
-.cesium-viewer-fullscreenContainer {
-    left: auto;
-    right: 20rem;
-    top: 1rem;
+.cesium-viewer-toolbar,
+.cesium-viewer-fullscreenContainer,
+.cesium-viewer-animationContainer,
+.cesium-viewer-timelineContainer,
+.cesium-viewer-bottom {
+    display: none;
 }
 .location,
 .view button,
