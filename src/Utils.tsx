@@ -26,6 +26,9 @@ import doNotEnter from "./assets/img/napsg/hazard-fire-do-not-enter.svg";
 import hazardousEntry from "./assets/img/napsg/hazard-fire-hazardous-entry.svg";
 import fireLadder from "./assets/img/napsg/fire-ladder.svg";
 import mobileComms from "./assets/img/napsg/mobile-comms.svg";
+import emsAir from "./assets/img/napsg/ems-air.svg";
+import helibase from "./assets/img/napsg/helibase.svg";
+import barrierSecurity from "./assets/img/napsg/barrier-security.svg";
 
 // need person unit (fire/ems/police)
 // need drones
@@ -44,10 +47,10 @@ export const POLICE_BLUE = `rgba(116, 173, 209)`;
 
 export const BILLBOARDS = [
     { lng: -86.156652, lat: 39.781150, name: "Incident Command Post", symbol: incidentCommandPost },
-    { lng: -86.156185, lat: 39.781510, name: "Triage", symbol: triage },
-    { lng: -86.155900, lat: 39.781635, name: "Casualty Collection Point", symbol: casualtyCollectionPoint },
-    { lng: -86.157074, lat: 39.781336, name: "Fire Staging", symbol: fireStaging },
-    { lng: -86.156249, lat: 39.781334, name: "EMS Staging", symbol: emsStaging },
+    // { lng: -86.156170, lat: 39.781567, name: "Triage", symbol: triage },
+    // { lng: -86.155958, lat: 39.781561, name: "Casualty Collection Point", symbol: casualtyCollectionPoint },
+    // { lng: -86.157074, lat: 39.781336, name: "Fire Staging", symbol: fireStaging },
+    // { lng: -86.156249, lat: 39.781334, name: "EMS Staging", symbol: emsStaging },
     { lng: -86.157441, lat: 39.781357, name: "Hydrant", symbol: fireHydrant },
     { lng: -86.157402, lat: 39.782125, name: "Hydrant", symbol: fireHydrant },
     { lng: -86.157016, lat: 39.781600, name: "Access Blocked", symbol: accessBlocked },
@@ -65,7 +68,8 @@ export const BILLBOARDS = [
     // { lng: -86.156380, lat: 39.781174, name: "Command Post", symbol: commandPost },
     { lng: -86.157076, lat: 39.780900, name: "Public Information", symbol: publicInformation },
     { lng: -86.156688, lat: 39.781097, name: "Mobile Communications", symbol: mobileComms },
-    { lng: -86.157137, lat: 39.781147, name: "Police Staging", symbol: policeStaging },
+    // { lng: -86.157137, lat: 39.781147, name: "Police Staging", symbol: policeStaging },
+    { lng: -86.155560, lat: 39.781637, alt: 30, name: "EMSAIR02", symbol: emsAir },
 ]
 
 export const UNITS_SINGLE_FIRE = [
@@ -122,14 +126,16 @@ export const UNITS_VEHICLE_POLICE = [
     { lng: -86.157268, lat: 39.781192, brng: getRandomBearing(), name: "PD99", color: POLICE_BLUE, symbol: policeVehicle },
 ]
 export const AREAS_RECTANGLE = [
-    [-86.157633, 39.782218, -86.157388, 39.782385, "Barricade - Northwest", "rgba(255, 255, 255)"],
-    [-86.157697, 39.781040, -86.157388, 39.781265, "Barricade - Southwest", "rgba(255, 255, 255)"],
-    [-86.155905, 39.782153, -86.155651, 39.782332, "Barricade - Northeast", "rgba(255, 255, 255)"],
-    [-86.155953, 39.780997, -86.155668, 39.781199, "Barricade - Southeast", "rgba(255, 255, 255)"],
-    [-86.157423, 39.781252, -86.156713, 39.781454, "Fire Staging", FIRE_RED],
-    [-86.156576, 39.781257, -86.155908, 39.781443, "EMS Staging", EMS_GREEN],
-    [-86.157326, 39.781080, -86.156953, 39.781220, "Police Staging", POLICE_BLUE],
-    [-86.156213, 39.781456, -86.155873, 39.781646, "Triage and Collection", "#FF00FF"]
+    [-86.157633, 39.782218, -86.157388, 39.782385, "Barricade - Northwest", "#FFF", barrierSecurity],
+    [-86.157697, 39.781040, -86.157388, 39.781265, "Barricade - Southwest", "#FFF", barrierSecurity],
+    [-86.155905, 39.782153, -86.155651, 39.782332, "Barricade - Northeast", "#FFF", barrierSecurity],
+    [-86.155953, 39.780997, -86.155668, 39.781199, "Barricade - Southeast", "#FFF", barrierSecurity],
+    [-86.157423, 39.781252, -86.156713, 39.781454, "Fire Staging", FIRE_RED, fireStaging],
+    [-86.156576, 39.781257, -86.155908, 39.781443, "EMS Staging", EMS_GREEN, emsStaging],
+    [-86.157326, 39.781080, -86.156953, 39.781220, "Police Staging", POLICE_BLUE, policeStaging],
+    [-86.156273, 39.781458, -86.156063, 39.781658, "Triage", "#FFFF00", triage],
+    [-86.156050, 39.781465, -86.155875, 39.781657, "Casuality Collection Point", "#FF00FF", casualtyCollectionPoint],
+    [-86.155795, 39.781539, -86.155523, 39.781715, "Medical Landing Zone", "#FFA500", helibase]
 ]
 
 export function getRandomBearing() {

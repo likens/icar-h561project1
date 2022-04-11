@@ -1,5 +1,5 @@
 import { RefObject, useEffect, useState } from 'react'
-import { Cartesian3, createWorldTerrain, Math as CesiumMath, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange, Billboard, GroundPrimitive, Ion, TimeIntervalCollection, TimeInterval, VelocityOrientationProperty, PolylineGlowMaterialProperty, SampledPositionProperty, ImageMaterialProperty } from "cesium";
+import { Cartesian3, createWorldTerrain, Math as CesiumMath, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange, Billboard, GroundPrimitive, Ion, TimeIntervalCollection, TimeInterval, VelocityOrientationProperty, PolylineGlowMaterialProperty, SampledPositionProperty, ImageMaterialProperty, LabelStyle } from "cesium";
 import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, AREAS_RECTANGLE, BILLBOARDS, vincentyDirection, getRandomBearing, FIRE_RED } from "./Utils";
 import fireCommercial from "./assets/img/napsg/hazard-fire-commercial.svg";
 
@@ -20,7 +20,8 @@ function startCesium() {
     
     viewer = new Viewer("cesiumContainer", {
         terrainProvider: terrainProvider,
-        shouldAnimate: true
+        shouldAnimate: true,
+        infoBox: false
     });
     
   
@@ -99,10 +100,10 @@ function startCesium() {
     addBasicPoint(-86.157073, 39.780962, 0, "TESTANIMATION");
 
     BILLBOARDS.forEach((billboard: any) => {
-        addBillboard(billboard.symbol, billboard.name, billboard.lng, billboard.lat);
+        addBillboard(billboard.symbol, billboard.name, billboard.lng, billboard.lat, billboard.alt);
     });
     AREAS_RECTANGLE.forEach((area: any) => {
-        addRectangle(area[0], area[1], area[2], area[3], area[4], area[5]);
+        addRectangle(area[0], area[1], area[2], area[3], area[4], area[5], area[6]);
     });
     UNITS_SINGLE_FIRE.forEach((unit: any) => {
         generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
@@ -149,7 +150,7 @@ function startCesium() {
                 locationMouse.position = cartesian ? cartesian : scene.globe.pick(viewer.camera.getPickRay(movement.endPosition), scene);
                 locationMouse.label.show = true;
                 locationMouse.label.text = pick.id.name;
-                locationMouse.label.font = "20px monospace";
+                locationMouse.label.font = "20px sans-serif";
             } else if (cartesian) {
                 const cartographic = Cartographic.fromCartesian(cartesian);
                 const longitudeString = CesiumMath.toDegrees(cartographic.longitude).toFixed(6);
@@ -158,7 +159,7 @@ function startCesium() {
                 locationMouse.position = cartesian;
                 locationMouse.label.show = true;
                 locationMouse.label.text = `Lon: ${longitudeString}\u00B0\nLat: ${latitudeString}\u00B0\nAlt: ${heightString}m`;
-                locationMouse.label.font = "12px monospace";
+                locationMouse.label.font = "12px sans-serif";
             } else {
                 locationMouse.label.show = false;
             }
@@ -218,7 +219,7 @@ function startCesium() {
             label: {
                 show: true,
                 text: "The Landmark Center",
-                font: "16px monospace",
+                font: "16px sans-serif",
                 fillColor: Color.WHITE,
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
                 heightReference: HeightReference.RELATIVE_TO_GROUND,
@@ -235,14 +236,16 @@ function startCesium() {
         for (let i = 0; i <= levels; i++) {
             const height = i * levelHeight;
             const extrudedHeight = height + levelHeight;
-            let color = Color.GREEN;
-            if (i === 5 || i === 9) {
-                color = Color.YELLOW;
-            } else if (i === 6 || i === 8) {
-                color = Color.ORANGE;
-            } else if (i === 7) {
-                color = Color.RED;
-            }
+            let color = Color.SILVER;
+            // if (i === 5 || i === 9) {
+            //     color = Color.YELLOW;
+            // } else if (i === 6 || i === 8) {
+            //     color = Color.ORANGE;
+            // } else if (i === 7) {
+            //     color = Color.RED;
+            // } else {
+            //     color = Color.GREEN;
+            // }
             if (i === 5) {
                 viewer.entities.add({
                     show: false,
@@ -255,7 +258,7 @@ function startCesium() {
                             holes: []
                         },
                         closeTop: false,
-                        material: Color.SILVER,
+                        material: color,
                         height: height,
                         heightReference: HeightReference.RELATIVE_TO_GROUND,
                         extrudedHeight: extrudedHeight,
@@ -369,16 +372,14 @@ function startCesium() {
             label: {
                 text: label,
                 show: pointerEnabled,
-                font: "12px monospace",
+                font: "13px sans-serif",
                 fillColor: Color.WHITE,
                 backgroundColor: Color.BLACK,
                 showBackground: true,
                 horizontalOrigin: HorizontalOrigin.CENTER,
                 verticalOrigin: VerticalOrigin.CENTER,
                 heightReference: HeightReference.RELATIVE_TO_GROUND,
-                eyeOffset: new Cartesian3(0, 2, -2),
-                outline: true,
-                outlineColor: Color.WHITE
+                eyeOffset: new Cartesian3(0, 2, -2)
             },
         }
 
@@ -402,7 +403,7 @@ function startCesium() {
             },
             label: {
                 text: label,
-                font: "11px monospace",
+                font: "11px sans-serif",
                 fillColor: Color.BLACK,
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
                 heightReference: HeightReference.CLAMP_TO_GROUND,
@@ -410,26 +411,26 @@ function startCesium() {
                 backgroundColor: Color.fromCssColorString(`rgba(255, 255, 255, .6)`),
                 horizontalOrigin: HorizontalOrigin.LEFT,
                 verticalOrigin: VerticalOrigin.BASELINE,
-                pixelOffset: unit ? new Cartesian2(-10, -100) : new Cartesian2(5, -95)
+                pixelOffset: unit ? new Cartesian2(5, -95) : new Cartesian2(-10, -100)
             },
         });
     }
 
-    function addBillboard(symbol: string, label: string, lng: number, lat: number) {
+    function addBillboard(symbol: string, label: string, lng: number, lat: number, alt = 0) {
         viewer.entities.add({
-            position: Cartesian3.fromDegrees(lng, lat, 0),
+            position: Cartesian3.fromDegrees(lng, lat, alt),
             name: label,
             billboard: {
                 image: symbol,
                 // disableDepthTestDistance: Number.POSITIVE_INFINITY,
                 heightReference: HeightReference.RELATIVE_TO_GROUND,
                 scale: .4,
-                eyeOffset: new Cartesian3(0, 2, -2)
+                eyeOffset: new Cartesian3(0, 1.5, 0),
             },
             label: {
                 text: label,
                 show: false,
-                font: "12px monospace",
+                font: "12px sans-serif",
                 fillColor: Color.WHITE,
                 // disableDepthTestDistance: Number.POSITIVE_INFINITY,
                 heightReference: HeightReference.RELATIVE_TO_GROUND,
@@ -442,18 +443,18 @@ function startCesium() {
         });
     }
 
-    function addRectangle(west: number, south: number, east: number, north: number, text: string, color: string) {
+    function addRectangle(west: number, south: number, east: number, north: number, text: string, color: string, symbol = "") {
         const rectangle = Rectangle.fromDegrees(west, south, east, north);
         const center = Rectangle.center(rectangle);
         const position = Cartographic.toCartesian(center);
 
         // "flat" symbology
-        // const longitude = CesiumMath.toDegrees(center.longitude);
-        // const latitude = CesiumMath.toDegrees(center.latitude);
-        // const topLeft = vincentyDirection(longitude, latitude, 315, 2);
-        // const botLeft = vincentyDirection(longitude, latitude, 225, 2);
-        // const botRight = vincentyDirection(longitude, latitude, 135, 2);
-        // const topRight = vincentyDirection(longitude, latitude, 45, 2);
+        const longitude = CesiumMath.toDegrees(center.longitude);
+        const latitude = CesiumMath.toDegrees(center.latitude);
+        const topLeft = vincentyDirection(longitude, latitude, 315, 5);
+        const botLeft = vincentyDirection(longitude, latitude, 225, 5);
+        const botRight = vincentyDirection(longitude, latitude, 135, 5);
+        const topRight = vincentyDirection(longitude, latitude, 45, 5);
 
         viewer.entities.add({
             name: text,
@@ -468,31 +469,28 @@ function startCesium() {
                 outlineColor: Color.fromCssColorString(color),
                 outlineWidth: 10
             },
-            // polygon: {
-            //     hierarchy: {
-            //         positions: Cartesian3.fromDegreesArray([
-            //             topLeft.lng,
-            //             topLeft.lat,
-            //             botLeft.lng,
-            //             botLeft.lat,
-            //             botRight.lng,
-            //             botRight.lat,
-            //             topRight.lng,
-            //             topRight.lat
-            //         ]),
-            //         holes: []
-            //     },
-            //     material: new ImageMaterialProperty({image: fireLadder}),
-            //     height: .5,
-            //     heightReference: HeightReference.RELATIVE_TO_GROUND,
-            //     outline: true,
-            //     outlineColor: Color.BLACK,
-            //     outlineWidth: 1
-            // }
+            polygon: {
+                hierarchy: {
+                    positions: Cartesian3.fromDegreesArray([
+                        topLeft.lng,
+                        topLeft.lat,
+                        botLeft.lng,
+                        botLeft.lat,
+                        botRight.lng,
+                        botRight.lat,
+                        topRight.lng,
+                        topRight.lat
+                    ]),
+                    holes: []
+                },
+                material: symbol ? new ImageMaterialProperty({image: symbol, transparent: true}) : Color.TRANSPARENT,
+                height: .5,
+                heightReference: HeightReference.RELATIVE_TO_GROUND
+            }
             // label: {
             //     show: false,
             //     text: text,
-            //     font: "14px monospace",
+            //     font: "14px sans-serif",
             //     fillColor: Color.WHITE,
             //     disableDepthTestDistance: Number.POSITIVE_INFINITY,
             //     heightReference: HeightReference.CLAMP_TO_GROUND,
@@ -518,7 +516,7 @@ function startCesium() {
 
         const basicLabel = {
             show: true,
-            font: "14px monospace",
+            font: "14px sans-serif",
             outlineColor: outlineColor,
             outlineWidth: 20,
             fillColor: outlineColor,
