@@ -202,7 +202,7 @@ body {
 .actions {
     position: absolute;
     right: 1rem;
-    bottom: 4rem;
+    top: 7rem;
     z-index: 200;
     display: grid;
     grid-gap: 1rem;
