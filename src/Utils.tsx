@@ -4,22 +4,28 @@ import emsSingle from "./assets/img/hci/ems_single.png";
 import emsVehicle from "./assets/img/hci/ems_vehicle.png";
 import policeSingle from "./assets/img/hci/police_single.png";
 import policeVehicle from "./assets/img/hci/police_vehicle.png";
-import incidentCommandPost from "./assets/img/napsg/incident_command_post.png";
-import triage from "./assets/img/napsg/triage.png";
-import casualtyCollectionPoint from "./assets/img/napsg/casualty_collection_point.png";
-import accessBlocked from "./assets/img/napsg/access_blocked.png";
-import fireStaging from "./assets/img/napsg/fire_staging.png";
-import emsStaging from "./assets/img/napsg/ems_staging.png";
-import media from "./assets/img/napsg/media.png";
-import fireHydrant from "./assets/img/napsg/fire_hydrant.png";
-import noWaterSupply from "./assets/img/napsg/fire_no_water_supply.png";
-import emergencyOperationsCenter from "./assets/img/napsg/emergency_operations_center.png";
-import jointOperationsCenter from "./assets/img/napsg/joint_operations_center.png";
-import usarTaskForce from "./assets/img/napsg/search_and_rescue_task_force.png";
-import evacTeam from "./assets/img/napsg/evacuation_coordination_team.png";
-import doNotEnter from "./assets/img/napsg/fire_do_not_enter.png";
-import hazardousEntry from "./assets/img/napsg/fire_hazardous_entry.png";
-import fireLadder from "./assets/img/napsg/fire_ladder.png";
+import triage from "./assets/img/napsg/triage.svg";
+import casualtyCollectionPoint from "./assets/img/napsg/ccp.svg";
+import accessBlocked from "./assets/img/napsg/hazard-access-blocked.svg";
+import fireStaging from "./assets/img/napsg/staging-fire.svg";
+import emsStaging from "./assets/img/napsg/staging-ems.svg";
+import policeStaging from "./assets/img/napsg/staging-police.svg";
+import media from "./assets/img/napsg/media.svg";
+import fireHydrant from "./assets/img/napsg/fire-hydrant.svg";
+import noWaterSupply from "./assets/img/napsg/hazard-fire-no-water-supply.svg";
+import emergencyOperationsCenter from "./assets/img/napsg/eoc.svg";
+import jointOperationsCenter from "./assets/img/napsg/joc.svg";
+import multiAgencyCoordinationCenter from "./assets/img/napsg/macc.svg";
+import incidentCommandPost from "./assets/img/napsg/icp.svg";
+import areaCommandPost from "./assets/img/napsg/acp.svg";
+import commandPost from "./assets/img/napsg/cp.svg";
+import publicInformation from "./assets/img/napsg/public-information.svg";
+import usarTaskForce from "./assets/img/napsg/usar-task-force.svg";
+import evacCoordTeam from "./assets/img/napsg/evac-coord-team.svg";
+import doNotEnter from "./assets/img/napsg/hazard-fire-do-not-enter.svg";
+import hazardousEntry from "./assets/img/napsg/hazard-fire-hazardous-entry.svg";
+import fireLadder from "./assets/img/napsg/fire-ladder.svg";
+import mobileComms from "./assets/img/napsg/mobile-comms.svg";
 
 // need person unit (fire/ems/police)
 // need drones
@@ -48,24 +54,30 @@ export const BILLBOARDS = [
     { lng: -86.157358, lat: 39.781812, name: "Access Blocked", symbol: accessBlocked },
     { lng: -86.157086, lat: 39.780803, name: "Media", symbol: media },
     { lng: -86.156536, lat: 39.782215, name: "No Water Supply", symbol: noWaterSupply },
-    { lng: -86.157625, lat: 39.781609, name: "Emergency Operations Center", symbol: emergencyOperationsCenter },
+    { lng: -86.156744, lat: 39.781161, name: "Emergency Operations Center", symbol: emergencyOperationsCenter },
     { lng: -86.156554, lat: 39.781168, name: "Joint Operations Center", symbol: jointOperationsCenter },
-    { lng: -86.156691, lat: 39.782050, name: "Search and Rescue Task Force", symbol: usarTaskForce },
-    { lng: -86.156442, lat: 39.781821, name: "Evacuation Coordination Team", symbol: evacTeam },
-    { lng: -86.157211, lat: 39.781712, name: "Do Not Enter", symbol: doNotEnter },
-    { lng: -86.156781, lat: 39.781999, name: "Hazardous Entry", symbol: hazardousEntry },
+    { lng: -86.156297, lat: 39.782018, name: "Search and Rescue Task Force", symbol: usarTaskForce },
+    { lng: -86.156327, lat: 39.781837, name: "Evacuation Coordination Team", symbol: evacCoordTeam },
+    { lng: -86.157211, lat: 39.781713, name: "Do Not Enter", symbol: doNotEnter },
+    { lng: -86.156779, lat: 39.782007, name: "Hazardous Entry", symbol: hazardousEntry },
+    { lng: -86.156457, lat: 39.781172, name: "Multi-Agency Coordination Center", symbol: multiAgencyCoordinationCenter },
+    { lng: -86.156305, lat: 39.781155, name: "Area Command Post", symbol: areaCommandPost },
+    { lng: -86.156380, lat: 39.781174, name: "Command Post", symbol: commandPost },
+    { lng: -86.157076, lat: 39.780900, name: "Public Information", symbol: publicInformation },
+    { lng: -86.156688, lat: 39.781097, name: "Mobile Communications", symbol: mobileComms },
+    { lng: -86.157137, lat: 39.781147, name: "Police Staging", symbol: policeStaging },
 ]
 
 export const UNITS_SINGLE_FIRE = [
-    { lng: -86.156922, lat: 39.781387, brng: getRandomBearing(), name: "Fleming, K.", color: FIRE_RED, symbol: fireSingle },
-    { lng: -86.156886, lat: 39.781286, brng: getRandomBearing(), name: "Ortega, J.", color: FIRE_RED, symbol: fireSingle },
-    { lng: -86.156826, lat: 39.781351, brng: getRandomBearing(), name: "Dunn, T.", color: FIRE_RED, symbol: fireSingle },
-    { lng: -86.157363, lat: 39.781997, brng: getRandomBearing(), name: "Chen, Y.", color: FIRE_RED, symbol: fireSingle },
-    { lng: -86.157396, lat: 39.781865, brng: getRandomBearing(), name: "Wood, R.", color: FIRE_RED, symbol: fireSingle },
-    { lng: -86.157358, lat: 39.781679, brng: getRandomBearing(), name: "Howell, C.", color: FIRE_RED, symbol: fireSingle },
-    { lng: -86.157241, lat: 39.781619, brng: getRandomBearing(), name: "Donovan, D.", color: FIRE_RED, symbol: fireSingle },
-    { lng: -86.156596, lat: 39.781710, brng: getRandomBearing(), name: "Partridge, M.", color: FIRE_RED, symbol: fireSingle },
-    { lng: -86.156731, lat: 39.781621, brng: getRandomBearing(), name: "Allison, K.", color: FIRE_RED, symbol: fireSingle }
+    { lng: -86.156922, lat: 39.781387, brng: getRandomBearing(), name: "Fleming", color: FIRE_RED, symbol: fireSingle },
+    { lng: -86.156886, lat: 39.781286, brng: getRandomBearing(), name: "Ortega", color: FIRE_RED, symbol: fireSingle },
+    { lng: -86.156826, lat: 39.781351, brng: getRandomBearing(), name: "Dunn", color: FIRE_RED, symbol: fireSingle },
+    { lng: -86.157363, lat: 39.781997, brng: getRandomBearing(), name: "Chen", color: FIRE_RED, symbol: fireSingle },
+    { lng: -86.157396, lat: 39.781865, brng: getRandomBearing(), name: "Wood", color: FIRE_RED, symbol: fireSingle },
+    { lng: -86.157358, lat: 39.781679, brng: getRandomBearing(), name: "Howell", color: FIRE_RED, symbol: fireSingle },
+    { lng: -86.157241, lat: 39.781619, brng: getRandomBearing(), name: "Donovan", color: FIRE_RED, symbol: fireSingle },
+    { lng: -86.156596, lat: 39.781710, brng: getRandomBearing(), name: "Partridge", color: FIRE_RED, symbol: fireSingle },
+    { lng: -86.156731, lat: 39.781621, brng: getRandomBearing(), name: "Allison", color: FIRE_RED, symbol: fireSingle }
 ]
 export const UNITS_VEHICLE_FIRE = [
     { lng: -86.157261, lat: 39.781358, brng: getRandomBearing(), name: "EG24", color: FIRE_RED, symbol: fireVehicle },
@@ -74,12 +86,12 @@ export const UNITS_VEHICLE_FIRE = [
     { lng: -86.157408, lat: 39.781927, brng: getRandomBearing(), name: "LD07", color: FIRE_RED, symbol: fireVehicle },
 ]
 export const UNITS_SINGLE_EMS = [
-    { lng: -86.156478, lat: 39.781398, brng: getRandomBearing(), name: "Keenan, P.", color: EMS_GREEN, symbol: emsSingle },
-    { lng: -86.156508, lat: 39.781335, brng: getRandomBearing(), name: "Quinn, W.", color: EMS_GREEN, symbol: emsSingle },
-    { lng: -86.156307, lat: 39.781426, brng: getRandomBearing(), name: "Findlay, A.", color: EMS_GREEN, symbol: emsSingle },
-    { lng: -86.156350, lat: 39.781364, brng: getRandomBearing(), name: "Gill, O.", color: EMS_GREEN, symbol: emsSingle },
-    { lng: -86.156089, lat: 39.781601, brng: getRandomBearing(), name: "Lynch, S.", color: EMS_GREEN, symbol: emsSingle },
-    { lng: -86.155946, lat: 39.781587, brng: getRandomBearing(), name: "Shepherd, P.", color: EMS_GREEN, symbol: emsSingle },
+    { lng: -86.156478, lat: 39.781398, brng: getRandomBearing(), name: "Keenan", color: EMS_GREEN, symbol: emsSingle },
+    { lng: -86.156508, lat: 39.781335, brng: getRandomBearing(), name: "Quinn", color: EMS_GREEN, symbol: emsSingle },
+    { lng: -86.156307, lat: 39.781426, brng: getRandomBearing(), name: "Findlay", color: EMS_GREEN, symbol: emsSingle },
+    { lng: -86.156350, lat: 39.781364, brng: getRandomBearing(), name: "Gill", color: EMS_GREEN, symbol: emsSingle },
+    { lng: -86.156089, lat: 39.781601, brng: getRandomBearing(), name: "Lynch", color: EMS_GREEN, symbol: emsSingle },
+    { lng: -86.155946, lat: 39.781587, brng: getRandomBearing(), name: "Shepherd", color: EMS_GREEN, symbol: emsSingle },
 ]
 export const UNITS_VEHICLE_EMS = [
     { lng: -86.156092, lat: 39.781399, brng: getRandomBearing(), name: "EMS33", color: EMS_GREEN, symbol: emsVehicle },
@@ -87,15 +99,17 @@ export const UNITS_VEHICLE_EMS = [
     { lng: -86.155980, lat: 39.781499, brng: getRandomBearing(), name: "EMS36", color: EMS_GREEN, symbol: emsVehicle }
 ]
 export const UNITS_SINGLE_POLICE = [
-    { lng: -86.157523, lat: 39.782254, brng: getRandomBearing(), name: "Metcalfe, T.", color: POLICE_BLUE, symbol: policeSingle },
-    { lng: -86.157456, lat: 39.782287, brng: getRandomBearing(), name: "Holman, E.", color: POLICE_BLUE, symbol: policeSingle },
-    { lng: -86.157493, lat: 39.782332, brng: getRandomBearing(), name: "Hills, N.", color: POLICE_BLUE, symbol: policeSingle },
-    { lng: -86.157586, lat: 39.781204, brng: getRandomBearing(), name: "Bates, C.", color: POLICE_BLUE, symbol: policeSingle },
-    { lng: -86.157519, lat: 39.781100, brng: getRandomBearing(), name: "Monaghan, K.", color: POLICE_BLUE, symbol: policeSingle },
-    { lng: -86.155868, lat: 39.782285, brng: getRandomBearing(), name: "Lawson, A.", color: POLICE_BLUE, symbol: policeSingle },
-    { lng: -86.155699, lat: 39.782189, brng: getRandomBearing(), name: "Fountain, E.", color: POLICE_BLUE, symbol: policeSingle },
-    { lng: -86.155827, lat: 39.781086, brng: getRandomBearing(), name: "McKee, R.", color: POLICE_BLUE, symbol: policeSingle },
-    { lng: -86.155730, lat: 39.781135, brng: getRandomBearing(), name: "Dunne, X.", color: POLICE_BLUE, symbol: policeSingle },
+    { lng: -86.157523, lat: 39.782254, brng: getRandomBearing(), name: "Metcalfe", color: POLICE_BLUE, symbol: policeSingle },
+    { lng: -86.157456, lat: 39.782287, brng: getRandomBearing(), name: "Holman", color: POLICE_BLUE, symbol: policeSingle },
+    { lng: -86.157493, lat: 39.782332, brng: getRandomBearing(), name: "Hills", color: POLICE_BLUE, symbol: policeSingle },
+    { lng: -86.157586, lat: 39.781204, brng: getRandomBearing(), name: "Bates", color: POLICE_BLUE, symbol: policeSingle },
+    { lng: -86.157519, lat: 39.781100, brng: getRandomBearing(), name: "Monaghan", color: POLICE_BLUE, symbol: policeSingle },
+    { lng: -86.155868, lat: 39.782285, brng: getRandomBearing(), name: "Lawson", color: POLICE_BLUE, symbol: policeSingle },
+    { lng: -86.155699, lat: 39.782189, brng: getRandomBearing(), name: "Fountain", color: POLICE_BLUE, symbol: policeSingle },
+    { lng: -86.155827, lat: 39.781086, brng: getRandomBearing(), name: "McKee", color: POLICE_BLUE, symbol: policeSingle },
+    { lng: -86.155730, lat: 39.781135, brng: getRandomBearing(), name: "Dunne", color: POLICE_BLUE, symbol: policeSingle },
+    { lng: -86.157272, lat: 39.781132, brng: getRandomBearing(), name: "Smith", color: POLICE_BLUE, symbol: policeSingle },
+    { lng: -86.157205, lat: 39.781095, brng: getRandomBearing(), name: "Jones", color: POLICE_BLUE, symbol: policeSingle },
 ]
 export const UNITS_VEHICLE_POLICE = [
     { lng: -86.157446, lat: 39.783739, brng: getRandomBearing(), name: "PD12", color: POLICE_BLUE, symbol: policeVehicle },
@@ -104,14 +118,17 @@ export const UNITS_VEHICLE_POLICE = [
     { lng: -86.155725, lat: 39.782260, brng: getRandomBearing(), name: "PD101", color: POLICE_BLUE, symbol: policeVehicle },
     { lng: -86.155786, lat: 39.781032, brng: getRandomBearing(), name: "PD23", color: POLICE_BLUE, symbol: policeVehicle },
     { lng: -86.155669, lat: 39.781080, brng: getRandomBearing(), name: "PD55", color: POLICE_BLUE, symbol: policeVehicle },
+    { lng: -86.157101, lat: 39.781096, brng: getRandomBearing(), name: "PD04", color: POLICE_BLUE, symbol: policeVehicle },
+    { lng: -86.157268, lat: 39.781192, brng: getRandomBearing(), name: "PD99", color: POLICE_BLUE, symbol: policeVehicle },
 ]
 export const AREAS_RECTANGLE = [
+    [-86.157633, 39.782218, -86.157388, 39.782385, "Barricade - Northwest", "rgba(255, 255, 255)"],
+    [-86.157697, 39.781040, -86.157388, 39.781265, "Barricade - Southwest", "rgba(255, 255, 255)"],
+    [-86.155905, 39.782153, -86.155651, 39.782332, "Barricade - Northeast", "rgba(255, 255, 255)"],
+    [-86.155953, 39.780997, -86.155668, 39.781199, "Barricade - Southeast", "rgba(255, 255, 255)"],
     [-86.157423, 39.781252, -86.156713, 39.781454, "Fire Staging", FIRE_RED],
-    [-86.157633, 39.782218, -86.157388, 39.782385, "Barricade - Northwest", POLICE_BLUE],
-    [-86.157697, 39.781040, -86.157388, 39.781265, "Barricade - Southwest", POLICE_BLUE],
-    [-86.155905, 39.782153, -86.155651, 39.782332, "Barricade - Northeast", POLICE_BLUE],
-    [-86.155953, 39.780997, -86.155668, 39.781199, "Barricade - Southeast", POLICE_BLUE],
     [-86.156576, 39.781257, -86.155908, 39.781443, "EMS Staging", EMS_GREEN],
+    [-86.157326, 39.781080, -86.156953, 39.781220, "Police Staging", POLICE_BLUE],
     [-86.156213, 39.781456, -86.155873, 39.781646, "Triage and Collection", "#FF00FF"]
 ]
 

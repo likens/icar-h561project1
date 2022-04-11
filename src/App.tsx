@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useState } from 'react'
-import { Cartesian3, createWorldTerrain, Math as CesiumMath, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange, Billboard, GroundPrimitive, Ion, TimeIntervalCollection, TimeInterval, VelocityOrientationProperty, PolylineGlowMaterialProperty, SampledPositionProperty } from "cesium";
-import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, AREAS_RECTANGLE, BILLBOARDS, vincentyDirection } from "./Utils";
-import fireCommercial from "./assets/img/napsg/fire_commercial.png";
+import { Cartesian3, createWorldTerrain, Math as CesiumMath, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange, Billboard, GroundPrimitive, Ion, TimeIntervalCollection, TimeInterval, VelocityOrientationProperty, PolylineGlowMaterialProperty, SampledPositionProperty, ImageMaterialProperty } from "cesium";
+import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, AREAS_RECTANGLE, BILLBOARDS, vincentyDirection, getRandomBearing, FIRE_RED } from "./Utils";
+import fireCommercial from "./assets/img/napsg/hazard-fire-commercial.svg";
 
 Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwZWI3MDRlMi1hMGMyLTQzYjUtYTYxMy0zOGNlYjViOTdjMGIiLCJpZCI6ODM5MjksImlhdCI6MTY0OTExOTQ3MX0.j_tC4ZO5-0FDV4_n-edMAlcQK5EyuV9WyRhfv_4yjEU";
 
@@ -16,7 +16,7 @@ function startCesium() {
     // https://sandcastle.cesium.com/?src=Interpolation.html
 
     const terrainProvider = createWorldTerrain();
-    const osmBuildings = createOsmBuildings();
+    // const osmBuildings = createOsmBuildings();
     
     viewer = new Viewer("cesiumContainer", {
         terrainProvider: terrainProvider,
@@ -42,8 +42,8 @@ function startCesium() {
     );
 
     const scene = viewer.scene;
-    scene.primitives.add(osmBuildings);
-    scene.globe.depthTestAgainstTerrain = true;
+    // scene.primitives.add(osmBuildings);
+    // scene.globe.depthTestAgainstTerrain = true;
 
     scene.camera.flyTo({
         destination: Cartesian3.fromDegrees(-86.156549, 39.781745, 300),
@@ -76,22 +76,22 @@ function startCesium() {
     //     }
     // });
 
-    osmBuildings.style = new Cesium3DTileStyle({
-        color: {
-            conditions: [
-                // ["${feature['building']} === 'apartments' || ${feature['building']} === 'residential'", "color('cyan', 1)",],
-                // ["${feature['building']} === 'civic'","color('blue', 1)",],
-                // ["${feature['building']} === 'office'","color('yellow', 1)",],
-                // ["${feature['building']} === 'commercial' || ${feature['building']} === 'retail'","color('green', 1)",],
-                // ["${feature['building']} === 'hospital'","color('red', 1)",],
-                // ["${feature['building']} === 'construction'","color('orange', 1)",],
-                // ["${feature['building']} === 'school'","color('purple', 1)",],
-                // ["${feature['building']} === 'parking'","color('pink', 1)",],
-                ["${feature['name']} === 'The Landmark Center'", "color('white', 0)"],
-                [true, "color('white', 1)"],
-            ],
-        }
-    });
+    // osmBuildings.style = new Cesium3DTileStyle({
+    //     color: {
+    //         conditions: [
+    //             // ["${feature['building']} === 'apartments' || ${feature['building']} === 'residential'", "color('cyan', 1)",],
+    //             // ["${feature['building']} === 'civic'","color('blue', 1)",],
+    //             // ["${feature['building']} === 'office'","color('yellow', 1)",],
+    //             // ["${feature['building']} === 'commercial' || ${feature['building']} === 'retail'","color('green', 1)",],
+    //             // ["${feature['building']} === 'hospital'","color('red', 1)",],
+    //             // ["${feature['building']} === 'construction'","color('orange', 1)",],
+    //             // ["${feature['building']} === 'school'","color('purple', 1)",],
+    //             // ["${feature['building']} === 'parking'","color('pink', 1)",],
+    //             ["${feature['name']} === 'The Landmark Center'", "color('white', 0)"],
+    //             [true, "color('white', 1)"],
+    //         ],
+    //     }
+    // });
 
     addTooltip();
     addLandmarkCenter();
@@ -105,22 +105,22 @@ function startCesium() {
         addRectangle(area[0], area[1], area[2], area[3], area[4], area[5]);
     });
     UNITS_SINGLE_FIRE.forEach((unit: any) => {
-        generateUnitPointer(unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
+        generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
     });
     UNITS_VEHICLE_FIRE.forEach((unit: any) => {
-        generateVehiclePointer(unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
+        generatePointer(false, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
     });
     UNITS_SINGLE_POLICE.forEach((unit: any) => {
-        generateUnitPointer(unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
+        generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
     });
     UNITS_VEHICLE_POLICE.forEach((unit: any) => {
-        generateVehiclePointer(unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
+        generatePointer(false, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
     });
     UNITS_SINGLE_EMS.forEach((unit: any) => {
-        generateUnitPointer(unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
+        generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
     });
     UNITS_VEHICLE_EMS.forEach((unit: any) => {
-        generateVehiclePointer(unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
+        generatePointer(false, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
     });
     
     function addTooltip() {
@@ -201,7 +201,8 @@ function startCesium() {
                 image: fireCommercial,
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
                 heightReference: HeightReference.RELATIVE_TO_GROUND,
-                pixelOffset: new Cartesian2(0, -80)
+                pixelOffset: new Cartesian2(0, -80),
+                scale: .5
             },
             ellipse: {
                 semiMinorAxis: 35,
@@ -242,26 +243,34 @@ function startCesium() {
             } else if (i === 7) {
                 color = Color.RED;
             }
-            viewer.entities.add({
-                show: false,
-                id: `landmark_floor_${i}`,
-                name: `Floor ${i}`,
-                position: landmarkPosition,
-                polygon: {
-                    hierarchy: {
-                        positions: landmarkCenterPolygon,
-                        holes: []
-                    },
-                    material: color.withAlpha(1),
-                    height: height,
-                    heightReference: HeightReference.RELATIVE_TO_GROUND,
-                    extrudedHeight: extrudedHeight,
-                    extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
-                    outline: true,
-                    outlineColor: Color.BLACK,
-                    outlineWidth: 1
-                }
-            });
+            if (i === 5) {
+                viewer.entities.add({
+                    show: false,
+                    id: `landmark_floor_${i}`,
+                    name: `Floor ${i}`,
+                    position: landmarkPosition,
+                    polygon: {
+                        hierarchy: {
+                            positions: landmarkCenterPolygon,
+                            holes: []
+                        },
+                        closeTop: false,
+                        material: Color.SILVER,
+                        height: height,
+                        heightReference: HeightReference.RELATIVE_TO_GROUND,
+                        extrudedHeight: extrudedHeight,
+                        extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
+                        outline: true,
+                        outlineColor: Color.BLACK,
+                        outlineWidth: 1
+                    }
+                });
+                generatePointer(true, "ff1", "", -86.157127, 39.781875, getRandomBearing(), FIRE_RED, height + .5)
+                generatePointer(true, "ff2", "", -86.156945, 39.781868, getRandomBearing(), FIRE_RED, height + .5)
+                generatePointer(true, "ff3", "", -86.156918, 39.781750, getRandomBearing(), FIRE_RED, height + .5)
+                generatePointer(true, "ff4", "", -86.156911, 39.781978, getRandomBearing(), FIRE_RED, height + .5)
+
+            }
         }
 
         viewer.entities.add({
@@ -301,21 +310,32 @@ function startCesium() {
         });
     }
 
-    function generateVehiclePointer(label: string, symbol: string, lng: number, lat: number, brng: number, color: string = "#ffffff", scale = 4) {
+    function generatePointer(unit: boolean, label: string, symbol: string, lng: number, lat: number, brng: number, color: string = "#ffffff", height?: number) {
 
+        const scale = unit ? 1 : 4;
         const east = 90;
         const south = 180;
         const west = 270;
+        const position = Cartesian3.fromDegrees(lng, lat, height ? height : 0);
 
-        const centerTop = vincentyDirection(lng, lat, brng, scale * .5);
-        const centerBot = vincentyDirection(lng, lat, south + brng, scale * .5);
-        const centerPoint = vincentyDirection(lng, lat, brng, scale);
+        const centerPoint = unit ? vincentyDirection(lng, lat, brng, scale) : vincentyDirection(lng, lat, brng, scale - 1);
+        const centerTop = unit ? vincentyDirection(lng, lat, brng, scale * -.75) : vincentyDirection(lng, lat, brng, scale * .5);
+        const centerBot = unit ? vincentyDirection(lng, lat, south + brng, scale) : vincentyDirection(lng, lat, south + brng, scale * .5);
         const cornerTopLeft = vincentyDirection(centerTop.lng, centerTop.lat, west + brng, scale * .25);
         const cornerTopRight = vincentyDirection(centerTop.lng, centerTop.lat, east + brng, scale * .25);
-        const cornerBotLeft = vincentyDirection(centerBot.lng, centerBot.lat, west + brng, scale * .25);
-        const cornerBotRight = vincentyDirection(centerBot.lng, centerBot.lat, east + brng, scale * .25);
-        
-        const polygonPoints = Cartesian3.fromDegreesArray([
+        const cornerBotLeft = unit ? vincentyDirection(centerBot.lng, centerBot.lat, west + brng, scale * .75) : vincentyDirection(centerBot.lng, centerBot.lat, west + brng, scale * .25);
+        const cornerBotRight = unit ? vincentyDirection(centerBot.lng, centerBot.lat, east + brng, scale * .75) : vincentyDirection(centerBot.lng, centerBot.lat, east + brng, scale * .25);
+
+        const polygonPoints = unit ? Cartesian3.fromDegreesArray([
+            centerTop.lng,
+            centerTop.lat,
+            cornerBotRight.lng,
+            cornerBotRight.lat,
+            centerPoint.lng,
+            centerPoint.lat,
+            cornerBotLeft.lng,
+            cornerBotLeft.lat
+        ]) : Cartesian3.fromDegreesArray([
             cornerTopLeft.lng,
             cornerTopLeft.lat,
             cornerBotLeft.lng,
@@ -328,96 +348,8 @@ function startCesium() {
             centerPoint.lat
         ]);
 
-        viewer.entities.add({
-            id: `pointer_vehicle_${label}`,
-            name: label,
-            position: Cartesian3.fromDegrees(lng, lat, 0),
-            show: pointerEnabled,
-            polygon: {
-                hierarchy: {
-                    positions: polygonPoints,
-                    holes: []
-                },
-                material: Color.fromCssColorString(color),
-                height: .5,
-                heightReference: HeightReference.RELATIVE_TO_GROUND,
-                extrudedHeight: 1,
-                extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
-                outline: true,
-                outlineColor: Color.BLACK,
-                outlineWidth: 1
-            },
-            // label: {
-            //     text: label,
-            //     show: pointerEnabled,
-            //     font: "12px monospace",
-            //     fillColor: Color.BLACK,
-            //     backgroundColor: Color.fromCssColorString(color),
-            //     showBackground: true,
-            //     horizontalOrigin: HorizontalOrigin.CENTER,
-            //     verticalOrigin: VerticalOrigin.CENTER,
-            //     disableDepthTestDistance: Number.POSITIVE_INFINITY,
-            //     heightReference: HeightReference.RELATIVE_TO_GROUND,
-            //     eyeOffset: new Cartesian3(0, 1, 0),
-            //     outlineColor: Color.BLACK,
-            //     outlineWidth: 1
-            // },
-        });
-
-        viewer.entities.add({
-            id: `billboard_vehicle_${label}`,
-            name: label,
-            position: Cartesian3.fromDegrees(lng, lat, 0),
-            show: !pointerEnabled,
-            billboard: {
-                image: symbol,
-                disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
-                pixelOffset: new Cartesian2(0, -60)
-            },
-            label: {
-                text: label,
-                font: "11px monospace",
-                fillColor: Color.BLACK,
-                disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
-                showBackground: true,
-                backgroundColor: Color.fromCssColorString(`rgba(255, 255, 255, .6)`),
-                horizontalOrigin: HorizontalOrigin.LEFT,
-                verticalOrigin: VerticalOrigin.BASELINE,
-                pixelOffset: new Cartesian2(-10, -100)
-            },
-        });
-
-    };
-
-    function generateUnitPointer(label: string, symbol: string, lng: number, lat: number, brng: number, color: string = "#ffffff", scale = 1.5) {
-
-        const east = 90;
-        const south = 180;
-        const west = 270;
-
-        const centerTop = vincentyDirection(lng, lat, brng, scale * -.75);
-        const centerBot = vincentyDirection(lng, lat, south + brng, scale);
-        const centerPoint = vincentyDirection(lng, lat, brng, scale);
-        const cornerBotLeft = vincentyDirection(centerBot.lng, centerBot.lat, west + brng, scale * .75);
-        const cornerBotRight = vincentyDirection(centerBot.lng, centerBot.lat, east + brng, scale * .75);
-        
-        const polygonPoints = Cartesian3.fromDegreesArray([
-            centerTop.lng,
-            centerTop.lat,
-            cornerBotRight.lng,
-            cornerBotRight.lat,
-            centerPoint.lng,
-            centerPoint.lat,
-            cornerBotLeft.lng,
-            cornerBotLeft.lat
-        ]);
-
-        const position = Cartesian3.fromDegrees(lng, lat, 0);
-
-        viewer.entities.add({
-            id: `pointer_unit_${label}`,
+        let entity = {
+            id: `pointer_${unit ? `unit` : `vehicle`}_${label}`,
             name: label,
             position: position,
             show: pointerEnabled,
@@ -427,34 +359,40 @@ function startCesium() {
                     holes: []
                 },
                 material: Color.fromCssColorString(color),
-                height: .5,
+                height: height ? height : .5,
                 heightReference: HeightReference.RELATIVE_TO_GROUND,
-                extrudedHeight: 1,
+                extrudedHeight: height ? height + .5 : 1,
                 extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
                 outline: true,
-                outlineColor: Color.BLACK,
-                outlineWidth: 1
-            }
-            // label: {
-            //     text: label,
-            //     font: "12px monospace",
-            //     fillColor: Color.BLACK,
-            //     backgroundColor: Color.fromCssColorString(color),
-            //     showBackground: true,
-            //     horizontalOrigin: HorizontalOrigin.CENTER,
-            //     verticalOrigin: VerticalOrigin.CENTER,
-            //     disableDepthTestDistance: Number.POSITIVE_INFINITY,
-            //     heightReference: HeightReference.RELATIVE_TO_GROUND,
-            //     eyeOffset: new Cartesian3(0, 1, 0),
-            //     outlineColor: Color.BLACK,
-            //     outlineWidth: 1
-            // }
-        });
+                outlineColor: Color.BLACK
+            },
+            label: {
+                text: label,
+                show: pointerEnabled,
+                font: "12px monospace",
+                fillColor: Color.WHITE,
+                backgroundColor: Color.BLACK,
+                showBackground: true,
+                horizontalOrigin: HorizontalOrigin.CENTER,
+                verticalOrigin: VerticalOrigin.CENTER,
+                heightReference: HeightReference.RELATIVE_TO_GROUND,
+                eyeOffset: new Cartesian3(0, 2, -2),
+                outline: true,
+                outlineColor: Color.WHITE
+            },
+        }
 
+        viewer.entities.add(entity);
+
+        if (!unit) {
+            
+        }
+
+        // 2D Billboards
         viewer.entities.add({
-            id: `billboard_unit_${label}`,
+            id: `billboard_${unit ? `unit` : `vehicle`}_${label}`,
             name: label,
-            position: Cartesian3.fromDegrees(lng, lat, 0),
+            position: position,
             show: !pointerEnabled,
             billboard: {
                 image: symbol,
@@ -472,11 +410,10 @@ function startCesium() {
                 backgroundColor: Color.fromCssColorString(`rgba(255, 255, 255, .6)`),
                 horizontalOrigin: HorizontalOrigin.LEFT,
                 verticalOrigin: VerticalOrigin.BASELINE,
-                pixelOffset: new Cartesian2(5, -95)
+                pixelOffset: unit ? new Cartesian2(-10, -100) : new Cartesian2(5, -95)
             },
-        })
-
-    };
+        });
+    }
 
     function addBillboard(symbol: string, label: string, lng: number, lat: number) {
         viewer.entities.add({
@@ -484,17 +421,18 @@ function startCesium() {
             name: label,
             billboard: {
                 image: symbol,
-                disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
-                scale: .5
+                // disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                heightReference: HeightReference.RELATIVE_TO_GROUND,
+                scale: .4,
+                eyeOffset: new Cartesian3(0, 2, -2)
             },
             label: {
                 text: label,
                 show: false,
                 font: "12px monospace",
                 fillColor: Color.WHITE,
-                disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
+                // disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                heightReference: HeightReference.RELATIVE_TO_GROUND,
                 showBackground: true,
                 backgroundColor: Color.BLACK,
                 horizontalOrigin: HorizontalOrigin.CENTER,
@@ -508,7 +446,15 @@ function startCesium() {
         const rectangle = Rectangle.fromDegrees(west, south, east, north);
         const center = Rectangle.center(rectangle);
         const position = Cartographic.toCartesian(center);
-        // const colorAlpha: Color = color.withAlpha(.5);
+
+        // "flat" symbology
+        // const longitude = CesiumMath.toDegrees(center.longitude);
+        // const latitude = CesiumMath.toDegrees(center.latitude);
+        // const topLeft = vincentyDirection(longitude, latitude, 315, 2);
+        // const botLeft = vincentyDirection(longitude, latitude, 225, 2);
+        // const botRight = vincentyDirection(longitude, latitude, 135, 2);
+        // const topRight = vincentyDirection(longitude, latitude, 45, 2);
+
         viewer.entities.add({
             name: text,
             position: position,
@@ -522,19 +468,41 @@ function startCesium() {
                 outlineColor: Color.fromCssColorString(color),
                 outlineWidth: 10
             },
-            label: {
-                show: false,
-                text: text,
-                font: "14px monospace",
-                fillColor: Color.WHITE,
-                disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
-                showBackground: true,
-                backgroundColor: Color.BLACK.withAlpha(0.5),
-                horizontalOrigin: HorizontalOrigin.CENTER,
-                verticalOrigin: VerticalOrigin.BASELINE
-            }
+            // polygon: {
+            //     hierarchy: {
+            //         positions: Cartesian3.fromDegreesArray([
+            //             topLeft.lng,
+            //             topLeft.lat,
+            //             botLeft.lng,
+            //             botLeft.lat,
+            //             botRight.lng,
+            //             botRight.lat,
+            //             topRight.lng,
+            //             topRight.lat
+            //         ]),
+            //         holes: []
+            //     },
+            //     material: new ImageMaterialProperty({image: fireLadder}),
+            //     height: .5,
+            //     heightReference: HeightReference.RELATIVE_TO_GROUND,
+            //     outline: true,
+            //     outlineColor: Color.BLACK,
+            //     outlineWidth: 1
+            // }
+            // label: {
+            //     show: false,
+            //     text: text,
+            //     font: "14px monospace",
+            //     fillColor: Color.WHITE,
+            //     disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            //     heightReference: HeightReference.CLAMP_TO_GROUND,
+            //     showBackground: true,
+            //     backgroundColor: Color.BLACK.withAlpha(0.5),
+            //     horizontalOrigin: HorizontalOrigin.CENTER,
+            //     verticalOrigin: VerticalOrigin.BASELINE
+            // }
         });
+
     }
 
     function addBasicPoint(lng: number, lat: number, alt: number = 0, text: string, color = Color.WHITE, outlineColor = Color.BLACK) {
@@ -670,7 +638,7 @@ function showPointers(threeD: boolean) {
 function showBuildingView(floors: boolean) {
     viewer.entities.values.forEach((entity: Entity) => {
         const id = entity.id;
-        if (id.startsWith("landmark_floor")) {
+        if (id.startsWith("landmark_floor") || id.startsWith("landmark_outline")) {
             entity.show = floors;
         } else if (id.startsWith("landmark_center")) {
             entity.show = !floors;
