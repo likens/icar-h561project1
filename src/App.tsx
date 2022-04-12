@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useState } from 'react'
-import { Cartesian3, createWorldTerrain, Math as CesiumMath, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange, Billboard, GroundPrimitive, Ion, TimeIntervalCollection, TimeInterval, VelocityOrientationProperty, PolylineGlowMaterialProperty, SampledPositionProperty, ImageMaterialProperty, LabelStyle } from "cesium";
-import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, AREAS_RECTANGLE, BILLBOARDS, vincentyDirection, getRandomBearing, FIRE_RED } from "./Utils";
+import { Cartesian3, createWorldTerrain, Math as CesiumMath, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange, Billboard, GroundPrimitive, Ion, TimeIntervalCollection, TimeInterval, VelocityOrientationProperty, PolylineGlowMaterialProperty, SampledPositionProperty, ImageMaterialProperty, LabelStyle, Polyline } from "cesium";
+import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, AREAS_RECTANGLE, BILLBOARDS, vincentyDirection, getRandomBearing, FIRE_RED, basicLabel, basicPoint, TEST_ANIMATION_POSITIONS, FIRE_DRONE } from "./Utils";
 import fireCommercial from "./assets/img/napsg/hazard-fire-commercial.svg";
 
 Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwZWI3MDRlMi1hMGMyLTQzYjUtYTYxMy0zOGNlYjViOTdjMGIiLCJpZCI6ODM5MjksImlhdCI6MTY0OTExOTQ3MX0.j_tC4ZO5-0FDV4_n-edMAlcQK5EyuV9WyRhfv_4yjEU";
@@ -34,7 +34,7 @@ function startCesium() {
     viewer.clock.stopTime = stop.clone();
     viewer.clock.currentTime = start.clone();
     viewer.clock.clockRange = ClockRange.LOOP_STOP; //Loop at the end
-    viewer.clock.multiplier = 10;
+    viewer.clock.multiplier = 5;
 
     viewer.timeline.zoomTo(start, stop);
 
@@ -96,8 +96,10 @@ function startCesium() {
 
     addTooltip();
     addLandmarkCenter();
+    addDrone();
 
-    addBasicPoint(-86.157073, 39.780962, 0, "TESTANIMATION");
+    addBasicPoint(-86.157074, 39.780615, 0, "TESTSTATIC");
+    addAnimatedPoint(TEST_ANIMATION_POSITIONS, "TESTANIMATION");
 
     BILLBOARDS.forEach((billboard: any) => {
         addBillboard(billboard.symbol, billboard.name, billboard.lng, billboard.lat, billboard.alt);
@@ -175,6 +177,10 @@ function startCesium() {
                 console.log(`${longitudeString}, ${latitudeString}`);
             }
         }, ScreenSpaceEventType.LEFT_CLICK);
+    }
+
+    function addDrone() {
+        addAnimatedPoint(FIRE_DRONE, "i am drone beep boop", false);
     }
 
     function addLandmarkCenter() {
@@ -371,7 +377,8 @@ function startCesium() {
             },
             label: {
                 text: label,
-                show: pointerEnabled,
+                // show: pointerEnabled,
+                show: false,
                 font: "13px sans-serif",
                 fillColor: Color.WHITE,
                 backgroundColor: Color.BLACK,
@@ -504,82 +511,62 @@ function startCesium() {
     }
 
     function addBasicPoint(lng: number, lat: number, alt: number = 0, text: string, color = Color.WHITE, outlineColor = Color.BLACK) {
-
-        const basicPoint = {
-            pixelSize: 10,
-            color: color,
-            outlineColor: outlineColor,
-            outlineWidth: 1,
-            disableDepthTestDistance: Number.POSITIVE_INFINITY,
-            heightReference : HeightReference.CLAMP_TO_GROUND
-        };
-
-        const basicLabel = {
-            show: true,
-            font: "14px sans-serif",
-            outlineColor: outlineColor,
-            outlineWidth: 20,
-            fillColor: outlineColor,
-            disableDepthTestDistance: Number.POSITIVE_INFINITY,
-            heightReference : HeightReference.RELATIVE_TO_GROUND,
-            showBackground: true,
-            backgroundColor: color,
-            horizontalOrigin: HorizontalOrigin.CENTER,
-            verticalOrigin: VerticalOrigin.BASELINE,
-            pixelOffset: new Cartesian2(7, -30)
-        }
         
+        viewer.entities.add({
+            position: Cartesian3.fromDegrees(lng, lat, alt),
+            point: {
+                ...basicPoint,
+                color: color,
+                outlineColor: outlineColor,
+            },
+            label: {
+                ...basicLabel,
+                backgroundColor: color,
+                fillColor: outlineColor,
+                text: text
+            }
+        });
+    }
+
+    function addAnimatedPoint(positions: any[], text: string, line = true, color = Color.WHITE, outlineColor = Color.BLACK) {
+
         const property = new SampledPositionProperty();
 
-        const positions = [
-            { lng: lng, lat: lat },
-            { lng: -86.157298, lat: 39.780967 },
-            { lng: -86.157304, lat: 39.780772 },
-            { lng: -86.157312, lat: 39.780560 },
-            { lng: -86.157075, lat: 39.780552 },
-            { lng: -86.156834, lat: 39.780560 },
-            { lng: -86.156829, lat: 39.780756 },
-            { lng: -86.156826, lat: 39.780961 },
-            { lng: lng, lat: lat }
-        ]
-
-        let polygonPoints = undefined;
-
-        positions.forEach((pos, i) => {
+        // add first position as last for looping
+        positions.push(positions[0]);
+        positions.forEach((pos: any, i) => {
             const time = JulianDate.addSeconds(start, i * 30, new JulianDate());
-            property.addSample(time, Cartesian3.fromDegrees(pos.lng, pos.lat));
-
-            // const centerTop = vincentyDirection(pos.lng, pos.lat, 45, 1 * -.75);
-            // const centerBot = vincentyDirection(pos.lng, pos.lat, 180 + 45, 1);
-            // const centerPoint = vincentyDirection(pos.lng, pos.lat, 45, 1);
-            // const cornerBotLeft = vincentyDirection(centerBot.lng, centerBot.lat, 270 + 45, 1 * .75);
-            // const cornerBotRight = vincentyDirection(centerBot.lng, centerBot.lat, 90 + 45, 1 * .75);
-            
-            // polygonPoints = Cartesian3.fromDegreesArray([
-            //     centerTop.lng,
-            //     centerTop.lat,
-            //     cornerBotRight.lng,
-            //     cornerBotRight.lat,
-            //     centerPoint.lng,
-            //     centerPoint.lat,
-            //     cornerBotLeft.lng,
-            //     cornerBotLeft.lat
-            // ]);
-
-            //Also create a point for each sample we generate.
-            viewer.entities.add({
-                position: Cartesian3.fromDegrees(pos.lng, pos.lat),
-                point: {
-                    pixelSize: 10,
-                    color: Color.TRANSPARENT,
-                    outlineColor: Color.WHITE,
-                    outlineWidth: 3,
-                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                    heightReference : HeightReference.CLAMP_TO_GROUND
-                },
-            });
+            property.addSample(time, Cartesian3.fromDegrees(pos.lng, pos.lat, pos.alt ? pos.alt : 0));
+            if (line) {
+                //Also create a point for each sample we generate.
+                viewer.entities.add({
+                    position: Cartesian3.fromDegrees(pos.lng, pos.lat, pos.alt),
+                    point: {
+                        pixelSize: 10,
+                        color: Color.TRANSPARENT,
+                        outlineColor: Color.WHITE,
+                        outlineWidth: 3,
+                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                        heightReference : HeightReference.CLAMP_TO_GROUND
+                    },
+                });
+            }
         });
-        
+
+        let polyline = undefined;
+
+        if (line) {
+            polyline = {
+                positions: positions.map((pos: any) => Cartesian3.fromDegrees(pos.lng, pos.lat)),
+                material: new PolylineGlowMaterialProperty({
+                    glowPower: 0.1,
+                    color: Color.WHITE,
+                }),
+                width: 10,
+                clampToGround: true
+            }
+        }
+
         viewer.entities.add({
             position: property,
             availability: new TimeIntervalCollection([
@@ -588,36 +575,21 @@ function startCesium() {
                     stop: stop,
                 }),
             ]),
-            // polygon: {
-            //     hierarchy: {
-            //         positions: polygonPoints,
-            //         holes: []
-            //     },
-            //     material: Color.fromCssColorString("#FFFFFF"),
-            //     height: .5,
-            //     heightReference: HeightReference.RELATIVE_TO_GROUND,
-            //     extrudedHeight: 1,
-            //     extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
-            //     outline: true,
-            //     outlineColor: Color.BLACK,
-            //     outlineWidth: 1
-            // },
-            polyline: {
-                positions: positions.map(pos => Cartesian3.fromDegrees(pos.lng, pos.lat)),
-                material: new PolylineGlowMaterialProperty({
-                    glowPower: 0.1,
-                    color: Color.WHITE,
-                }),
-                width: 10,
-                clampToGround: true
-            },
+            polyline: polyline,
             orientation: new VelocityOrientationProperty(property),
-            point: basicPoint,
+            point: {
+                ...basicPoint,
+                color: color,
+                outlineColor: outlineColor,
+            },
             label: {
                 ...basicLabel,
+                backgroundColor: color,
+                fillColor: outlineColor,
                 text: text
             }
         });
+
     }
 
 }
@@ -644,6 +616,18 @@ function showBuildingView(floors: boolean) {
     });
 }
 
+function showPointerLabels(show: boolean) {
+    viewer.entities.values.forEach((entity: Entity) => {
+        const id = entity.id;
+        if (id.startsWith("pointer")) {
+            const label = entity.label;
+            if (label) {
+                label.show = new ConstantProperty(show);
+            }
+        }
+    });
+}
+
 function show3DPointers() {
     showPointers(true);
 }
@@ -658,6 +642,14 @@ function showBuildingFloors() {
 
 function showBuildingSolid() {
     showBuildingView(false);
+}
+
+function hide3DPointerLabels() {
+    showPointerLabels(false);
+}
+
+function show3DPointerLabels() {
+    showPointerLabels(true);
 }
 
 function App() {
@@ -682,6 +674,12 @@ function App() {
                 </div>
                 <div className='action'>
                     <button onClick={showBuildingSolid}>View Solid Building</button>
+                </div>
+                <div className='action'>
+                    <button onClick={hide3DPointerLabels}>Hide 3D Pointer Labels</button>
+                </div>
+                <div className='action'>
+                    <button onClick={show3DPointerLabels}>Show 3D Pointer Labels</button>
                 </div>
             </div>
             <div className='tab-buttons'>

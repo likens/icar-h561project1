@@ -29,6 +29,7 @@ import mobileComms from "./assets/img/napsg/mobile-comms.svg";
 import emsAir from "./assets/img/napsg/ems-air.svg";
 import helibase from "./assets/img/napsg/helibase.svg";
 import barrierSecurity from "./assets/img/napsg/barrier-security.svg";
+import { Cartesian2, HeightReference, HorizontalOrigin, VerticalOrigin } from "cesium";
 
 // need person unit (fire/ems/police)
 // need drones
@@ -138,11 +139,48 @@ export const AREAS_RECTANGLE = [
     [-86.155795, 39.781539, -86.155523, 39.781715, "Medical Landing Zone", "#FFA500", helibase]
 ]
 
+export const FIRE_DRONE = [
+    { lng: -86.156534, lat: 39.782132, alt: 40 },
+    { lng: -86.156944, lat: 39.782288, alt: 40 },
+    { lng: -86.157525, lat: 39.782158, alt: 40 },
+    { lng: -86.157635, lat: 39.781885, alt: 40 },
+    { lng: -86.157602, lat: 39.781531, alt: 40 },
+    { lng: -86.157126, lat: 39.781411, alt: 40 },
+    { lng: -86.156702, lat: 39.781473, alt: 40 },
+    { lng: -86.156359, lat: 39.781734, alt: 40 },
+]
+
+export const TEST_ANIMATION_POSITIONS = [
+    { lng: -86.157073, lat: 39.780962 },
+    { lng: -86.157298, lat: 39.780967 },
+    { lng: -86.157304, lat: 39.780772 },
+    { lng: -86.157312, lat: 39.780560 },
+    { lng: -86.157075, lat: 39.780552 },
+    { lng: -86.156834, lat: 39.780560 },
+    { lng: -86.156829, lat: 39.780756 },
+    { lng: -86.156826, lat: 39.780961 }
+]
+
 export function getRandomBearing() {
     return Math.floor(Math.random() * (360 - 0 + 1) + 0);
 }
 
+export const basicPoint = {
+    pixelSize: 10,
+    outlineWidth: 1,
+    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+    heightReference : HeightReference.RELATIVE_TO_GROUND
+};
 
+export const basicLabel = {
+    show: true,
+    font: "14px sans-serif",
+    heightReference : HeightReference.RELATIVE_TO_GROUND,
+    showBackground: true,
+    horizontalOrigin: HorizontalOrigin.CENTER,
+    verticalOrigin: VerticalOrigin.BASELINE,
+    pixelOffset: new Cartesian2(7, -30)
+}
 
 /*!
  * JavaScript function to calculate the destination point given start point latitude / longitude (numeric degrees), bearing (numeric degrees) and distance (in m).
