@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useState } from 'react'
-import { Cartesian3, createWorldTerrain, Math as CesiumMath, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange, Billboard, GroundPrimitive, Ion, TimeIntervalCollection, TimeInterval, VelocityOrientationProperty, PolylineGlowMaterialProperty, SampledPositionProperty, ImageMaterialProperty, LabelStyle, Polyline } from "cesium";
-import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, AREAS_RECTANGLE, BILLBOARDS, vincentyDirection, getRandomBearing, FIRE_RED, basicLabel, basicPoint, TEST_ANIMATION_POSITIONS, FIRE_DRONE } from "./Utils";
+import { Cartesian3, createWorldTerrain, Math as CesiumMath, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange, Billboard, GroundPrimitive, Ion, TimeIntervalCollection, TimeInterval, VelocityOrientationProperty, PolylineGlowMaterialProperty, SampledPositionProperty, ImageMaterialProperty, LabelStyle, Polyline, LagrangePolynomialApproximation } from "cesium";
+import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, AREAS_RECTANGLE, BILLBOARDS, vincentyDirection, getRandomNumber, FIRE_RED, basicLabel, basicPoint, FIRE_DRONE, EMS_AIR, UNIT_AIR, AREAS_ELLIPSE } from "./Utils";
 import fireCommercial from "./assets/img/napsg/hazard-fire-commercial.svg";
 
 Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwZWI3MDRlMi1hMGMyLTQzYjUtYTYxMy0zOGNlYjViOTdjMGIiLCJpZCI6ODM5MjksImlhdCI6MTY0OTExOTQ3MX0.j_tC4ZO5-0FDV4_n-edMAlcQK5EyuV9WyRhfv_4yjEU";
@@ -96,16 +96,18 @@ function startCesium() {
 
     addTooltip();
     addLandmarkCenter();
-    addDrone();
 
-    addBasicPoint(-86.157074, 39.780615, 0, "TESTSTATIC");
-    addAnimatedPoint(TEST_ANIMATION_POSITIONS, "TESTANIMATION");
+    // addBasicPoint(-86.157074, 39.780615, 0, "TESTSTATIC");
+    // addAnimatedPoint(TEST_ANIMATION_POSITIONS, "TESTANIMATION");
 
     BILLBOARDS.forEach((billboard: any) => {
         addBillboard(billboard.symbol, billboard.name, billboard.lng, billboard.lat, billboard.alt);
     });
     AREAS_RECTANGLE.forEach((area: any) => {
-        addRectangle(area[0], area[1], area[2], area[3], area[4], area[5], area[6]);
+        addRectangle(area[0], area[1], area[2], area[3], area[4], area[5], area[6], area[7]);
+    });
+    AREAS_ELLIPSE.forEach((area: any) => {
+        addEllipse(area.lng, area.lat, area.name, area.color, area.symbol, area.scale);
     });
     UNITS_SINGLE_FIRE.forEach((unit: any) => {
         generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
@@ -124,6 +126,9 @@ function startCesium() {
     });
     UNITS_VEHICLE_EMS.forEach((unit: any) => {
         generatePointer(false, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color);
+    });
+    UNIT_AIR.forEach((unit: any) => {
+        addAnimatedBillboard(unit.symbol, unit.label, unit.positions);
     });
     
     function addTooltip() {
@@ -177,10 +182,6 @@ function startCesium() {
                 console.log(`${longitudeString}, ${latitudeString}`);
             }
         }, ScreenSpaceEventType.LEFT_CLICK);
-    }
-
-    function addDrone() {
-        addAnimatedPoint(FIRE_DRONE, "i am drone beep boop", false);
     }
 
     function addLandmarkCenter() {
@@ -254,7 +255,6 @@ function startCesium() {
             // }
             if (i === 5) {
                 viewer.entities.add({
-                    show: false,
                     id: `landmark_floor_${i}`,
                     name: `Floor ${i}`,
                     position: landmarkPosition,
@@ -274,10 +274,10 @@ function startCesium() {
                         outlineWidth: 1
                     }
                 });
-                generatePointer(true, "ff1", "", -86.157127, 39.781875, getRandomBearing(), FIRE_RED, height + .5)
-                generatePointer(true, "ff2", "", -86.156945, 39.781868, getRandomBearing(), FIRE_RED, height + .5)
-                generatePointer(true, "ff3", "", -86.156918, 39.781750, getRandomBearing(), FIRE_RED, height + .5)
-                generatePointer(true, "ff4", "", -86.156911, 39.781978, getRandomBearing(), FIRE_RED, height + .5)
+                generatePointer(true, "ff1", "", -86.157127, 39.781875, getRandomNumber(0, 360), FIRE_RED, height + .5)
+                generatePointer(true, "ff2", "", -86.156945, 39.781868, getRandomNumber(0, 360), FIRE_RED, height + .5)
+                generatePointer(true, "ff3", "", -86.156918, 39.781750, getRandomNumber(0, 360), FIRE_RED, height + .5)
+                generatePointer(true, "ff4", "", -86.156911, 39.781978, getRandomNumber(0, 360), FIRE_RED, height + .5)
 
             }
         }
@@ -301,6 +301,7 @@ function startCesium() {
         viewer.entities.add({
             id: `landmark_center`,
             position: landmarkPosition,
+            show: false,
             name: "The Landmark Center",
             polygon: {
                 hierarchy: {
@@ -357,6 +358,9 @@ function startCesium() {
             centerPoint.lat
         ]);
 
+        const entityHeight = height ? height : .5;
+        const extrudedHeight = height ? height + .5 : 1;
+
         let entity = {
             id: `pointer_${unit ? `unit` : `vehicle`}_${label}`,
             name: label,
@@ -368,9 +372,9 @@ function startCesium() {
                     holes: []
                 },
                 material: Color.fromCssColorString(color),
-                height: height ? height : .5,
+                height: entityHeight,
                 heightReference: HeightReference.RELATIVE_TO_GROUND,
-                extrudedHeight: height ? height + .5 : 1,
+                extrudedHeight: extrudedHeight,
                 extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
                 outline: true,
                 outlineColor: Color.BLACK
@@ -393,7 +397,31 @@ function startCesium() {
         viewer.entities.add(entity);
 
         if (!unit) {
-            
+            // viewer.entities.add({
+            //     position: position,
+            //     show: pointerEnabled,
+            //     polygon: {
+            //         hierarchy: {
+            //             positions: Cartesian3.fromDegreesArray([
+            //                 cornerTopLeft.lng,
+            //                 cornerTopLeft.lat,
+            //                 cornerBotLeft.lng,
+            //                 cornerBotLeft.lat,
+            //                 cornerBotRight.lng,
+            //                 cornerBotRight.lat,
+            //                 cornerTopRight.lng,
+            //                 cornerTopRight.lat
+            //             ]),
+            //             holes: []
+            //         },
+            //         material: new ImageMaterialProperty({
+            //             image: symbol,
+            //             transparent: true
+            //         }),
+            //         height: extrudedHeight,
+            //         heightReference: HeightReference.RELATIVE_TO_GROUND
+            //     },
+            // })
         }
 
         // 2D Billboards
@@ -450,7 +478,45 @@ function startCesium() {
         });
     }
 
-    function addRectangle(west: number, south: number, east: number, north: number, text: string, color: string, symbol = "") {
+    function addAnimatedBillboard(symbol: string, label: string, positions: any[]) {
+        
+        const property = new SampledPositionProperty();
+
+        // add first position as last for looping
+        positions.push(positions[0]);
+        positions.forEach((pos: any, i) => {
+            const time = JulianDate.addSeconds(start, i * 30, new JulianDate());
+            property.addSample(time, Cartesian3.fromDegrees(pos.lng, pos.lat, pos.alt ? pos.alt : 0));
+        });
+
+        
+        property.setInterpolationOptions({
+            interpolationDegree: 5,
+            interpolationAlgorithm: LagrangePolynomialApproximation,
+        })
+
+        viewer.entities.add({
+            position: property,
+            availability: new TimeIntervalCollection([
+                new TimeInterval({
+                    start: start,
+                    stop: stop,
+                }),
+            ]),
+            orientation: new VelocityOrientationProperty(property),
+            name: label,
+            billboard: {
+                image: symbol,
+                // disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                heightReference: HeightReference.RELATIVE_TO_GROUND,
+                scale: .4,
+                eyeOffset: new Cartesian3(0, 1.5, 0),
+            },
+        });
+
+    }
+
+    function addRectangle(west: number, south: number, east: number, north: number, text: string, color: string, symbol = "", scale = 5) {
         const rectangle = Rectangle.fromDegrees(west, south, east, north);
         const center = Rectangle.center(rectangle);
         const position = Cartographic.toCartesian(center);
@@ -458,10 +524,10 @@ function startCesium() {
         // "flat" symbology
         const longitude = CesiumMath.toDegrees(center.longitude);
         const latitude = CesiumMath.toDegrees(center.latitude);
-        const topLeft = vincentyDirection(longitude, latitude, 315, 5);
-        const botLeft = vincentyDirection(longitude, latitude, 225, 5);
-        const botRight = vincentyDirection(longitude, latitude, 135, 5);
-        const topRight = vincentyDirection(longitude, latitude, 45, 5);
+        const topLeft = vincentyDirection(longitude, latitude, 315, scale);
+        const botLeft = vincentyDirection(longitude, latitude, 225, scale);
+        const botRight = vincentyDirection(longitude, latitude, 135, scale);
+        const topRight = vincentyDirection(longitude, latitude, 45, scale);
 
         viewer.entities.add({
             name: text,
@@ -474,7 +540,7 @@ function startCesium() {
                 extrudedHeight: .25,
                 outline: true,
                 outlineColor: Color.fromCssColorString(color),
-                outlineWidth: 10
+                outlineWidth: 1
             },
             polygon: {
                 hierarchy: {
@@ -494,20 +560,52 @@ function startCesium() {
                 height: .5,
                 heightReference: HeightReference.RELATIVE_TO_GROUND
             }
-            // label: {
-            //     show: false,
-            //     text: text,
-            //     font: "14px sans-serif",
-            //     fillColor: Color.WHITE,
-            //     disableDepthTestDistance: Number.POSITIVE_INFINITY,
-            //     heightReference: HeightReference.CLAMP_TO_GROUND,
-            //     showBackground: true,
-            //     backgroundColor: Color.BLACK.withAlpha(0.5),
-            //     horizontalOrigin: HorizontalOrigin.CENTER,
-            //     verticalOrigin: VerticalOrigin.BASELINE
-            // }
         });
 
+    }
+
+    function addEllipse(lng: number, lat: number, text: string, color: string, symbol: string, scale = 2) {
+
+        // "flat" symbology
+        const position = Cartesian3.fromDegrees(lng, lat);
+        const topLeft = vincentyDirection(lng, lat, 315, scale);
+        const botLeft = vincentyDirection(lng, lat, 225, scale);
+        const botRight = vincentyDirection(lng, lat, 135, scale);
+        const topRight = vincentyDirection(lng, lat, 45, scale);
+
+        viewer.entities.add({
+            name: text,
+            position: position,
+            ellipse: {
+                semiMinorAxis: 2,
+                semiMajorAxis: 2,
+                heightReference: HeightReference.CLAMP_TO_GROUND,
+                material: Color.fromCssColorString(color).withAlpha(.25),
+                height: 0,
+                extrudedHeight: .25,
+                outline: true,
+                outlineColor: Color.fromCssColorString(color),
+                outlineWidth: 1
+            },
+            polygon: {
+                hierarchy: {
+                    positions: Cartesian3.fromDegreesArray([
+                        topLeft.lng,
+                        topLeft.lat,
+                        botLeft.lng,
+                        botLeft.lat,
+                        botRight.lng,
+                        botRight.lat,
+                        topRight.lng,
+                        topRight.lat
+                    ]),
+                    holes: []
+                },
+                material: symbol ? new ImageMaterialProperty({image: symbol, transparent: true}) : Color.TRANSPARENT,
+                height: .5,
+                heightReference: HeightReference.RELATIVE_TO_GROUND
+            }
+        });
     }
 
     function addBasicPoint(lng: number, lat: number, alt: number = 0, text: string, color = Color.WHITE, outlineColor = Color.BLACK) {
@@ -565,6 +663,11 @@ function startCesium() {
                 width: 10,
                 clampToGround: true
             }
+        } else {
+            property.setInterpolationOptions({
+                interpolationDegree: 5,
+                interpolationAlgorithm: LagrangePolynomialApproximation,
+            })
         }
 
         viewer.entities.add({
@@ -654,7 +757,7 @@ function show3DPointerLabels() {
 
 function App() {
     
-	const [count, setCount] = useState(0)
+	// const [count, setCount] = useState(0)
 
     useEffect(() => {
         startCesium();
