@@ -1,6 +1,7 @@
 import { RefObject, useEffect, useState } from 'react'
 import { Cartesian3, createWorldTerrain, Math as CesiumMath, createOsmBuildings, PrimitiveCollection, Viewer, Cesium3DTile, Cesium3DTileStyle, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, NearFarScalar, ScreenSpaceEventType, Entity, Cartesian2, PostProcessStageLibrary, defined, Cesium3DTileFeature, Cartographic, PolylineOutlineMaterialProperty, IonImageryProvider, ConstantProperty, ArcType, Rectangle, JulianDate, ClockRange, Billboard, GroundPrimitive, Ion, TimeIntervalCollection, TimeInterval, VelocityOrientationProperty, PolylineGlowMaterialProperty, SampledPositionProperty, ImageMaterialProperty, LabelStyle, Polyline, LagrangePolynomialApproximation } from "cesium";
-import { UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNIT_TYPE_SINGLE, UNIT_TYPE_VEHICLE, AREAS_RECTANGLE, BILLBOARDS, vincentyDirection, getRandomNumber, FIRE_RED, basicLabel, basicPoint, FIRE_DRONE, EMS_AIR, UNIT_AIR, AREAS_ELLIPSE } from "./Utils";
+import { vincentyDirection, getRandomNumber, basicLabel, basicPoint } from "./Utils";
+import { LANDMARK_CENTER_POSITION, LANDMARK_CENTER_OUTLINE, LANDMARK_CENTER_WALLS, BILLBOARDS, AREAS_RECTANGLE, AREAS_ELLIPSE, UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, FIRE_RED, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNIT_AIR, LANDMARK_CENTER_DOORS, LANDMARK_CENTER_WINDOWS, LANDMARK_CENTER_UNITS } from "./Data";
 import fireCommercial from "./assets/img/napsg/hazard-fire-commercial.svg";
 
 Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwZWI3MDRlMi1hMGMyLTQzYjUtYTYxMy0zOGNlYjViOTdjMGIiLCJpZCI6ODM5MjksImlhdCI6MTY0OTExOTQ3MX0.j_tC4ZO5-0FDV4_n-edMAlcQK5EyuV9WyRhfv_4yjEU";
@@ -185,25 +186,9 @@ function startCesium() {
     }
 
     function addLandmarkCenter() {
-        
-        const landmarkPosition = Cartesian3.fromDegrees(-86.157, 39.78187, 38);
-        const landmarkCenterPolygon = Cartesian3.fromDegreesArray([
-            -86.156992, 39.782069,
-            -86.157060, 39.782127,
-            -86.157324, 39.781944,
-            -86.157241, 39.781873,
-            -86.157325, 39.781814,
-            -86.157079, 39.781610,
-            -86.157004, 39.781664,
-            -86.156919, 39.781609,
-            -86.156687, 39.781781,
-            -86.156772, 39.781851,
-            -86.156685, 39.781917,
-            -86.156924, 39.782110
-        ]);
 
         viewer.entities.add({
-            position: landmarkPosition,
+            position: LANDMARK_CENTER_POSITION,
             name: "The Landmark Center",
             billboard: {
                 image: fireCommercial,
@@ -223,27 +208,36 @@ function startCesium() {
                 outlineColor: Color.fromCssColorString("#A50026"),
                 outlineWidth: 1
             },
-            label: {
-                show: true,
-                text: "The Landmark Center",
-                font: "16px sans-serif",
-                fillColor: Color.WHITE,
-                disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                heightReference: HeightReference.RELATIVE_TO_GROUND,
-                showBackground: true,
-                backgroundColor: Color.BLACK,
-                pixelOffset: new Cartesian2(0, -20)
-            }
+            // label: {
+            //     show: true,
+            //     text: "The Landmark Center",
+            //     font: "16px sans-serif",
+            //     fillColor: Color.WHITE,
+            //     disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            //     heightReference: HeightReference.RELATIVE_TO_GROUND,
+            //     showBackground: true,
+            //     backgroundColor: Color.BLACK,
+            //     pixelOffset: new Cartesian2(0, -20)
+            // }
         });
     
         const totalHeight = 36;
-        const levels = 13;
+        const levels = 12;
         const levelHeight = totalHeight / levels;
     
         for (let i = 0; i <= levels; i++) {
             const height = i * levelHeight;
             const extrudedHeight = height + levelHeight;
-            let color = Color.SILVER;
+            const polygonDefs = {
+                height: height,
+                heightReference: HeightReference.RELATIVE_TO_GROUND,
+                extrudedHeight: extrudedHeight,
+                extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
+                outline: true,
+                outlineColor: Color.BLACK,
+                outlineWidth: 1
+            }
+            let color = Color.fromCssColorString("#aaa");
             // if (i === 5 || i === 9) {
             //     color = Color.YELLOW;
             // } else if (i === 6 || i === 8) {
@@ -253,37 +247,74 @@ function startCesium() {
             // } else {
             //     color = Color.GREEN;
             // }
+            viewer.entities.add({
+                id: `landmark_floor_${i + 1}`,
+                name: `Floor ${i + 1}`,
+                position: LANDMARK_CENTER_POSITION,
+                polygon: {
+                    ...polygonDefs,
+                    hierarchy: { positions: Cartesian3.fromDegreesArray(LANDMARK_CENTER_OUTLINE), holes: [] },
+                    closeTop: false,
+                    material: color
+                }
+            });
             if (i === 5) {
-                viewer.entities.add({
-                    id: `landmark_floor_${i}`,
-                    name: `Floor ${i}`,
-                    position: landmarkPosition,
-                    polygon: {
-                        hierarchy: {
-                            positions: landmarkCenterPolygon,
-                            holes: []
-                        },
-                        closeTop: false,
-                        material: color,
-                        height: height,
-                        heightReference: HeightReference.RELATIVE_TO_GROUND,
-                        extrudedHeight: extrudedHeight,
-                        extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
-                        outline: true,
-                        outlineColor: Color.BLACK,
-                        outlineWidth: 1
-                    }
+                // LANDMARK_CENTER_OUTLINE.forEach((pos, i) => {
+                //     if (i % 2 == 0) {
+                //         const lng = pos;
+                //         const lat = LANDMARK_CENTER_OUTLINE[i+1];
+                //         addBasicPoint(lng, lat, height + .5, `${lng}, ${lat}`);
+                //     }
+                // });
+                LANDMARK_CENTER_UNITS.forEach((unit) => {
+                    generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color, height + .5);
                 });
-                generatePointer(true, "ff1", "", -86.157127, 39.781875, getRandomNumber(0, 360), FIRE_RED, height + .5)
-                generatePointer(true, "ff2", "", -86.156945, 39.781868, getRandomNumber(0, 360), FIRE_RED, height + .5)
-                generatePointer(true, "ff3", "", -86.156918, 39.781750, getRandomNumber(0, 360), FIRE_RED, height + .5)
-                generatePointer(true, "ff4", "", -86.156911, 39.781978, getRandomNumber(0, 360), FIRE_RED, height + .5)
-
+                LANDMARK_CENTER_WALLS.forEach((wall, i) => {
+                    let entity = {
+                        id: `landmark_wall_${i + 1}`,
+                        name: `Wall ${i + 1}`,
+                        polygon: {
+                            ...polygonDefs,
+                            hierarchy: { positions: Cartesian3.fromDegreesArray(wall), holes: [] },
+                            material: Color.fromCssColorString("#aaa"),
+                            extrudedHeight: height + 3,
+                        }
+                    }
+                    viewer.entities.add(entity);
+                });
+                LANDMARK_CENTER_DOORS.forEach((door, i) => {
+                    let entity = {
+                        id: `landmark_door_${i + 1}`,
+                        name: `Door ${i + 1}`,
+                        polygon: {
+                            ...polygonDefs,
+                            hierarchy: { positions: Cartesian3.fromDegreesArray(door), holes: [] },
+                            material: Color.fromCssColorString("#9d7148"),
+                            extrudedHeight: height + 2.5,
+                        }
+                    }
+                    viewer.entities.add(entity);
+                });
+                LANDMARK_CENTER_WINDOWS.forEach((window, i) => {
+                    let entity = {
+                        id: `landmark_window_${i + 1}`,
+                        name: `Window ${i + 1}`,
+                        polygon: {
+                            ...polygonDefs,
+                            hierarchy: { positions: Cartesian3.fromDegreesArray(window), holes: [] },
+                            material: Color.fromCssColorString("#36c3ff"),
+                            height: height + 1,
+                            extrudedHeight: height + 2.5
+                        }
+                    }
+                    viewer.entities.add(entity);
+                });
+                break;
             }
         }
 
         viewer.entities.add({
-            position: landmarkPosition,
+            position: LANDMARK_CENTER_POSITION,
             name: "The Landmark Center",
             ellipse: {
                 semiMinorAxis: 40,
@@ -299,13 +330,13 @@ function startCesium() {
         })
 
         viewer.entities.add({
-            id: `landmark_center`,
-            position: landmarkPosition,
+            id: `landmark_full`,
+            position: LANDMARK_CENTER_POSITION,
             show: false,
             name: "The Landmark Center",
             polygon: {
                 hierarchy: {
-                    positions: landmarkCenterPolygon,
+                    positions: Cartesian3.fromDegreesArray(LANDMARK_CENTER_OUTLINE),
                     holes: []
                 },
                 material: Color.fromCssColorString("#aaa"),
@@ -381,16 +412,15 @@ function startCesium() {
             },
             label: {
                 text: label,
-                // show: pointerEnabled,
-                show: false,
-                font: "13px sans-serif",
+                font: "14px sans-serif",
                 fillColor: Color.WHITE,
                 backgroundColor: Color.BLACK,
                 showBackground: true,
                 horizontalOrigin: HorizontalOrigin.CENTER,
                 verticalOrigin: VerticalOrigin.CENTER,
                 heightReference: HeightReference.RELATIVE_TO_GROUND,
-                eyeOffset: new Cartesian3(0, 2, -2)
+                eyeOffset: new Cartesian3(0, 3, -2),
+                // translucencyByDistance: new NearFarScalar(1.25e2, 1, 2.5e2, 0),
             },
         }
 
@@ -433,7 +463,7 @@ function startCesium() {
             billboard: {
                 image: symbol,
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
+                heightReference: HeightReference.RELATIVE_TO_GROUND,
                 pixelOffset: new Cartesian2(0, -60)
             },
             label: {
@@ -441,7 +471,7 @@ function startCesium() {
                 font: "11px sans-serif",
                 fillColor: Color.BLACK,
                 disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                heightReference: HeightReference.CLAMP_TO_GROUND,
+                heightReference: HeightReference.RELATIVE_TO_GROUND,
                 showBackground: true,
                 backgroundColor: Color.fromCssColorString(`rgba(255, 255, 255, .6)`),
                 horizontalOrigin: HorizontalOrigin.LEFT,
@@ -713,7 +743,7 @@ function showBuildingView(floors: boolean) {
         const id = entity.id;
         if (id.startsWith("landmark_floor") || id.startsWith("landmark_outline")) {
             entity.show = floors;
-        } else if (id.startsWith("landmark_center")) {
+        } else if (id.startsWith("landmark_full")) {
             entity.show = !floors;
         }
     });
