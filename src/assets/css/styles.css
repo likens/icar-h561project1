@@ -1,3 +1,9 @@
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
 html {
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 62.5%;
@@ -12,7 +18,7 @@ body {
 .master {
     max-width: 100rem;
     margin: 0 auto;
-    padding: 5rem;
+    padding: 8rem 5rem 5rem;
     position: relative;
     z-index: 30;
 }
@@ -35,28 +41,52 @@ body {
     background-size: cover;
     opacity: .75;
 }
+.cesium {
+    background: #000;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transition: all .25s ease;
+    z-index: 30;
+}
+.cesium--ql {
+    transform: translateX(-55rem);
+}
 .title {
     font-size: 3rem;
     font-weight: 700;
 }
-.links {
+.quick-links {
+    width: 50rem;
     font-size: 2rem;
+    grid-gap: 2rem;
     display: grid;
-    grid-gap: 3rem;
     padding-top: 4rem;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 20;
+    align-content: flex-start;
 }
-.links a {
+.quick-links a {
     color: #000;
     font-weight: 600;
     text-decoration: none;
     font-size: 2.4rem;
 }
-.links a:hover {
+.quick-links a:hover {
     font-weight: 700;
     text-decoration: underline;
 }
-.links ul a {
+.quick-links ul a {
     font-size: 1.8rem;
+}
+.links {
+    display: grid;
+    grid-gap: 2rem;
 }
 .prototype {
     position: fixed;
@@ -64,12 +94,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    transform: translateY(-100%);
     z-index: 100;
-    transition: all .25s ease;
-}
-.prototype.active {
-    transform: none;
 }
 #cesiumContainer {
     position: absolute;
@@ -86,7 +111,6 @@ body {
 .cesium-viewer-bottom {
     display: none !important;
 }
-.location,
 .view button,
 .legend {
     background: rgba(0,0,0,.75);
@@ -99,42 +123,19 @@ body {
     font-size: 2rem;
     line-height: 1;
 }
-.location {
-    position: absolute;
-    bottom: 6rem;
-    right: 1rem;
-    z-index: 20;
-}
 .view {
     position: absolute;
-    right: 1rem;
-    top: 1rem;
+    right: 0;
+    top: 0;
     z-index: 500;
+    width: 100%;
 }
 .view button {
+    display: block;
     cursor: pointer;
     padding: 1rem 2rem;
-}
-
-.legend {
-    position: absolute;
-    left: 1rem;
-    bottom: 12rem;
-    z-index: 20;
-    display: grid;
-    grid-gap: .75rem;
-}
-
-.legenditem {
-    display: flex;
-    align-items: center;
-}
-
-.legenditem span {
-    display: inline-block;
-    width: 1.6rem;
-    height: 1.6rem;
-    margin-right: .75rem;
+    width: 100%;
+    border-radius: 0;
 }
 
 .tab-buttons {
@@ -161,23 +162,23 @@ body {
     text-transform: uppercase;
     cursor: pointer;
     white-space: nowrap;
-    width: 20rem;
+    width: 14rem;
 }
 
 .tab-buttons button:nth-child(1) {
-    transform: rotate(90deg) translate(9rem, 8rem);
+    transform: rotate(90deg) translate(7rem, 5rem);
 }
 
 .tab-buttons button:nth-child(2) {
-    transform: rotate(90deg) translate(25rem, 8rem);
+    transform: rotate(90deg) translate(18rem, 5rem);
 }
 
 .tab-buttons button:nth-child(3) {
-    transform: rotate(90deg) translate(41rem, 8rem);
+    transform: rotate(90deg) translate(29rem, 5rem);
 }
 
 .tab-buttons button:nth-child(4) {
-    transform: rotate(90deg) translate(57rem, 8rem);
+    transform: rotate(90deg) translate(40rem, 5rem);
 }
 
 .tab-content {
@@ -192,8 +193,8 @@ body {
 
 .actions {
     position: absolute;
-    right: 1rem;
-    top: 7rem;
+    right: 2rem;
+    bottom: 6rem;
     z-index: 200;
     display: grid;
     grid-gap: 1rem;
@@ -212,4 +213,99 @@ body {
     line-height: 1;
     text-transform: uppercase;
     cursor: pointer;
+}
+
+.compass {
+    background: rgba(0,0,0,.75);
+    width: 11.5rem !important;
+    height: 11.5rem !important;
+    border-radius: 1rem;
+    top: 2rem !important;
+    right: 2rem !important;
+}
+
+.compass-outer-ring, 
+.compass-gyro,
+.compass-rotation-marker {
+    left: 50% !important;
+    top: 50% !important;
+    width: 10rem !important;
+    height: 10rem !important;
+    margin: -5rem 0 0 -5rem !important;
+}
+
+.compass-outer-ring-background,
+.compass-gyro-background {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+}
+
+.navigation-controls {
+    right: 15rem !important;
+    top: 2rem !important;
+    width: 3rem !important;
+    height: 11.5rem;
+    border-radius: 1rem;
+    background: rgba(0,0,0,.75);
+    display: grid;
+    align-items: center;
+}
+
+.navigation-control {
+    border: 0 !important;
+}
+
+.navigation-control-icon-reset {
+    left: auto !important;
+    fill: #fff !important;
+    padding: 0 !important;
+    margin: 0 auto;
+    width: 1.2rem !important;
+    height: 1.2rem !important;
+}
+
+.navigation-control-icon-zoom-in,
+.navigation-control-icon-zoom-out {
+    font-size: 2.6rem !important;
+    padding: 0 !important;
+}
+
+.infobar {
+    position: absolute;
+    bottom: 0;
+    color: #fff;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,.75);
+    padding: 2rem;
+    z-index: 10;
+}
+
+.location {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.distance-legend {
+    z-index: 10;
+    bottom: 2rem !important;
+    right: 2rem;
+    height: 3rem !important;
+    width: 12rem !important;
+    border-radius: 1rem !important;
+    padding: 0 1rem !important;
+    background: rgba(0,0,0,.75);
+}
+
+.distance-legend-label {
+    font-family: 'IBM Plex Sans' !important;
+    font-weight: 700 !important;
+    line-height: auto !important;
+    padding-top: .5rem;
+}
+
+.distance-legend-scale-bar {
+    transition: all .25s ease;
+    top: 1.2rem !important;
 }

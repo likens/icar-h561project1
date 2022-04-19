@@ -1,4 +1,359 @@
-import { Cartesian2, HeightReference, HorizontalOrigin, VerticalOrigin } from "cesium";
+import { Cartesian2, Cartesian3, Cartographic, Color, HeightReference, HorizontalOrigin, ImageMaterialProperty, JulianDate, LagrangePolynomialApproximation, Math as CesiumMath, PolylineGlowMaterialProperty, Rectangle, SampledPositionProperty, TimeInterval, TimeIntervalCollection, VelocityOrientationProperty, VerticalOrigin } from "cesium";
+import { viewer } from "./App";
+
+export function getStartTime(): JulianDate {
+    return JulianDate.fromDate(new Date());
+}
+
+export function getStopTime(): JulianDate {
+    return JulianDate.addSeconds(getStartTime(), 240, new JulianDate());
+}
+
+export function generatePointer(unit: boolean, label: string, symbol: string, lng: number, lat: number, brng: number, color: string = "#ffffff", height?: number) {
+
+    const scale = unit ? 1 : 4;
+    const east = 90;
+    const south = 180;
+    const west = 270;
+    const position = Cartesian3.fromDegrees(lng, lat, height ? height : 0);
+
+    const centerPoint = unit ? vincentyDirection(lng, lat, brng, scale) : vincentyDirection(lng, lat, brng, scale - 1);
+    const centerTop = unit ? vincentyDirection(lng, lat, brng, scale * -.75) : vincentyDirection(lng, lat, brng, scale * .5);
+    const centerBot = unit ? vincentyDirection(lng, lat, south + brng, scale) : vincentyDirection(lng, lat, south + brng, scale * .5);
+    const cornerTopLeft = vincentyDirection(centerTop.lng, centerTop.lat, west + brng, scale * .25);
+    const cornerTopRight = vincentyDirection(centerTop.lng, centerTop.lat, east + brng, scale * .25);
+    const cornerBotLeft = unit ? vincentyDirection(centerBot.lng, centerBot.lat, west + brng, scale * .75) : vincentyDirection(centerBot.lng, centerBot.lat, west + brng, scale * .25);
+    const cornerBotRight = unit ? vincentyDirection(centerBot.lng, centerBot.lat, east + brng, scale * .75) : vincentyDirection(centerBot.lng, centerBot.lat, east + brng, scale * .25);
+
+    const polygonPoints = unit ? Cartesian3.fromDegreesArray([
+        centerTop.lng,
+        centerTop.lat,
+        cornerBotRight.lng,
+        cornerBotRight.lat,
+        centerPoint.lng,
+        centerPoint.lat,
+        cornerBotLeft.lng,
+        cornerBotLeft.lat
+    ]) : Cartesian3.fromDegreesArray([
+        cornerTopLeft.lng,
+        cornerTopLeft.lat,
+        cornerBotLeft.lng,
+        cornerBotLeft.lat,
+        cornerBotRight.lng,
+        cornerBotRight.lat,
+        cornerTopRight.lng,
+        cornerTopRight.lat,
+        centerPoint.lng,
+        centerPoint.lat
+    ]);
+
+    const entityHeight = height ? height : .5;
+    const extrudedHeight = height ? height + .5 : 1;
+
+    let entity = {
+        id: `pointer_${unit ? `unit` : `vehicle`}_${label}`,
+        name: label,
+        position: position,
+        show: true,
+        polygon: {
+            hierarchy: {
+                positions: polygonPoints,
+                holes: []
+            },
+            material: Color.fromCssColorString(color),
+            height: entityHeight,
+            heightReference: HeightReference.RELATIVE_TO_GROUND,
+            extrudedHeight: extrudedHeight,
+            extrudedHeightReference: HeightReference.RELATIVE_TO_GROUND,
+            outline: true,
+            outlineColor: Color.BLACK
+        },
+        label: {
+            text: label,
+            font: "14px sans-serif",
+            fillColor: Color.WHITE,
+            backgroundColor: Color.BLACK,
+            showBackground: true,
+            horizontalOrigin: HorizontalOrigin.CENTER,
+            verticalOrigin: VerticalOrigin.CENTER,
+            heightReference: HeightReference.RELATIVE_TO_GROUND,
+            eyeOffset: new Cartesian3(0, 3, -2),
+            // translucencyByDistance: new NearFarScalar(1.25e2, 1, 2.5e2, 0),
+        },
+    }
+
+    viewer.entities.add(entity);
+
+    // 2D Billboards
+    viewer.entities.add({
+        id: `billboard_${unit ? `unit` : `vehicle`}_${label}`,
+        name: label,
+        position: position,
+        show: false,
+        billboard: {
+            image: symbol,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            heightReference: HeightReference.RELATIVE_TO_GROUND,
+            pixelOffset: new Cartesian2(0, -60)
+        },
+        label: {
+            text: label,
+            font: "11px sans-serif",
+            fillColor: Color.BLACK,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            heightReference: HeightReference.RELATIVE_TO_GROUND,
+            showBackground: true,
+            backgroundColor: Color.fromCssColorString(`rgba(255, 255, 255, .6)`),
+            horizontalOrigin: HorizontalOrigin.LEFT,
+            verticalOrigin: VerticalOrigin.BASELINE,
+            pixelOffset: unit ? new Cartesian2(5, -95) : new Cartesian2(-10, -100)
+        },
+    });
+}
+
+export function generateBillboard(symbol: string, label: string, lng: number, lat: number, alt = 0) {
+    viewer.entities.add({
+        position: Cartesian3.fromDegrees(lng, lat, alt),
+        name: label,
+        billboard: {
+            image: symbol,
+            // disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            heightReference: HeightReference.RELATIVE_TO_GROUND,
+            scale: .4,
+            eyeOffset: new Cartesian3(0, 1.5, 0),
+        },
+        label: {
+            text: label,
+            show: false,
+            font: "12px sans-serif",
+            fillColor: Color.WHITE,
+            // disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            heightReference: HeightReference.RELATIVE_TO_GROUND,
+            showBackground: true,
+            backgroundColor: Color.BLACK,
+            horizontalOrigin: HorizontalOrigin.CENTER,
+            verticalOrigin: VerticalOrigin.BOTTOM,
+            pixelOffset: new Cartesian2(0, 60)
+        }
+    });
+}
+
+export function generateAnimatedBillboard(symbol: string, label: string, positions: any[]) {
+    
+    const property = new SampledPositionProperty();
+
+    // add first position as last for looping
+    positions.push(positions[0]);
+    positions.forEach((pos: any, i) => {
+        const time = JulianDate.addSeconds(getStartTime(), i * 30, new JulianDate());
+        property.addSample(time, Cartesian3.fromDegrees(pos.lng, pos.lat, pos.alt ? pos.alt : 0));
+    });
+
+    
+    property.setInterpolationOptions({
+        interpolationDegree: 5,
+        interpolationAlgorithm: LagrangePolynomialApproximation,
+    })
+
+    viewer.entities.add({
+        position: property,
+        availability: new TimeIntervalCollection([
+            new TimeInterval({
+                start: getStartTime(),
+                stop: getStopTime(),
+            }),
+        ]),
+        orientation: new VelocityOrientationProperty(property),
+        name: label,
+        billboard: {
+            image: symbol,
+            // disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            heightReference: HeightReference.RELATIVE_TO_GROUND,
+            scale: .4,
+            eyeOffset: new Cartesian3(0, 1.5, 0),
+        },
+    });
+
+}
+
+export function generateRectangle(west: number, south: number, east: number, north: number, text: string, color: string, symbol = "", scale = 5) {
+    const rectangle = Rectangle.fromDegrees(west, south, east, north);
+    const center = Rectangle.center(rectangle);
+    const position = Cartographic.toCartesian(center);
+
+    // "flat" symbology
+    const longitude = CesiumMath.toDegrees(center.longitude);
+    const latitude = CesiumMath.toDegrees(center.latitude);
+    const topLeft = vincentyDirection(longitude, latitude, 315, scale);
+    const botLeft = vincentyDirection(longitude, latitude, 225, scale);
+    const botRight = vincentyDirection(longitude, latitude, 135, scale);
+    const topRight = vincentyDirection(longitude, latitude, 45, scale);
+
+    viewer.entities.add({
+        name: text,
+        position: position,
+        rectangle: {
+            coordinates: rectangle, // left middle, bot middle, right middle, top middle
+            material: Color.fromCssColorString(color).withAlpha(.25),
+            heightReference: HeightReference.CLAMP_TO_GROUND,
+            height: 0,
+            extrudedHeight: .25,
+            outline: true,
+            outlineColor: Color.fromCssColorString(color),
+            outlineWidth: 1
+        },
+        polygon: {
+            hierarchy: {
+                positions: Cartesian3.fromDegreesArray([
+                    topLeft.lng,
+                    topLeft.lat,
+                    botLeft.lng,
+                    botLeft.lat,
+                    botRight.lng,
+                    botRight.lat,
+                    topRight.lng,
+                    topRight.lat
+                ]),
+                holes: []
+            },
+            material: symbol ? new ImageMaterialProperty({image: symbol, transparent: true}) : Color.TRANSPARENT,
+            height: .5,
+            heightReference: HeightReference.RELATIVE_TO_GROUND
+        }
+    });
+
+}
+
+export function generateEllipse(lng: number, lat: number, text: string, color: string, symbol: string, scale = 2) {
+
+    // "flat" symbology
+    const position = Cartesian3.fromDegrees(lng, lat);
+    const topLeft = vincentyDirection(lng, lat, 315, scale);
+    const botLeft = vincentyDirection(lng, lat, 225, scale);
+    const botRight = vincentyDirection(lng, lat, 135, scale);
+    const topRight = vincentyDirection(lng, lat, 45, scale);
+
+    viewer.entities.add({
+        name: text,
+        position: position,
+        ellipse: {
+            semiMinorAxis: 2,
+            semiMajorAxis: 2,
+            heightReference: HeightReference.CLAMP_TO_GROUND,
+            material: Color.fromCssColorString(color).withAlpha(.25),
+            height: 0,
+            extrudedHeight: .25,
+            outline: true,
+            outlineColor: Color.fromCssColorString(color),
+            outlineWidth: 1
+        },
+        polygon: {
+            hierarchy: {
+                positions: Cartesian3.fromDegreesArray([
+                    topLeft.lng,
+                    topLeft.lat,
+                    botLeft.lng,
+                    botLeft.lat,
+                    botRight.lng,
+                    botRight.lat,
+                    topRight.lng,
+                    topRight.lat
+                ]),
+                holes: []
+            },
+            material: symbol ? new ImageMaterialProperty({image: symbol, transparent: true}) : Color.TRANSPARENT,
+            height: .5,
+            heightReference: HeightReference.RELATIVE_TO_GROUND
+        }
+    });
+}
+
+export function generatePoint(lng: number, lat: number, alt: number = 0, text: string, color = Color.WHITE, outlineColor = Color.BLACK) {
+    
+    viewer.entities.add({
+        position: Cartesian3.fromDegrees(lng, lat, alt),
+        point: {
+            ...basicPoint,
+            color: color,
+            outlineColor: outlineColor,
+        },
+        label: {
+            ...basicLabel,
+            backgroundColor: color,
+            fillColor: outlineColor,
+            text: text
+        }
+    });
+}
+
+export function generateAnimatedPoint(positions: any[], text: string, line = true, color = Color.WHITE, outlineColor = Color.BLACK) {
+
+    const property = new SampledPositionProperty();
+
+    // add first position as last for looping
+    positions.push(positions[0]);
+    positions.forEach((pos: any, i) => {
+        const time = JulianDate.addSeconds(getStartTime(), i * 30, new JulianDate());
+        property.addSample(time, Cartesian3.fromDegrees(pos.lng, pos.lat, pos.alt ? pos.alt : 0));
+        if (line) {
+            //Also create a point for each sample we generate.
+            viewer.entities.add({
+                position: Cartesian3.fromDegrees(pos.lng, pos.lat, pos.alt),
+                point: {
+                    pixelSize: 10,
+                    color: Color.TRANSPARENT,
+                    outlineColor: Color.WHITE,
+                    outlineWidth: 3,
+                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                    heightReference : HeightReference.CLAMP_TO_GROUND
+                },
+            });
+        }
+    });
+
+    let polyline = undefined;
+
+    if (line) {
+        polyline = {
+            positions: positions.map((pos: any) => Cartesian3.fromDegrees(pos.lng, pos.lat)),
+            material: new PolylineGlowMaterialProperty({
+                glowPower: 0.1,
+                color: Color.WHITE,
+            }),
+            width: 10,
+            clampToGround: true
+        }
+    } else {
+        property.setInterpolationOptions({
+            interpolationDegree: 5,
+            interpolationAlgorithm: LagrangePolynomialApproximation,
+        })
+    }
+
+    viewer.entities.add({
+        position: property,
+        availability: new TimeIntervalCollection([
+            new TimeInterval({
+                start: getStartTime(),
+                stop: getStopTime(),
+            }),
+        ]),
+        polyline: polyline,
+        orientation: new VelocityOrientationProperty(property),
+        point: {
+            ...basicPoint,
+            color: color,
+            outlineColor: outlineColor,
+        },
+        label: {
+            ...basicLabel,
+            backgroundColor: color,
+            fillColor: outlineColor,
+            text: text
+        }
+    });
+
+}
 
 export function getRandomNumber(min: number, max: number) {
     return Math.floor(Math.random() * (max - min) + min);
@@ -74,3 +429,39 @@ export function vincentyDirection(lng: number, lat: number, brng: number, dist: 
     const revAz = Math.atan2(sinAlpha, -tmp); // final bearing
     return { lng: lng + toDeg(L), lat: toDeg(latitude) };
 };
+
+// const osmBuildings = createOsmBuildings();
+// scene.primitives.add(osmBuildings);
+// scene.globe.depthTestAgainstTerrain = true;
+
+// osmBuildings.tileLoad.addEventListener((tile: Cesium3DTile) => {
+//     const content = tile.content;
+//     const featuresLength = content.featuresLength;
+//     for (let i = 0; i < featuresLength; i++) {
+//         const name = content.getFeature(i).getProperty("name");
+//         if (name === "The Landmark Center") {
+//             console.log(content.getFeature(i));
+//             const lng = content.getFeature(i).getProperty("cesium#longitude");
+//             const lat = content.getFeature(i).getProperty("cesium#latitude");
+//             const alt = parseInt(content.getFeature(i).getProperty("cesium#estimatedHeight"));
+//             const str = `${lng}:${lat}:${alt}`;
+//             const ent = viewer.entities.getById(str);
+//     }
+// });
+
+// osmBuildings.style = new Cesium3DTileStyle({
+//     color: {
+//         conditions: [
+//             // ["${feature['building']} === 'apartments' || ${feature['building']} === 'residential'", "color('cyan', 1)",],
+//             // ["${feature['building']} === 'civic'","color('blue', 1)",],
+//             // ["${feature['building']} === 'office'","color('yellow', 1)",],
+//             // ["${feature['building']} === 'commercial' || ${feature['building']} === 'retail'","color('green', 1)",],
+//             // ["${feature['building']} === 'hospital'","color('red', 1)",],
+//             // ["${feature['building']} === 'construction'","color('orange', 1)",],
+//             // ["${feature['building']} === 'school'","color('purple', 1)",],
+//             // ["${feature['building']} === 'parking'","color('pink', 1)",],
+//             ["${feature['name']} === 'The Landmark Center'", "color('white', 0)"],
+//             [true, "color('white', 1)"],
+//         ],
+//     }
+// });
