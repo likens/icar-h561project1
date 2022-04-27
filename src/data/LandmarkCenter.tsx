@@ -1,8 +1,5 @@
 import { FIRE_RED, getRandomNumber } from "../Utils";
 
-
-export const LANDMARK_CENTER_POSITION = { lng: -86.157, lat: 39.78187, alt: 38 };
-
 export const LANDMARK_CENTER_OUTLINE = [
     -86.156992, 39.782069,
     -86.157060, 39.782127,

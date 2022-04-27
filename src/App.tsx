@@ -2,7 +2,7 @@ import { Key, useEffect, useReducer, useState } from 'react'
 import { Cartesian3, createWorldTerrain, Math as CesiumMath, Viewer, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, ScreenSpaceEventType, Entity, Cartesian2, Cartographic, IonImageryProvider, ConstantProperty, ClockRange, Ion, Rectangle, Scene } from "cesium";
 // import CesiumNavigation from 'cesium-navigation-es6';
 import { generateBillboard, generateRectangle, generateEllipse, generatePointer, generateAnimatedBillboard, getStartTime, getStopTime, FIRE_RED } from "./Utils";
-import { LANDMARK_CENTER_POSITION, LANDMARK_CENTER_OUTLINE, LANDMARK_CENTER_WALLS, LANDMARK_CENTER_DOORS, LANDMARK_CENTER_WINDOWS, LANDMARK_CENTER_PERSONNEL } from "./data/LandmarkCenter";
+import { LANDMARK_CENTER_OUTLINE, LANDMARK_CENTER_WALLS, LANDMARK_CENTER_DOORS, LANDMARK_CENTER_WINDOWS, LANDMARK_CENTER_PERSONNEL } from "./data/LandmarkCenter";
 import fireCommercial from "./assets/img/napsg/hazard-fire-commercial.svg";
 import { FIRE_PERSONNEL } from './data/FirePersonnel';
 import { FIRE_VEHICLES } from './data/FireVehicles';
@@ -158,9 +158,11 @@ function startCesium() {
         }
     
         function addLandmarkCenter() {
+
+            const LANDMARK_CENTER_POSITION = Cartesian3.fromDegrees(-86.157, 39.78187, 38);
     
             viewer.entities.add({
-                position: Cartesian3.fromDegrees(LANDMARK_CENTER_POSITION.lat, LANDMARK_CENTER_POSITION.lng, LANDMARK_CENTER_POSITION.alt),
+                position: LANDMARK_CENTER_POSITION,
                 name: "The Landmark Center",
                 billboard: {
                     image: fireCommercial,
@@ -222,7 +224,7 @@ function startCesium() {
                 viewer.entities.add({
                     id: `landmark_floor_${i + 1}`,
                     name: `Floor ${i + 1}`,
-                    position: Cartesian3.fromDegrees(LANDMARK_CENTER_POSITION.lat, LANDMARK_CENTER_POSITION.lng, LANDMARK_CENTER_POSITION.alt),
+                    position: LANDMARK_CENTER_POSITION,
                     polygon: {
                         ...polygonDefs,
                         hierarchy: { positions: Cartesian3.fromDegreesArray(LANDMARK_CENTER_OUTLINE), holes: [] },
@@ -286,7 +288,7 @@ function startCesium() {
             }
     
             viewer.entities.add({
-                position: Cartesian3.fromDegrees(LANDMARK_CENTER_POSITION.lat, LANDMARK_CENTER_POSITION.lng, LANDMARK_CENTER_POSITION.alt),
+                position: LANDMARK_CENTER_POSITION,
                 name: "The Landmark Center",
                 ellipse: {
                     semiMinorAxis: 40,
@@ -303,7 +305,7 @@ function startCesium() {
     
             viewer.entities.add({
                 id: `landmark_full`,
-                position: Cartesian3.fromDegrees(LANDMARK_CENTER_POSITION.lat, LANDMARK_CENTER_POSITION.lng, LANDMARK_CENTER_POSITION.alt),
+                position: LANDMARK_CENTER_POSITION,
                 show: false,
                 name: "The Landmark Center",
                 polygon: {
@@ -410,7 +412,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/dist/assets/photos/${p.name}.jpg`} alt='' />
+                                                    <img src={`/photos/${p.name}.jpg`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-status'>{p.status ? p.status : `Available`}</div>
@@ -428,7 +430,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/dist/assets/photos/FireVehicle.png`} alt='' />
+                                                    <img src={`/photos/FireVehicle.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -445,7 +447,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/dist/assets/photos/FireDrone.png`} alt='' />
+                                                    <img src={`/photos/FireDrone.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -466,7 +468,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/dist/assets/photos/${p.name}.jpg`} alt='' />
+                                                    <img src={`/photos/${p.name}.jpg`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-status'>{p.status ? p.status : `Available`}</div>
@@ -484,7 +486,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/dist/assets/photos/MedicalVehicle.png`} alt='' />
+                                                    <img src={`/photos/MedicalVehicle.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -501,7 +503,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/dist/assets/photos/MedicalAir.png`} alt='' />
+                                                    <img src={`/photos/MedicalAir.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -522,7 +524,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/dist/assets/photos/${p.name}.jpg`} alt='' />
+                                                    <img src={`/photos/${p.name}.jpg`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-status'>{p.status ? p.status : `Available`}</div>
@@ -540,7 +542,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/dist/assets/photos/PoliceVehicle.png`} alt='' />
+                                                    <img src={`/photos/PoliceVehicle.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -557,7 +559,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/dist/assets/photos/PoliceAir.png`} alt='' />
+                                                    <img src={`/photos/PoliceAir.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -578,7 +580,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/dist/assets/photos/${p.name}.jpg`} alt='' />
+                                                    <img src={`/photos/${p.name}.jpg`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-status'>{p.status ? p.status : `Available`}</div>
@@ -596,7 +598,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/dist/assets/photos/PublicVehicle.png`} alt='' />
+                                                    <img src={`/photos/PublicVehicle.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -613,7 +615,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/dist/assets/photos/PoliceAir.png`} alt='' />
+                                                    <img src={`/photos/PoliceAir.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
