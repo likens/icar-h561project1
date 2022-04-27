@@ -1,6 +1,11 @@
 import { Cartesian2, Cartesian3, Cartographic, Color, HeightReference, HorizontalOrigin, ImageMaterialProperty, JulianDate, LagrangePolynomialApproximation, Math as CesiumMath, PolylineGlowMaterialProperty, Rectangle, SampledPositionProperty, TimeInterval, TimeIntervalCollection, VelocityOrientationProperty, VerticalOrigin } from "cesium";
 import { viewer } from "./App";
 
+export const FIRE_RED = `rgba(215, 48, 39)`;
+export const MED_GREEN = `rgba(127, 188, 65)`;
+export const POLICE_BLUE = `rgba(116, 173, 209)`;
+export const PUB_YELLOW = `rgba(255, 210, 61)`;
+
 export function getStartTime(): JulianDate {
     return JulianDate.fromDate(new Date());
 }
@@ -117,10 +122,10 @@ export function generateBillboard(symbol: string, label: string, lng: number, la
         name: label,
         billboard: {
             image: symbol,
-            // disableDepthTestDistance: Number.POSITIVE_INFINITY,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
             heightReference: HeightReference.RELATIVE_TO_GROUND,
-            scale: .4,
-            eyeOffset: new Cartesian3(0, 1.5, 0),
+            scale: .5,
+            eyeOffset: new Cartesian3(0, 0, 0),
         },
         label: {
             text: label,
@@ -224,7 +229,7 @@ export function generateRectangle(west: number, south: number, east: number, nor
 
 }
 
-export function generateEllipse(lng: number, lat: number, text: string, color: string, symbol: string, scale = 2) {
+export function generateEllipse(lng: number, lat: number, text: string, color: string, symbol: string, scale = 4) {
 
     // "flat" symbology
     const position = Cartesian3.fromDegrees(lng, lat);
@@ -237,8 +242,8 @@ export function generateEllipse(lng: number, lat: number, text: string, color: s
         name: text,
         position: position,
         ellipse: {
-            semiMinorAxis: 2,
-            semiMajorAxis: 2,
+            semiMinorAxis: 4,
+            semiMajorAxis: 4,
             heightReference: HeightReference.CLAMP_TO_GROUND,
             material: Color.fromCssColorString(color).withAlpha(.25),
             height: 0,

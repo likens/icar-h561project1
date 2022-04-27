@@ -1,3 +1,14 @@
+:root {
+    --fireRed: rgb(215, 48, 39);
+    --medGreen: rgb(127, 188, 65);
+    --policeBlue: rgb(116, 173, 209);
+    --publicYellow: rgb(255, 210, 61);
+    --fireRed50: rgba(215, 48, 39, .50);
+    --medGreen50: rgba(127, 188, 65, .50);
+    --policeBlue50: rgba(116, 173, 209, .50);
+    --publicYellow50: rgba(255, 210, 61, .50);
+}
+
 *,
 *:before,
 *:after {
@@ -54,6 +65,11 @@ body {
 .cesium--ql {
     transform: translateX(-55rem);
 }
+
+.cesium--ql .actions {
+    transform: translateX(55rem);
+}
+
 .title {
     font-size: 3rem;
     font-weight: 700;
@@ -138,6 +154,20 @@ body {
     border-radius: 0;
 }
 
+.tab {
+    height: 100%;
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    width: 100%;
+    transform: translateX(-100%);
+    transition: all .25s ease;
+}
+
+.tab--active {
+    transform: translateX(0)
+}
+
 .tab-buttons {
     position: absolute;
     left: 0;
@@ -147,14 +177,20 @@ body {
     flex-direction: column;
     align-items: flex-start;
     grid-gap: 1rem;
+    transition: all .25s ease;
+    transform: translateX(0);
+}
+
+.tab-buttons--active {
+    transform: translateX(40rem);
 }
 
 .tab-buttons button {
-    background: rgba(0,0,0,.75);
+    background: rgba(0,0,0,.8);
     color: #fff;
     padding: 1.25rem 1rem 1rem;
     border-radius: 1rem 1rem 0 0;
-    border: 0;
+    border: .2rem solid rgba(0,0,0,.75);
     font-family: inherit;
     font-weight: 700;
     font-size: 1.8rem;
@@ -163,6 +199,9 @@ body {
     cursor: pointer;
     white-space: nowrap;
     width: 14rem;
+    text-shadow: 0 0 .5rem #000;
+    transition: all .25s ease;
+    box-shadow: 0 0 1rem #000;
 }
 
 .tab-buttons button:nth-child(1) {
@@ -182,23 +221,47 @@ body {
 }
 
 .tab-content {
-    width: 30rem;
+    color: #fff;
+    background: rgba(0,0,0,.95);
+    border-right: .5rem solid black;
+    width: 40rem;
     height: 100vh;
     position: absolute;
     left: 0;
     top: 0;
     z-index: 100;
     transform: translateX(-100%);
+    transition: all .25s ease;
+    text-shadow: 0 0 .5rem #000;
+    overflow: auto;
+    scrollbar-color: #fff #000;
+    scrollbar-width: thin;
+    box-shadow: 0 0 1rem #000;
+}
+
+.tab-content::-webkit-scrollbar {
+    width: .4rem;
+    height: .4rem;
+    background-color: #000;
+}
+  
+.tab-content::-webkit-scrollbar-thumb {
+    background: #fff;
+}
+
+.tab-content--active {
+    transform: none;
 }
 
 .actions {
     position: absolute;
     right: 2rem;
-    bottom: 6rem;
+    bottom: 2rem;
     z-index: 200;
     display: grid;
     grid-gap: 1rem;
     text-align: right;
+    transition: all .25s ease;
 }
 
 .actions button {
@@ -289,23 +352,163 @@ body {
 
 .distance-legend {
     z-index: 10;
-    bottom: 2rem !important;
+    bottom: auto !important;
     right: 2rem;
+    top: 15rem;
     height: 3rem !important;
-    width: 12rem !important;
+    width: 14rem !important;
     border-radius: 1rem !important;
     padding: 0 1rem !important;
     background: rgba(0,0,0,.75);
+    display: block !important;
 }
 
 .distance-legend-label {
     font-family: 'IBM Plex Sans' !important;
     font-weight: 700 !important;
-    line-height: auto !important;
+    line-height: 1 !important;
     padding-top: .5rem;
+    width: 14rem !important;
 }
 
 .distance-legend-scale-bar {
     transition: all .25s ease;
     top: 1.2rem !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+}
+
+.list-title {
+    text-transform: uppercase;
+    padding: 1.5rem;
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,.9);
+    font-weight: 700;
+    font-size: 2.6rem;
+    z-index: 100;
+}
+
+.list {
+    margin: 0;
+    padding: 0 0 3rem;
+    list-style: none;
+    display: grid;
+    grid-gap: 0;
+}
+
+.list-item {
+    display: grid;
+    column-gap: 1.5rem;
+    cursor: pointer;
+    transition: all .25s ease;
+    padding: 1.5rem;
+    position: relative;
+    z-index: 10;
+    grid-template-columns: 7.5rem 1fr;
+    grid-template-areas: "image name"
+                         "image sub"
+                         "image loc";
+}
+
+.list-name {
+    grid-area: name;
+    font-weight: 700;
+    font-size: 2.2rem;
+    padding-bottom: .5rem;
+    text-transform: uppercase;
+}
+
+.list-status {
+    position: absolute;
+    left: 2rem;
+    bottom: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1rem;
+    background: green;
+    border-radius: 1rem;
+    padding: .25rem .5rem;
+    line-height: 1;
+}
+
+.list-image {
+    grid-area: image;
+}
+
+.list-image img {
+    border-radius: 100%;
+    width: 100%;
+    display: block;
+    border: .2rem solid green;
+}
+
+.list-sub {
+    grid-area: sub;
+}
+
+.list-loc {
+    grid-area: loc;
+}
+
+.tab-button--fire:hover,
+.tab-button--fire.tab-button--active {
+    border-color: var(--fireRed);
+    background: var(--fireRed);
+}
+
+.tab-content--fire {
+    border-color: var(--fireRed);
+}
+
+.tab-content--fire .list-item--active,
+.tab-content--fire .list-item:hover {
+    background: var(--fireRed50);
+}
+
+.tab-button--medical:hover,
+.tab-button--medical.tab-button--active {
+    border-color: var(--medGreen);
+    background: var(--medGreen);
+}
+
+.tab-content--medical {
+    border-color: var(--medGreen);
+}
+
+.tab-content--medical .list-item--active,
+.tab-content--medical .list-item:hover {
+    background: var(--medGreen50);
+}
+
+.tab-button--police:hover,
+.tab-button--police.tab-button--active {
+    border-color: var(--policeBlue);
+    background: var(--policeBlue);
+}
+
+.tab-content--police {
+    border-color: var(--policeBlue);
+}
+
+.tab-content--police .list-item--active,
+.tab-content--police .list-item:hover {
+    background: var(--policeBlue50);
+}
+
+.tab-button--public:hover,
+.tab-button--public.tab-button--active {
+    border-color: var(--publicYellow);
+    background: var(--publicYellow);
+}
+
+.tab-content--public {
+    border-color: var(--publicYellow);
+}
+
+.tab-content--public .list-item--active,
+.tab-content--public .list-item:hover {
+    background: var(--publicYellow50);
 }

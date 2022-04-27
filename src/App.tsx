@@ -1,39 +1,50 @@
 import { Key, useEffect, useReducer, useState } from 'react'
 import { Cartesian3, createWorldTerrain, Math as CesiumMath, Viewer, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, ScreenSpaceEventType, Entity, Cartesian2, Cartographic, IonImageryProvider, ConstantProperty, ClockRange, Ion, Rectangle, Scene } from "cesium";
-import { generateBillboard, generateRectangle, generateEllipse, generatePointer, generateAnimatedBillboard, getStartTime, getStopTime } from "./Utils";
-import { QUICK_LINKS, ION_ACCESS_TOKEN, LANDMARK_CENTER_POSITION, LANDMARK_CENTER_OUTLINE, LANDMARK_CENTER_WALLS, BILLBOARDS, AREAS_RECTANGLE, AREAS_ELLIPSE, UNITS_SINGLE_FIRE, UNITS_VEHICLE_FIRE, UNITS_SINGLE_POLICE, UNITS_VEHICLE_POLICE, UNITS_SINGLE_EMS, UNITS_VEHICLE_EMS, UNIT_AIR, LANDMARK_CENTER_DOORS, LANDMARK_CENTER_WINDOWS, LANDMARK_CENTER_UNITS } from "./Data";
-import fireCommercial from "./assets/img/napsg/hazard-fire-commercial.svg";
 // import CesiumNavigation from 'cesium-navigation-es6';
+import { generateBillboard, generateRectangle, generateEllipse, generatePointer, generateAnimatedBillboard, getStartTime, getStopTime, FIRE_RED } from "./Utils";
+import { LANDMARK_CENTER_POSITION, LANDMARK_CENTER_OUTLINE, LANDMARK_CENTER_WALLS, LANDMARK_CENTER_DOORS, LANDMARK_CENTER_WINDOWS, LANDMARK_CENTER_PERSONNEL } from "./data/LandmarkCenter";
+import fireCommercial from "./assets/img/napsg/hazard-fire-commercial.svg";
+import { FIRE_PERSONNEL } from './data/FirePersonnel';
+import { FIRE_VEHICLES } from './data/FireVehicles';
+import { POLICE_PERSONNEL } from './data/PolicePersonnel';
+import { POLICE_VEHICLES } from './data/PoliceVehicles';
+import { MEDICAL_PERSONNEL } from './data/MedicalPersonnel';
+import { MEDICAL_VEHICLES } from './data/MedicalVehicles';
+import { AREAS_RECTANGLE } from './data/AreasRectangle';
+import { AREAS_ELLIPSE } from './data/AreasEllipse';
+import { MEDICAL_AIR } from './data/MedicalAir';
+import { FIRE_AIR } from './data/FireAir';
+import { QUICK_LINKS } from './data/QuickLinks';
+import { PUBLIC_WORKS_PERSONNEL } from './data/PublicWorksPersonnel';
+import { PUBLIC_WORKS_VEHICLES } from './data/PublicWorksVehicles';
 
-Ion.defaultAccessToken = ION_ACCESS_TOKEN;
+Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwZWI3MDRlMi1hMGMyLTQzYjUtYTYxMy0zOGNlYjViOTdjMGIiLCJpZCI6ODM5MjksImlhdCI6MTY0OTExOTQ3MX0.j_tC4ZO5-0FDV4_n-edMAlcQK5EyuV9WyRhfv_4yjEU";
 
 export let viewer: Viewer;
 export let scene: Scene;
 
 function startCesium() {
-    
-        // https://napsg-web.s3.amazonaws.com/symbology/index.html#/
-        // https://sandcastle.cesium.com/?src=Drawing%20on%20Terrain.html
-        // https://sandcastle.cesium.com/index.html?src=HeadingPitchRoll.html&label=Tutorials
-        // https://sandcastle.cesium.com/?src=Interpolation.html
 
         setupViewer();
         addTooltip();
         addLandmarkCenter();
-    
-        // generatePoint(-86.157074, 39.780615, 0, "TESTSTATIC");
-        // generateAnimatedPoint(TEST_ANIMATION_POSITIONS, "TESTANIMATION");
-    
-        BILLBOARDS.forEach((billboard: any) => generateBillboard(billboard.symbol, billboard.name, billboard.lng, billboard.lat, billboard.alt));
+
         AREAS_RECTANGLE.forEach((area: any) => generateRectangle(area[0], area[1], area[2], area[3], area[4], area[5], area[6], area[7]));
         AREAS_ELLIPSE.forEach((area: any) => generateEllipse(area.lng, area.lat, area.name, area.color, area.symbol, area.scale));
-        UNITS_SINGLE_FIRE.forEach((unit: any) => generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
-        UNITS_SINGLE_POLICE.forEach((unit: any) => generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
-        UNITS_SINGLE_EMS.forEach((unit: any) => generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
-        UNITS_VEHICLE_FIRE.forEach((unit: any) => generatePointer(false, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
-        UNITS_VEHICLE_POLICE.forEach((unit: any) => generatePointer(false, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
-        UNITS_VEHICLE_EMS.forEach((unit: any) => generatePointer(false, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
-        UNIT_AIR.forEach((unit: any) => generateAnimatedBillboard(unit.symbol, unit.label, unit.positions));
+
+        FIRE_PERSONNEL.forEach((unit: any) => generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
+        FIRE_VEHICLES.forEach((unit: any) => generatePointer(false, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
+        FIRE_AIR.forEach((unit: any) => generateAnimatedBillboard(unit.symbol, unit.name, unit.locations));
+
+        POLICE_PERSONNEL.forEach((unit: any) => generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
+        POLICE_VEHICLES.forEach((unit: any) => generatePointer(false, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
+
+        MEDICAL_PERSONNEL.forEach((unit: any) => generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
+        MEDICAL_VEHICLES.forEach((unit: any) => generatePointer(false, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
+        MEDICAL_AIR.forEach((unit: any) => generateAnimatedBillboard(unit.symbol, unit.name, unit.locations));
+
+        PUBLIC_WORKS_PERSONNEL.forEach((unit: any) => generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
+        PUBLIC_WORKS_VEHICLES.forEach((unit: any) => generatePointer(false, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
         
         function setupViewer() {
 
@@ -45,16 +56,16 @@ function startCesium() {
                 infoBox: false
             });
         
-            const cesiumNavigationOptions = {
-                defaultResetView: Rectangle.fromDegrees(-86.159431, 39.779762, -86.153759, 39.783698),
-                enableCompass: true,
-                enableZoomControls: true,
-                enableDistanceLegend: true,
-                enableCompassOuterRing: true,
-                resetTooltip: "Reset to Default View",
-                zoomInTooltip: "Zoom In",
-                zoomOutTooltip: "Zoom Out"
-            }
+            // const cesiumNavigationOptions = {
+            //     defaultResetView: Rectangle.fromDegrees(-86.159431, 39.779762, -86.153759, 39.783698),
+            //     enableCompass: true,
+            //     enableZoomControls: true,
+            //     enableDistanceLegend: true,
+            //     enableCompassOuterRing: true,
+            //     resetTooltip: "Reset to Default View",
+            //     zoomInTooltip: "Zoom In",
+            //     zoomOutTooltip: "Zoom Out"
+            // }
         
             // new CesiumNavigation(viewer, cesiumNavigationOptions);
         
@@ -66,7 +77,7 @@ function startCesium() {
             viewer.clock.multiplier = 5;
         
             viewer.timeline.zoomTo(getStartTime(), getStopTime());
-            viewer.imageryLayers.addImageryProvider(new IonImageryProvider({ assetId: 3 }));
+            // viewer.imageryLayers.addImageryProvider(new IonImageryProvider({ assetId: 3 }));
 
             scene = viewer.scene;
             scene.camera.flyTo({
@@ -104,34 +115,35 @@ function startCesium() {
             const handler = new ScreenSpaceEventHandler(scene.canvas);
     
             handler.setInputAction(function onMouseMove(movement) {
-                const locationMouse: any = viewer.entities.getById('tooltip');
+                const tooltip: any = viewer.entities.getById('tooltip');
                 const cartesian = scene.pickPosition(movement.endPosition);
                 const pick = scene.pick(movement.endPosition);
-                
-                const cartographic = Cartographic.fromCartesian(cartesian);
-                const longitudeString = CesiumMath.toDegrees(cartographic.longitude).toFixed(6);
-                const latitudeString = CesiumMath.toDegrees(cartographic.latitude).toFixed(6);
-                const heightString = CesiumMath.toDegrees(cartographic.height).toFixed(2);
-                // setLongitude(longitudeString);
-                // setLatitude(latitudeString);
-                // setAltitude(heightString);
 
-                if (pick?.id?.name) {
-                    locationMouse.position = cartesian ? cartesian : scene.globe.pick(viewer.camera.getPickRay(movement.endPosition), scene);
-                    locationMouse.label.show = true;
-                    locationMouse.label.text = pick.id.name;
-                    locationMouse.label.font = "20px sans-serif";
-                } 
-                else if (cartesian) {
-                    locationMouse.position = cartesian;
-                    locationMouse.label.show = true;
-                    locationMouse.label.text = `Lon: ${longitudeString}\u00B0\nLat: ${latitudeString}\u00B0\nAlt: ${heightString}m`;
-                    locationMouse.label.font = "12px sans-serif";
-                } 
-                else {
-                    locationMouse.label.show = false;
+                if (cartesian) {
+
+                    const cartographic = Cartographic.fromCartesian(cartesian);
+                    const longitudeString = CesiumMath.toDegrees(cartographic.longitude).toFixed(6);
+                    const latitudeString = CesiumMath.toDegrees(cartographic.latitude).toFixed(6);
+                    const heightString = CesiumMath.toDegrees(cartographic.height).toFixed(2);
+    
+                    if (pick?.id?.name) {
+                        tooltip.position = cartesian ? cartesian : scene.globe.pick(viewer.camera.getPickRay(movement.endPosition), scene);
+                        tooltip.label.show = true;
+                        tooltip.label.text = pick.id.name;
+                        tooltip.label.font = "20px sans-serif";
+                    } else if (cartesian) {
+                        tooltip.position = cartesian;
+                        tooltip.label.show = true;
+                        tooltip.label.text = `Lon: ${longitudeString}\u00B0\nLat: ${latitudeString}\u00B0\nAlt: ${heightString}m`;
+                        tooltip.label.font = "12px sans-serif";
+                    } else {
+                        tooltip.label.show = false;
+                    }
+                    scene.requestRender();
+
+                } else {
+                    tooltip.label.show = false;
                 }
-                scene.requestRender();
             }, ScreenSpaceEventType.MOUSE_MOVE);
     
             handler.setInputAction(function onMouseMove(movement) {
@@ -148,7 +160,7 @@ function startCesium() {
         function addLandmarkCenter() {
     
             viewer.entities.add({
-                position: LANDMARK_CENTER_POSITION,
+                position: Cartesian3.fromDegrees(LANDMARK_CENTER_POSITION.lat, LANDMARK_CENTER_POSITION.lng, LANDMARK_CENTER_POSITION.alt),
                 name: "The Landmark Center",
                 billboard: {
                     image: fireCommercial,
@@ -210,7 +222,7 @@ function startCesium() {
                 viewer.entities.add({
                     id: `landmark_floor_${i + 1}`,
                     name: `Floor ${i + 1}`,
-                    position: LANDMARK_CENTER_POSITION,
+                    position: Cartesian3.fromDegrees(LANDMARK_CENTER_POSITION.lat, LANDMARK_CENTER_POSITION.lng, LANDMARK_CENTER_POSITION.alt),
                     polygon: {
                         ...polygonDefs,
                         hierarchy: { positions: Cartesian3.fromDegreesArray(LANDMARK_CENTER_OUTLINE), holes: [] },
@@ -226,8 +238,8 @@ function startCesium() {
                     //         generatePoint(lng, lat, height + .5, `${lng}, ${lat}`);
                     //     }
                     // });
-                    LANDMARK_CENTER_UNITS.forEach((unit) => {
-                        generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color, height + .5);
+                    LANDMARK_CENTER_PERSONNEL.forEach((p) => {
+                        generatePointer(true, p.name, p.symbol, p.lng, p.lat, p.brng, FIRE_RED, height + .5);
                     });
                     LANDMARK_CENTER_WALLS.forEach((wall, i) => {
                         let entity = {
@@ -274,7 +286,7 @@ function startCesium() {
             }
     
             viewer.entities.add({
-                position: LANDMARK_CENTER_POSITION,
+                position: Cartesian3.fromDegrees(LANDMARK_CENTER_POSITION.lat, LANDMARK_CENTER_POSITION.lng, LANDMARK_CENTER_POSITION.alt),
                 name: "The Landmark Center",
                 ellipse: {
                     semiMinorAxis: 40,
@@ -291,7 +303,7 @@ function startCesium() {
     
             viewer.entities.add({
                 id: `landmark_full`,
-                position: LANDMARK_CENTER_POSITION,
+                position: Cartesian3.fromDegrees(LANDMARK_CENTER_POSITION.lat, LANDMARK_CENTER_POSITION.lng, LANDMARK_CENTER_POSITION.alt),
                 show: false,
                 name: "The Landmark Center",
                 polygon: {
@@ -317,6 +329,8 @@ function App() {
     
     const [floors, setFloors] = useState(true);
     const [quickLinks, setQuickLinks] = useState(false);
+    const [firePersonnel, setFirePersonnel] = useState([{}]);
+    const [activeTab, setActiveTab] = useState("");
     const [longitude, setLongitude] = useState("0");
     const [latitude, setLatitude] = useState("0");
     const [altitude, setAltitude] = useState("0");
@@ -340,6 +354,16 @@ function App() {
 
     useEffect(() => {
         startCesium();
+        if (FIRE_PERSONNEL.length) {
+            const firePersonnel: any = [];
+            LANDMARK_CENTER_PERSONNEL.forEach((p: any) => {
+                firePersonnel.push(p);
+            });
+            FIRE_PERSONNEL.forEach((p: any) => {
+                firePersonnel.push(p);
+            });
+            setFirePersonnel(firePersonnel);
+        }
     }, []);
 
 	return (
@@ -349,31 +373,265 @@ function App() {
                     <div className='action'>
                         <button onClick={() => toggleQuickLinks()}>{quickLinks ? 'Hide' : 'View'} Quick Links</button>
                     </div>
-                    <div className='action'>
+                    {/* <div className='action'>
                         <button onClick={() => toggleFloors()}>View {floors ? `Full Structure` : `Structure Floors`}</button>
-                    </div>
-                </div>
-                <div className='tab-buttons'>
-                    <button><span>Fire</span></button>
-                    <button><span>Police</span></button>
-                    <button><span>Medical</span></button>
-                    <button><span>Pub. Works</span></button>
-                </div>
-                <div className='tab-content'>
-                    <div className='tab'></div>
-                    <div className='tab'></div>
-                    <div className='tab'></div>
-                    <div className='tab'></div>
-                </div>
-                <div id="cesiumContainer">
-                    {/* <div className='infobar'>
-                        <div className='location'>
-                            <div className='longitude'>{longitude}</div>
-                            <div className='latitude'>{latitude}</div>
-                            <div className='altitude'>{altitude}</div>
-                        </div>
                     </div> */}
                 </div>
+                <div className={`tab-buttons ${activeTab != '' ? `tab-buttons--active` : ``}`}>
+                    <button onClick={() => setActiveTab('fire')} 
+                        className={`tab-button tab-button--fire ${activeTab === 'fire' ? `tab-button--active` : ``}`}>
+                        <span>Fire</span>
+                    </button><button onClick={() => setActiveTab('medical')} 
+                        className={`tab-button tab-button--medical ${activeTab === 'medical' ? `tab-button--active` : ``}`}>
+                        <span>Medical</span>
+                    </button><button onClick={() => setActiveTab('police')} 
+                        className={`tab-button tab-button--police ${activeTab === 'police' ? `tab-button--active` : ``}`}>
+                        <span>Police</span>
+                    </button><button onClick={() => setActiveTab('public')} 
+                        className={`tab-button tab-button--public ${activeTab === 'public' ? `tab-button--active` : ``}`}>
+                        <span>Pub. Works</span>
+                    </button>
+                </div>
+                <div className={`tab-content ${activeTab != '' ? `tab-content--${activeTab} tab-content--active` : ``}`}>
+                    <div className='filters'>
+                        <button onClick={() => setActiveTab('')}>close menu</button>
+                        <div className='filter-view'></div>
+                        <div className='filter-all'></div>
+                        <div className='filter-officers'></div>
+                        <div className='filter-vehicles'></div>
+                        <div className='filter-other'></div>
+                    </div>
+                    <div className={`tab tab--fire ${activeTab === 'fire' ? `tab--active` : ``}`}>
+                        <div className='units'>
+                            <div className='personnel'>
+                                <div className='list-title'>Personnel</div>
+                                <ul className='list'>
+                                    {firePersonnel.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item'>
+                                                <div className='list-image'>
+                                                    <img src={`/dist/assets/photos/${p.name}.jpg`} alt='' />
+                                                </div>
+                                                <div className='list-name'>{p.name}</div>
+                                                <div className='list-status'>{p.status ? p.status : `Available`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
+                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                            <div className='vehicles'>
+                                <div className='list-title'>Vehicles</div>
+                                <ul className='list'>
+                                    {FIRE_VEHICLES.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item'>
+                                                <div className='list-image'>
+                                                    <img src={`/dist/assets/photos/FireVehicle.png`} alt='' />
+                                                </div>
+                                                <div className='list-name'>{p.name}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
+                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                            <div className='air'>
+                                <div className='list-title'>Air</div>
+                                <ul className='list'>
+                                    {FIRE_AIR.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item'>
+                                                <div className='list-image'>
+                                                    <img src={`/dist/assets/photos/FireDrone.png`} alt='' />
+                                                </div>
+                                                <div className='list-name'>{p.name}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
+                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={`tab tab--medical ${activeTab === 'medical' ? `tab--active` : ``}`}>
+                        <div className='units'>
+                            <div className='personnel'>
+                                <div className='list-title'>Personnel</div>
+                                <ul className='list'>
+                                    {MEDICAL_PERSONNEL.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item'>
+                                                <div className='list-image'>
+                                                    <img src={`/dist/assets/photos/${p.name}.jpg`} alt='' />
+                                                </div>
+                                                <div className='list-name'>{p.name}</div>
+                                                <div className='list-status'>{p.status ? p.status : `Available`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
+                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                            <div className='vehicles'>
+                                <div className='list-title'>Vehicles</div>
+                                <ul className='list'>
+                                    {MEDICAL_VEHICLES.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item'>
+                                                <div className='list-image'>
+                                                    <img src={`/dist/assets/photos/MedicalVehicle.png`} alt='' />
+                                                </div>
+                                                <div className='list-name'>{p.name}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
+                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                            <div className='air'>
+                                <div className='list-title'>Air</div>
+                                <ul className='list'>
+                                    {MEDICAL_AIR.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item'>
+                                                <div className='list-image'>
+                                                    <img src={`/dist/assets/photos/MedicalAir.png`} alt='' />
+                                                </div>
+                                                <div className='list-name'>{p.name}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
+                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={`tab tab--police ${activeTab === 'police' ? `tab--active` : ``}`}>
+                        <div className='units'>
+                            <div className='personnel'>
+                                <div className='list-title'>Personnel</div>
+                                <ul className='list'>
+                                    {POLICE_PERSONNEL.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item'>
+                                                <div className='list-image'>
+                                                    <img src={`/dist/assets/photos/${p.name}.jpg`} alt='' />
+                                                </div>
+                                                <div className='list-name'>{p.name}</div>
+                                                <div className='list-status'>{p.status ? p.status : `Available`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
+                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                            <div className='vehicles'>
+                                <div className='list-title'>Vehicles</div>
+                                <ul className='list'>
+                                    {POLICE_VEHICLES.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item'>
+                                                <div className='list-image'>
+                                                    <img src={`/dist/assets/photos/PoliceVehicle.png`} alt='' />
+                                                </div>
+                                                <div className='list-name'>{p.name}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
+                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                            {/* <div className='air'>
+                                <div className='list-title'>Air</div>
+                                <ul className='list'>
+                                    {POLICE_AIR.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item'>
+                                                <div className='list-image'>
+                                                    <img src={`/dist/assets/photos/PoliceAir.png`} alt='' />
+                                                </div>
+                                                <div className='list-name'>{p.name}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
+                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div> */}
+                        </div>
+                    </div>
+                    <div className={`tab tab--public ${activeTab === 'public' ? `tab--active` : ``}`}>
+                        <div className='units'>
+                            <div className='personnel'>
+                                <div className='list-title'>Personnel</div>
+                                <ul className='list'>
+                                    {PUBLIC_WORKS_PERSONNEL.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item'>
+                                                <div className='list-image'>
+                                                    <img src={`/dist/assets/photos/${p.name}.jpg`} alt='' />
+                                                </div>
+                                                <div className='list-name'>{p.name}</div>
+                                                <div className='list-status'>{p.status ? p.status : `Available`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
+                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                            <div className='vehicles'>
+                                <div className='list-title'>Vehicles</div>
+                                <ul className='list'>
+                                    {PUBLIC_WORKS_VEHICLES.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item'>
+                                                <div className='list-image'>
+                                                    <img src={`/dist/assets/photos/PublicVehicle.png`} alt='' />
+                                                </div>
+                                                <div className='list-name'>{p.name}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
+                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                            {/* <div className='air'>
+                                <div className='list-title'>Air</div>
+                                <ul className='list'>
+                                    {POLICE_AIR.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item'>
+                                                <div className='list-image'>
+                                                    <img src={`/dist/assets/photos/PoliceAir.png`} alt='' />
+                                                </div>
+                                                <div className='list-name'>{p.name}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
+                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div> */}
+                        </div>
+                    </div>
+                </div>
+                <div id="cesiumContainer"></div>
+            </div>
+            <div className='modal'>
+                <div className='modal-video'></div>
+                <div className='modal-body'></div>
+                <div className='modal-audio'></div>
             </div>
             <div className='quick-links'>
                 <div className="title">AR in COP for ICS Quick Links</div>
