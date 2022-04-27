@@ -412,7 +412,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/photos/${p.name}.jpg`} alt='' />
+                                                    <img src={`/${p.name}.jpg`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-status'>{p.status ? p.status : `Available`}</div>
@@ -430,7 +430,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/photos/FireVehicle.png`} alt='' />
+                                                    <img src={`/FireVehicle.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -447,7 +447,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/photos/FireDrone.png`} alt='' />
+                                                    <img src={`/FireDrone.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -468,7 +468,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/photos/${p.name}.jpg`} alt='' />
+                                                    <img src={`/${p.name}.jpg`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-status'>{p.status ? p.status : `Available`}</div>
@@ -486,7 +486,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/photos/MedicalVehicle.png`} alt='' />
+                                                    <img src={`/MedicalVehicle.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -503,7 +503,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/photos/MedicalAir.png`} alt='' />
+                                                    <img src={`/MedicalAir.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -524,7 +524,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/photos/${p.name}.jpg`} alt='' />
+                                                    <img src={`/${p.name}.jpg`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-status'>{p.status ? p.status : `Available`}</div>
@@ -542,7 +542,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/photos/PoliceVehicle.png`} alt='' />
+                                                    <img src={`/PoliceVehicle.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -559,7 +559,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/photos/PoliceAir.png`} alt='' />
+                                                    <img src={`/PoliceAir.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -580,7 +580,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/photos/${p.name}.jpg`} alt='' />
+                                                    <img src={`/${p.name}.jpg`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-status'>{p.status ? p.status : `Available`}</div>
@@ -598,7 +598,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/photos/PublicVehicle.png`} alt='' />
+                                                    <img src={`/PublicVehicle.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
@@ -615,7 +615,7 @@ function App() {
                                         return (
                                             <li key={i} className='list-item'>
                                                 <div className='list-image'>
-                                                    <img src={`/photos/PoliceAir.png`} alt='' />
+                                                    <img src={`/PoliceAir.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
                                                 <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
