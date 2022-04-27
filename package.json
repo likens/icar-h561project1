@@ -4,9 +4,8 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && copy",
-    "preview": "vite preview",
-    "copy": "copyfiles -f ./src/assets/img/photos/* ./dist"
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "cesium": "^1.90.0",
