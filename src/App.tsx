@@ -77,7 +77,7 @@ function startCesium() {
             viewer.clock.multiplier = 3;
         
             viewer.timeline.zoomTo(getStartTime(), getStopTime());
-            viewer.imageryLayers.addImageryProvider(new IonImageryProvider({ assetId: 3 }));
+            // viewer.imageryLayers.addImageryProvider(new IonImageryProvider({ assetId: 3 }));
 
             scene = viewer.scene;
             scene.camera.flyTo({
