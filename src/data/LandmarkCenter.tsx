@@ -1,4 +1,5 @@
 import { FIRE_RED, getRandomNumber } from "../Utils";
+import { FIRE_RANKS, FIRE_STATUS } from "./FirePersonnel";
 
 export const LANDMARK_CENTER_OUTLINE = [
     -86.156992, 39.782069,
@@ -15,11 +16,58 @@ export const LANDMARK_CENTER_OUTLINE = [
     -86.156924, 39.782110
 ]
 
-export const LANDMARK_CENTER_PERSONNEL = [
-    { lng: -86.157127, lat: 39.781875, brng: getRandomNumber(0, 360), name: "Allens", symbol: "", color: FIRE_RED },
-    { lng: -86.156945, lat: 39.781868, brng: getRandomNumber(0, 360), name: "Murphy", symbol: "", color: FIRE_RED },
-    { lng: -86.157035, lat: 39.781810, brng: getRandomNumber(0, 360), name: "Williams", symbol: "", color: FIRE_RED },
-    { lng: -86.157045, lat: 39.781915, brng: getRandomNumber(0, 360), name: "Wood", symbol: "", color: FIRE_RED },
+export const LANDMARK_CENTER_PERSONNEL = [{
+    lng: -86.157127,
+    lat: 39.781875,
+    brng: getRandomNumber(0, 360),
+    fname: "Tim",
+    lname: "Allens",
+    name: "Allens",
+    sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
+    status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
+    loc: "Floor 5, The Landmark Center",
+    symbol: "",
+    color: FIRE_RED
+},
+{
+    lng: -86.156945,
+    lat: 39.781868,
+    brng: getRandomNumber(0, 360),
+    fname: "Dave",
+    lname: "Murphy",
+    name: "Murphy",
+    sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
+    status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
+    loc: "Floor 5, The Landmark Center",
+    symbol: "",
+    color: FIRE_RED
+},
+{
+    lng: -86.157035,
+    lat: 39.781810,
+    brng: getRandomNumber(0, 360),
+    fname: "Ethan",
+    lname: "Williams",
+    name: "Williams",
+    sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
+    status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
+    loc: "Floor 5, The Landmark Center",
+    symbol: "",
+    color: FIRE_RED
+},
+{
+    lng: -86.157045,
+    lat: 39.781915,
+    brng: getRandomNumber(0, 360),
+    fname: "Frank",
+    lname: "Wood",
+    name: "Wood",
+    sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
+    status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
+    loc: "Floor 5, The Landmark Center",
+    symbol: "",
+    color: FIRE_RED
+},
 ]
 
 export const LANDMARK_CENTER_WALLS = [

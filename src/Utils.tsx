@@ -1,5 +1,15 @@
-import { Cartesian2, Cartesian3, Cartographic, Color, HeightReference, HorizontalOrigin, ImageMaterialProperty, JulianDate, LagrangePolynomialApproximation, Math as CesiumMath, PolylineGlowMaterialProperty, Rectangle, SampledPositionProperty, TimeInterval, TimeIntervalCollection, VelocityOrientationProperty, VerticalOrigin } from "cesium";
+import { Cartesian2, Cartesian3, Cartographic, Color, HeightReference, HorizontalOrigin, ImageMaterialProperty, JulianDate, LabelStyle, LagrangePolynomialApproximation, Math as CesiumMath, NearFarScalar, PolylineGlowMaterialProperty, Rectangle, SampledPositionProperty, TimeInterval, TimeIntervalCollection, VelocityOrientationProperty, VerticalOrigin } from "cesium";
 import { viewer } from "./App";
+
+export const PERSONNEL_STATUS = [
+    "Staging",
+    "Active",
+    "Available",
+    "Unavailable",
+    "Resting",
+    "Patrolling",
+    "Guarding"
+]
 
 export const FIRE_RED = `rgba(215, 48, 39)`;
 export const MED_GREEN = `rgba(127, 188, 65)`;
@@ -14,7 +24,7 @@ export function getStopTime(): JulianDate {
     return JulianDate.addSeconds(getStartTime(), 240, new JulianDate());
 }
 
-export function generatePointer(unit: boolean, label: string, symbol: string, lng: number, lat: number, brng: number, color: string = "#ffffff", height?: number) {
+export function generatePointer(unit: boolean, name: string, symbol: string, lng: number, lat: number, brng: number, color: string = "#ffffff", height?: number) {
 
     const scale = unit ? 1 : 4;
     const east = 90;
@@ -56,8 +66,8 @@ export function generatePointer(unit: boolean, label: string, symbol: string, ln
     const extrudedHeight = height ? height + .5 : 1;
 
     let entity = {
-        id: `pointer_${unit ? `unit` : `vehicle`}_${label}`,
-        name: label,
+        id: `pointer_${name}`, // ${unit ? `unit` : `vehicle`}
+        name: name,
         position: position,
         show: true,
         polygon: {
@@ -74,16 +84,11 @@ export function generatePointer(unit: boolean, label: string, symbol: string, ln
             outlineColor: Color.BLACK
         },
         label: {
-            text: label,
-            font: "14px sans-serif",
-            fillColor: Color.WHITE,
-            backgroundColor: Color.BLACK,
-            showBackground: true,
-            horizontalOrigin: HorizontalOrigin.CENTER,
-            verticalOrigin: VerticalOrigin.CENTER,
-            heightReference: HeightReference.RELATIVE_TO_GROUND,
-            eyeOffset: new Cartesian3(0, 3, -2),
-            // translucencyByDistance: new NearFarScalar(1.25e2, 1, 2.5e2, 0),
+            text: name,
+            ...basicLabel,
+            show: true,
+            backgroundColor: Color.BLACK.withAlpha(.5)
+            // backgroundColor: Color.fromCssColorString(color).withAlpha(.5)
         },
     }
 
@@ -91,8 +96,8 @@ export function generatePointer(unit: boolean, label: string, symbol: string, ln
 
     // 2D Billboards
     viewer.entities.add({
-        id: `billboard_${unit ? `unit` : `vehicle`}_${label}`,
-        name: label,
+        id: `billboard_${name}`, // ${unit ? `unit` : `vehicle`}
+        name: name,
         position: position,
         show: false,
         billboard: {
@@ -102,7 +107,7 @@ export function generatePointer(unit: boolean, label: string, symbol: string, ln
             pixelOffset: new Cartesian2(0, -60)
         },
         label: {
-            text: label,
+            text: name,
             font: "11px sans-serif",
             fillColor: Color.BLACK,
             disableDepthTestDistance: Number.POSITIVE_INFINITY,
@@ -181,7 +186,7 @@ export function generateAnimatedBillboard(symbol: string, label: string, positio
 
 }
 
-export function generateRectangle(west: number, south: number, east: number, north: number, text: string, color: string, symbol = "", scale = 5) {
+export function generateRectangle(west: number, south: number, east: number, north: number, name: string, color: string, symbol = "", scale = 5) {
     const rectangle = Rectangle.fromDegrees(west, south, east, north);
     const center = Rectangle.center(rectangle);
     const position = Cartographic.toCartesian(center);
@@ -195,7 +200,7 @@ export function generateRectangle(west: number, south: number, east: number, nor
     const topRight = vincentyDirection(longitude, latitude, 45, scale);
 
     viewer.entities.add({
-        name: text,
+        name: name,
         position: position,
         rectangle: {
             coordinates: rectangle, // left middle, bot middle, right middle, top middle
@@ -224,26 +229,31 @@ export function generateRectangle(west: number, south: number, east: number, nor
             material: symbol ? new ImageMaterialProperty({image: symbol, transparent: true}) : Color.TRANSPARENT,
             height: .5,
             heightReference: HeightReference.RELATIVE_TO_GROUND
+        },
+        label: {
+            text: name,
+            ...basicLabel,
+            backgroundColor: Color.fromCssColorString(color).withAlpha(.5),
         }
     });
 
 }
 
-export function generateEllipse(lng: number, lat: number, text: string, color: string, symbol: string, scale = 4) {
+export function generateEllipse(lng: number, lat: number, name: string, color: string, symbol: string, scale = 4) {
 
     // "flat" symbology
     const position = Cartesian3.fromDegrees(lng, lat);
-    const topLeft = vincentyDirection(lng, lat, 315, scale);
-    const botLeft = vincentyDirection(lng, lat, 225, scale);
-    const botRight = vincentyDirection(lng, lat, 135, scale);
-    const topRight = vincentyDirection(lng, lat, 45, scale);
+    const topLeft = vincentyDirection(lng, lat, 315, scale * .75);
+    const botLeft = vincentyDirection(lng, lat, 225, scale * .75);
+    const botRight = vincentyDirection(lng, lat, 135, scale * .75);
+    const topRight = vincentyDirection(lng, lat, 45, scale * .75);
 
     viewer.entities.add({
-        name: text,
+        name: name,
         position: position,
         ellipse: {
-            semiMinorAxis: 4,
-            semiMajorAxis: 4,
+            semiMinorAxis: scale,
+            semiMajorAxis: scale,
             heightReference: HeightReference.CLAMP_TO_GROUND,
             material: Color.fromCssColorString(color).withAlpha(.25),
             height: 0,
@@ -269,6 +279,11 @@ export function generateEllipse(lng: number, lat: number, text: string, color: s
             material: symbol ? new ImageMaterialProperty({image: symbol, transparent: true}) : Color.TRANSPARENT,
             height: .5,
             heightReference: HeightReference.RELATIVE_TO_GROUND
+        },
+        label: {
+            text: name,
+            ...basicLabel,
+            backgroundColor: Color.fromCssColorString(color).withAlpha(.5),
         }
     });
 }
@@ -372,14 +387,20 @@ export const basicPoint = {
 };
 
 export const basicLabel = {
-    show: true,
+    show: false,
     font: "14px sans-serif",
-    disableDepthTestDistance: Number.POSITIVE_INFINITY,
-    heightReference : HeightReference.RELATIVE_TO_GROUND,
+    fillColor: Color.WHITE,
+    backgroundColor: Color.BLACK,
     showBackground: true,
-    horizontalOrigin: HorizontalOrigin.CENTER,
-    verticalOrigin: VerticalOrigin.BASELINE,
-    pixelOffset: new Cartesian2(7, -30)
+    outline: true,
+    outlineColor: Color.BLACK,
+    outlineWidth: 3,
+    style: LabelStyle.FILL_AND_OUTLINE,
+    horizontalOrigin: HorizontalOrigin.LEFT,
+    verticalOrigin: VerticalOrigin.BOTTOM,
+    heightReference: HeightReference.RELATIVE_TO_GROUND,
+    eyeOffset: new Cartesian3(0, 1, -2),
+    translucencyByDistance: new NearFarScalar(4e2, 1, 10.0e2, 0),
 }
 
 /*!

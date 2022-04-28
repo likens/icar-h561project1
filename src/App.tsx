@@ -1,5 +1,5 @@
 import { Key, useEffect, useReducer, useState } from 'react'
-import { Cartesian3, createWorldTerrain, Math as CesiumMath, Viewer, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, ScreenSpaceEventType, Entity, Cartesian2, Cartographic, IonImageryProvider, ConstantProperty, ClockRange, Ion, Rectangle, Scene } from "cesium";
+import { Cartesian3, createWorldTerrain, Math as CesiumMath, Viewer, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, ScreenSpaceEventType, Entity, Cartesian2, Cartographic, IonImageryProvider, ConstantProperty, ClockRange, Ion, Rectangle, Scene, HeadingPitchRange, JulianDate } from "cesium";
 // import CesiumNavigation from 'cesium-navigation-es6';
 import { generateBillboard, generateRectangle, generateEllipse, generatePointer, generateAnimatedBillboard, getStartTime, getStopTime, FIRE_RED } from "./Utils";
 import { LANDMARK_CENTER_OUTLINE, LANDMARK_CENTER_WALLS, LANDMARK_CENTER_DOORS, LANDMARK_CENTER_WINDOWS, LANDMARK_CENTER_PERSONNEL } from "./data/LandmarkCenter";
@@ -74,10 +74,10 @@ function startCesium() {
             viewer.clock.stopTime = getStopTime().clone();
             viewer.clock.currentTime = getStartTime().clone();
             viewer.clock.clockRange = ClockRange.LOOP_STOP; //Loop at the end
-            viewer.clock.multiplier = 5;
+            viewer.clock.multiplier = 3;
         
             viewer.timeline.zoomTo(getStartTime(), getStopTime());
-            // viewer.imageryLayers.addImageryProvider(new IonImageryProvider({ assetId: 3 }));
+            viewer.imageryLayers.addImageryProvider(new IonImageryProvider({ assetId: 3 }));
 
             scene = viewer.scene;
             scene.camera.flyTo({
@@ -131,12 +131,14 @@ function startCesium() {
                         tooltip.label.show = true;
                         tooltip.label.text = pick.id.name;
                         tooltip.label.font = "20px sans-serif";
-                    } else if (cartesian) {
-                        tooltip.position = cartesian;
-                        tooltip.label.show = true;
-                        tooltip.label.text = `Lon: ${longitudeString}\u00B0\nLat: ${latitudeString}\u00B0\nAlt: ${heightString}m`;
-                        tooltip.label.font = "12px sans-serif";
-                    } else {
+                    }
+                    // } else if (cartesian) {
+                    //     tooltip.position = cartesian;
+                    //     tooltip.label.show = true;
+                    //     tooltip.label.text = `Lon: ${longitudeString}\u00B0\nLat: ${latitudeString}\u00B0\nAlt: ${heightString}m`;
+                    //     tooltip.label.font = "12px sans-serif";
+                    // } 
+                    else {
                         tooltip.label.show = false;
                     }
                     scene.requestRender();
@@ -169,7 +171,7 @@ function startCesium() {
                     disableDepthTestDistance: Number.POSITIVE_INFINITY,
                     heightReference: HeightReference.RELATIVE_TO_GROUND,
                     pixelOffset: new Cartesian2(0, -80),
-                    scale: .5
+                    scale: .75
                 },
                 ellipse: {
                     semiMinorAxis: 35,
@@ -182,17 +184,17 @@ function startCesium() {
                     outlineColor: Color.fromCssColorString("#A50026"),
                     outlineWidth: 1
                 },
-                // label: {
-                //     show: true,
-                //     text: "The Landmark Center",
-                //     font: "16px sans-serif",
-                //     fillColor: Color.WHITE,
-                //     disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                //     heightReference: HeightReference.RELATIVE_TO_GROUND,
-                //     showBackground: true,
-                //     backgroundColor: Color.BLACK,
-                //     pixelOffset: new Cartesian2(0, -20)
-                // }
+                label: {
+                    show: true,
+                    text: "The Landmark Center",
+                    font: "16px sans-serif",
+                    fillColor: Color.WHITE,
+                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                    heightReference: HeightReference.RELATIVE_TO_GROUND,
+                    showBackground: true,
+                    backgroundColor: Color.BLACK,
+                    pixelOffset: new Cartesian2(0, -20)
+                }
             });
         
             const totalHeight = 36;
@@ -333,6 +335,7 @@ function App() {
     const [quickLinks, setQuickLinks] = useState(false);
     const [firePersonnel, setFirePersonnel] = useState([{}]);
     const [activeTab, setActiveTab] = useState("");
+    const [activeVideo, setActiveVideo] = useState("");
     const [longitude, setLongitude] = useState("0");
     const [latitude, setLatitude] = useState("0");
     const [altitude, setAltitude] = useState("0");
@@ -354,16 +357,17 @@ function App() {
         setQuickLinks(!quickLinks)
     }
 
+    function pointerFly(id: string, brng: number) {
+        viewer.flyTo(viewer.entities.getById(id) as Entity, { duration: 1.5, offset: new HeadingPitchRange(CesiumMath.toRadians(brng), CesiumMath.toRadians(-40), 20) });
+        setActiveVideo(FIRE_AIR[0].video);
+    }
+
     useEffect(() => {
         startCesium();
         if (FIRE_PERSONNEL.length) {
             const firePersonnel: any = [];
-            LANDMARK_CENTER_PERSONNEL.forEach((p: any) => {
-                firePersonnel.push(p);
-            });
-            FIRE_PERSONNEL.forEach((p: any) => {
-                firePersonnel.push(p);
-            });
+            LANDMARK_CENTER_PERSONNEL.forEach((p: any) => firePersonnel.push(p));
+            FIRE_PERSONNEL.forEach((p: any) => firePersonnel.push(p));
             setFirePersonnel(firePersonnel);
         }
     }, []);
@@ -383,20 +387,27 @@ function App() {
                     <button onClick={() => setActiveTab('fire')} 
                         className={`tab-button tab-button--fire ${activeTab === 'fire' ? `tab-button--active` : ``}`}>
                         <span>Fire</span>
-                    </button><button onClick={() => setActiveTab('medical')} 
+                    </button>
+                    <button onClick={() => setActiveTab('medical')} 
                         className={`tab-button tab-button--medical ${activeTab === 'medical' ? `tab-button--active` : ``}`}>
                         <span>Medical</span>
-                    </button><button onClick={() => setActiveTab('police')} 
+                    </button>
+                    <button onClick={() => setActiveTab('police')} 
                         className={`tab-button tab-button--police ${activeTab === 'police' ? `tab-button--active` : ``}`}>
                         <span>Police</span>
-                    </button><button onClick={() => setActiveTab('public')} 
+                    </button>
+                    <button onClick={() => setActiveTab('public')} 
                         className={`tab-button tab-button--public ${activeTab === 'public' ? `tab-button--active` : ``}`}>
                         <span>Pub. Works</span>
+                    </button>
+                    <button onClick={() => setActiveTab('areas')} 
+                        className={`tab-button tab-button--areas ${activeTab === 'areas' ? `tab-button--active` : ``}`}>
+                        <span>Areas</span>
                     </button>
                 </div>
                 <div className={`tab-content ${activeTab != '' ? `tab-content--${activeTab} tab-content--active` : ``}`}>
                     <div className='filters'>
-                        <button onClick={() => setActiveTab('')}>close menu</button>
+                        <button className='close-btn' title='Close Resource Menu' onClick={() => setActiveTab('')}>X</button>
                         <div className='filter-view'></div>
                         <div className='filter-all'></div>
                         <div className='filter-officers'></div>
@@ -404,20 +415,24 @@ function App() {
                         <div className='filter-other'></div>
                     </div>
                     <div className={`tab tab--fire ${activeTab === 'fire' ? `tab--active` : ``}`}>
+                        <div className='tab-title'>Fire Resources</div>
                         <div className='units'>
                             <div className='personnel'>
                                 <div className='list-title'>Personnel</div>
                                 <ul className='list'>
                                     {firePersonnel.map((p: any, i) => {
                                         return (
-                                            <li key={i} className='list-item'>
+                                            <li key={i} className='list-item' onClick={() => pointerFly(`pointer_${p.name}`, p.brng)}>
                                                 <div className='list-image'>
                                                     <img src={`/${p.name}.jpg`} alt='' />
                                                 </div>
-                                                <div className='list-name'>{p.name}</div>
-                                                <div className='list-status'>{p.status ? p.status : `Available`}</div>
-                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
-                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                                <div className='list-name'>
+                                                    {p.lname ? `${p.lname}` : p.name}
+                                                    {p.fname ? <span>{`, ${p.fname}`}</span> : ``}
+                                                </div>
+                                                <div className='list-status'>{p.status ? p.status : `Status`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className={`list-loc`}>{p.loc ? p.loc : 'Location'}</div>
                                             </li>
                                         )
                                     })}
@@ -428,13 +443,14 @@ function App() {
                                 <ul className='list'>
                                     {FIRE_VEHICLES.map((p: any, i) => {
                                         return (
-                                            <li key={i} className='list-item'>
+                                            <li key={i} className='list-item' onClick={() => pointerFly(`pointer_${p.name}`, p.brng)}>
                                                 <div className='list-image'>
                                                     <img src={`/FireVehicle.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
-                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
-                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                                <div className='list-status'>{p.status ? p.status : `Status`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className='list-loc'><span>{p.loc ? p.loc : 'Location'}</span></div>
                                             </li>
                                         )
                                     })}
@@ -445,13 +461,14 @@ function App() {
                                 <ul className='list'>
                                     {FIRE_AIR.map((p: any, i) => {
                                         return (
-                                            <li key={i} className='list-item'>
+                                            <li key={i} className='list-item' onClick={() => pointerFly(`${p.name}`, p.brng)}>
                                                 <div className='list-image'>
                                                     <img src={`/FireDrone.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
-                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
-                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                                <div className='list-status'>{p.status ? p.status : `Status`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className='list-loc'><span>{p.loc ? p.loc : 'Location'}</span></div>
                                             </li>
                                         )
                                     })}
@@ -460,20 +477,24 @@ function App() {
                         </div>
                     </div>
                     <div className={`tab tab--medical ${activeTab === 'medical' ? `tab--active` : ``}`}>
+                        <div className='tab-title'>Medical</div>
                         <div className='units'>
                             <div className='personnel'>
                                 <div className='list-title'>Personnel</div>
                                 <ul className='list'>
                                     {MEDICAL_PERSONNEL.map((p: any, i) => {
                                         return (
-                                            <li key={i} className='list-item'>
+                                            <li key={i} className='list-item' onClick={() => pointerFly(`pointer_${p.name}`, p.brng)}>
                                                 <div className='list-image'>
                                                     <img src={`/${p.name}.jpg`} alt='' />
                                                 </div>
-                                                <div className='list-name'>{p.name}</div>
-                                                <div className='list-status'>{p.status ? p.status : `Available`}</div>
-                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
-                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                                <div className='list-name'>
+                                                    {p.lname ? `${p.lname}` : p.name}
+                                                    {p.fname ? <span>{`, ${p.fname}`}</span> : ``}
+                                                </div>
+                                                <div className='list-status'>{p.status ? p.status : `Status`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className='list-loc'><span>{p.loc ? p.loc : 'Location'}</span></div>
                                             </li>
                                         )
                                     })}
@@ -484,13 +505,14 @@ function App() {
                                 <ul className='list'>
                                     {MEDICAL_VEHICLES.map((p: any, i) => {
                                         return (
-                                            <li key={i} className='list-item'>
+                                            <li key={i} className='list-item' onClick={() => pointerFly(`pointer_${p.name}`, p.brng)}>
                                                 <div className='list-image'>
                                                     <img src={`/MedicalVehicle.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
-                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
-                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                                <div className='list-status'>{p.status ? p.status : `Status`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className='list-loc'><span>{p.loc ? p.loc : 'Location'}</span></div>
                                             </li>
                                         )
                                     })}
@@ -506,8 +528,9 @@ function App() {
                                                     <img src={`/MedicalAir.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
-                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
-                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                                <div className='list-status'>{p.status ? p.status : `Status`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className='list-loc'><span>{p.loc ? p.loc : 'Location'}</span></div>
                                             </li>
                                         )
                                     })}
@@ -516,20 +539,24 @@ function App() {
                         </div>
                     </div>
                     <div className={`tab tab--police ${activeTab === 'police' ? `tab--active` : ``}`}>
+                        <div className='tab-title'>Police</div>
                         <div className='units'>
                             <div className='personnel'>
                                 <div className='list-title'>Personnel</div>
                                 <ul className='list'>
                                     {POLICE_PERSONNEL.map((p: any, i) => {
                                         return (
-                                            <li key={i} className='list-item'>
+                                            <li key={i} className='list-item' onClick={() => pointerFly(`pointer_${p.name}`, p.brng)}>
                                                 <div className='list-image'>
                                                     <img src={`/${p.name}.jpg`} alt='' />
                                                 </div>
-                                                <div className='list-name'>{p.name}</div>
-                                                <div className='list-status'>{p.status ? p.status : `Available`}</div>
-                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
-                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                                <div className='list-name'>
+                                                    {p.lname ? `${p.lname}` : p.name}
+                                                    {p.fname ? <span>{`, ${p.fname}`}</span> : ``}
+                                                </div>
+                                                <div className='list-status'>{p.status ? p.status : `Status`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className='list-loc'><span>{p.loc ? p.loc : 'Location'}</span></div>
                                             </li>
                                         )
                                     })}
@@ -540,13 +567,14 @@ function App() {
                                 <ul className='list'>
                                     {POLICE_VEHICLES.map((p: any, i) => {
                                         return (
-                                            <li key={i} className='list-item'>
+                                            <li key={i} className='list-item' onClick={() => pointerFly(`pointer_${p.name}`, p.brng)}>
                                                 <div className='list-image'>
                                                     <img src={`/PoliceVehicle.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
-                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
-                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                                <div className='list-status'>{p.status ? p.status : `Status`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className='list-loc'><span>{p.loc ? p.loc : 'Location'}</span></div>
                                             </li>
                                         )
                                     })}
@@ -562,8 +590,8 @@ function App() {
                                                     <img src={`/PoliceAir.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
-                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
-                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className='list-loc'><span>{p.loc ? p.loc : 'Location'}</span></div>
                                             </li>
                                         )
                                     })}
@@ -572,20 +600,24 @@ function App() {
                         </div>
                     </div>
                     <div className={`tab tab--public ${activeTab === 'public' ? `tab--active` : ``}`}>
+                        <div className='tab-title'>Public Works</div>
                         <div className='units'>
                             <div className='personnel'>
                                 <div className='list-title'>Personnel</div>
                                 <ul className='list'>
                                     {PUBLIC_WORKS_PERSONNEL.map((p: any, i) => {
                                         return (
-                                            <li key={i} className='list-item'>
+                                            <li key={i} className='list-item' onClick={() => pointerFly(`pointer_${p.name}`, p.brng)}>
                                                 <div className='list-image'>
                                                     <img src={`/${p.name}.jpg`} alt='' />
                                                 </div>
-                                                <div className='list-name'>{p.name}</div>
-                                                <div className='list-status'>{p.status ? p.status : `Available`}</div>
-                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
-                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                                <div className='list-name'>
+                                                    {p.lname ? `${p.lname}` : p.name}
+                                                    {p.fname ? <span>{`, ${p.fname}`}</span> : ``}
+                                                </div>
+                                                <div className='list-status'>{p.status ? p.status : `Status`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className='list-loc'><span>{p.loc ? p.loc : 'Location'}</span></div>
                                             </li>
                                         )
                                     })}
@@ -596,13 +628,14 @@ function App() {
                                 <ul className='list'>
                                     {PUBLIC_WORKS_VEHICLES.map((p: any, i) => {
                                         return (
-                                            <li key={i} className='list-item'>
+                                            <li key={i} className='list-item' onClick={() => pointerFly(`pointer_${p.name}`, p.brng)}>
                                                 <div className='list-image'>
                                                     <img src={`/PublicVehicle.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
-                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
-                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                                <div className='list-status'>{p.status ? p.status : `Status`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className='list-loc'><span>{p.loc ? p.loc : 'Location'}</span></div>
                                             </li>
                                         )
                                     })}
@@ -618,8 +651,8 @@ function App() {
                                                     <img src={`/PoliceAir.png`} alt='' />
                                                 </div>
                                                 <div className='list-name'>{p.name}</div>
-                                                <div className='list-sub'>{p.sub ? p.sub : `Captain`}</div>
-                                                <div className='list-loc'>{p.loc ? p.loc : 'Landmark Center - Floor 5'}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className='list-loc'><span>{p.loc ? p.loc : 'Location'}</span></div>
                                             </li>
                                         )
                                     })}
@@ -627,14 +660,42 @@ function App() {
                             </div> */}
                         </div>
                     </div>
+                    <div className={`tab tab--areas ${activeTab === 'areas' ? `tab--active` : ``}`}>
+                        <div className='tab-title'>Areas of Operation</div>
+                        <div className='units'>
+                            <div className='aor'>
+                                <div className='list-title'>Stagings</div>
+                                <ul className='list'>
+                                    {/* {firePersonnel.map((p: any, i) => {
+                                        return (
+                                            <li key={i} className='list-item' onClick={() => pointerFly(`pointer_${p.name}`, p.brng)}>
+                                                <div className='list-image'>
+                                                    <img src={`/${p.name}.jpg`} alt='' />
+                                                </div>
+                                                <div className='list-name'>
+                                                    {p.lname ? `${p.lname}` : p.name}
+                                                    {p.fname ? <span>{`, ${p.fname}`}</span> : ``}
+                                                </div>
+                                                <div className='list-status'>{p.status ? p.status : `Status`}</div>
+                                                <div className='list-sub'>{p.sub ? p.sub : `Subtitle`}</div>
+                                                <div className={`list-loc`}>{p.loc ? p.loc : 'Location'}</div>
+                                            </li>
+                                        )
+                                    })} */}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="cesiumContainer"></div>
             </div>
-            <div className='modal'>
-                <div className='modal-video'></div>
+            {/* <div className='modal'>
+                <div className='modal-video'>
+                    <iframe src={activeVideo}></iframe>
+                </div>
                 <div className='modal-body'></div>
                 <div className='modal-audio'></div>
-            </div>
+            </div> */}
             <div className='quick-links'>
                 <div className="title">AR in COP for ICS Quick Links</div>
                 <div className="links">

@@ -19,7 +19,7 @@ export const AREAS_RECTANGLE = [
     [-86.156576, 39.781257, -86.155908, 39.781443, "EMS Staging", MED_GREEN, emsStaging],
     [-86.157326, 39.781080, -86.156953, 39.781220, "Police Staging", POLICE_BLUE, policeStaging],
     [-86.156273, 39.781458, -86.156063, 39.781658, "Triage", "#FFFF00", triage],
-    [-86.156050, 39.781465, -86.155875, 39.781657, "Casuality Collection Point", "#FF00FF", casualtyCollectionPoint],
+    [-86.156050, 39.781465, -86.155875, 39.781657, "Casualty Collection Point", "#FF00FF", casualtyCollectionPoint],
     [-86.155795, 39.781539, -86.155523, 39.781715, "Medical Landing Zone", "#FFA500", helibase],
     [-86.156772, 39.781156, -86.156711, 39.781191, "Emergency Operations Center", "#028cef", emergencyOperationsCenter, 2],
     [-86.156678, 39.781142, -86.156604, 39.781187, "Incident Command Post", "#028cef", incidentCommandPost, 2],
