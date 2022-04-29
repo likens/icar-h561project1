@@ -9,7 +9,7 @@ export const FIRE_AIR = [
         alt: getRandomNumber(30, 40),
         symbol: fireDrone,
         color: FIRE_RED,
-        video: "https://www.youtube.com/embed/FzKHLiSl7qI?playlist=FzKHLiSl7qI&start=10&autoplay=1&controls=0&disablekb=1&fs=0&loop=1&end=90&mute=1",
+        video: "drone1",
         locations: [{
             lng: -86.156534,
             lat: 39.782132,

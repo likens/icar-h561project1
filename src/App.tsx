@@ -2,7 +2,7 @@ import { Key, useEffect, useReducer, useState } from 'react'
 import { Cartesian3, createWorldTerrain, Math as CesiumMath, Viewer, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, ScreenSpaceEventType, Entity, Cartesian2, Cartographic, IonImageryProvider, ConstantProperty, ClockRange, Ion, Rectangle, Scene, HeadingPitchRange, JulianDate } from "cesium";
 // import CesiumNavigation from 'cesium-navigation-es6';
 import { generateBillboard, generateRectangle, generateEllipse, generatePointer, generateAnimatedBillboard, getStartTime, getStopTime, FIRE_RED } from "./Utils";
-import { LANDMARK_CENTER_OUTLINE, LANDMARK_CENTER_WALLS, LANDMARK_CENTER_DOORS, LANDMARK_CENTER_WINDOWS, LANDMARK_CENTER_PERSONNEL } from "./data/LandmarkCenter";
+import { LANDMARK_CENTER_OUTLINE, LANDMARK_CENTER_WALLS, LANDMARK_CENTER_DOORS, LANDMARK_CENTER_WINDOWS, LANDMARK_CENTER_PERSONNEL, LANDMARK_CENTER_FIRES } from "./data/LandmarkCenter";
 import fireCommercial from "./assets/img/napsg/hazard-fire-commercial.svg";
 import { FIRE_PERSONNEL } from './data/FirePersonnel';
 import { FIRE_VEHICLES } from './data/FireVehicles';
@@ -30,7 +30,7 @@ function startCesium() {
         addLandmarkCenter();
 
         AREAS_RECTANGLE.forEach((area: any) => generateRectangle(area[0], area[1], area[2], area[3], area[4], area[5], area[6], area[7]));
-        AREAS_ELLIPSE.forEach((area: any) => generateEllipse(area.lng, area.lat, area.name, area.color, area.symbol, area.scale));
+        AREAS_ELLIPSE.forEach((area: any) => generateEllipse(area.lng, area.lat, area.alt, area.name, area.color, area.symbol, area.scale));
 
         FIRE_PERSONNEL.forEach((unit: any) => generatePointer(true, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
         FIRE_VEHICLES.forEach((unit: any) => generatePointer(false, unit.name, unit.symbol, unit.lng, unit.lat, unit.brng, unit.color));
@@ -245,6 +245,9 @@ function startCesium() {
                     LANDMARK_CENTER_PERSONNEL.forEach((p) => {
                         generatePointer(true, p.name, p.symbol, p.lng, p.lat, p.brng, FIRE_RED, height + .5);
                     });
+                    LANDMARK_CENTER_FIRES.forEach((fire, i) => {
+                        generateEllipse(fire.lng, fire.lat, height + .5, fire.name, fire.color, fire.symbol, fire.scale);
+                    });
                     LANDMARK_CENTER_WALLS.forEach((wall, i) => {
                         let entity = {
                             id: `landmark_wall_${i + 1}`,
@@ -335,6 +338,7 @@ function App() {
     const [quickLinks, setQuickLinks] = useState(false);
     const [firePersonnel, setFirePersonnel] = useState([{}]);
     const [activeTab, setActiveTab] = useState("");
+    const [activeName, setActiveName] = useState("");
     const [activeVideo, setActiveVideo] = useState("");
     const [longitude, setLongitude] = useState("0");
     const [latitude, setLatitude] = useState("0");
@@ -358,8 +362,17 @@ function App() {
     }
 
     function pointerFly(id: string, brng: number) {
+        resetResource();
         viewer.flyTo(viewer.entities.getById(id) as Entity, { duration: 1.5, offset: new HeadingPitchRange(CesiumMath.toRadians(brng), CesiumMath.toRadians(-40), 20) });
-        setActiveVideo(FIRE_AIR[0].video);
+        setTimeout(() => {
+            setActiveName(FIRE_AIR[0].name);
+            setActiveVideo(FIRE_AIR[0].video);
+        }, 1000);
+    }
+
+    function resetResource() {
+        setActiveName("");
+        setActiveVideo("");
     }
 
     useEffect(() => {
@@ -689,13 +702,21 @@ function App() {
                 </div>
                 <div id="cesiumContainer"></div>
             </div>
-            {/* <div className='modal'>
+            <div className={`modal ${activeName ? `modal--active` : ``}`}>
+                <div className='modal-close' onClick={() => resetResource()}>X</div>
                 <div className='modal-video'>
-                    <iframe src={activeVideo}></iframe>
+                    <video src={`/${activeVideo}.mp4`} autoPlay={true} controls={false} muted={true} loop={true}></video>
                 </div>
-                <div className='modal-body'></div>
-                <div className='modal-audio'></div>
-            </div> */}
+                <div className='modal-body'>
+                    <div className='modal-live'>Live</div>
+                    <div className='modal-title'>
+                        {activeName}
+                    </div>
+                </div>
+                <div className='modal-contact'>
+
+                </div>
+            </div>
             <div className='quick-links'>
                 <div className="title">AR in COP for ICS Quick Links</div>
                 <div className="links">

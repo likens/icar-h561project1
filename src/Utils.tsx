@@ -239,10 +239,10 @@ export function generateRectangle(west: number, south: number, east: number, nor
 
 }
 
-export function generateEllipse(lng: number, lat: number, name: string, color: string, symbol: string, scale = 4) {
+export function generateEllipse(lng: number, lat: number, alt = 0, name: string, color: string, symbol: string, scale = 4) {
 
     // "flat" symbology
-    const position = Cartesian3.fromDegrees(lng, lat);
+    const position = Cartesian3.fromDegrees(lng, lat, alt);
     const topLeft = vincentyDirection(lng, lat, 315, scale * .75);
     const botLeft = vincentyDirection(lng, lat, 225, scale * .75);
     const botRight = vincentyDirection(lng, lat, 135, scale * .75);
@@ -254,10 +254,10 @@ export function generateEllipse(lng: number, lat: number, name: string, color: s
         ellipse: {
             semiMinorAxis: scale,
             semiMajorAxis: scale,
-            heightReference: HeightReference.CLAMP_TO_GROUND,
+            heightReference: HeightReference.RELATIVE_TO_GROUND,
             material: Color.fromCssColorString(color).withAlpha(.25),
-            height: 0,
-            extrudedHeight: .25,
+            height: alt,
+            extrudedHeight: alt + .25,
             outline: true,
             outlineColor: Color.fromCssColorString(color),
             outlineWidth: 1
@@ -277,7 +277,7 @@ export function generateEllipse(lng: number, lat: number, name: string, color: s
                 holes: []
             },
             material: symbol ? new ImageMaterialProperty({image: symbol, transparent: true}) : Color.TRANSPARENT,
-            height: .5,
+            height: alt + .25,
             heightReference: HeightReference.RELATIVE_TO_GROUND
         },
         label: {

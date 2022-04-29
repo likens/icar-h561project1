@@ -479,28 +479,24 @@ body {
     border-radius: 100%;
     width: 100%;
     display: block;
-    border: .2rem solid white;
+    border: .5rem solid white;
 }
 
 .list-sub {
-    font-size: 1.8rem;
-    font-variant: small-caps;
     grid-area: sub;
     white-space: nowrap;
     display: block;
     width: 100%;
     text-overflow: ellipsis;
     overflow: hidden;
+    font-size: 1.8rem;
     font-weight: 700;
 }
 
 .list-loc {
     grid-area: loc;
-    white-space: nowrap;
     display: block;
     width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
     font-style: italic;
 }
 
@@ -605,25 +601,72 @@ body {
 
 .modal {
     position: absolute;
-    right: 2rem;
+    right: 0;
     bottom: 8rem;
     z-index: 100;
     width: 40rem;
+    height: 60rem;
+    margin-right: 4rem;
+    background: rgba(0,0,0,.75);
+    transition: all .25s ease;
+    transform: translateX(44rem);
+}
+
+.modal--active {
+    transform: translateX(0);
 }
 
 .modal-video {
     position: relative;
-    padding-bottom: 56.25%;
+    padding-bottom: 50%; /* 56.25% */
     padding-top: 2.5rem;
     height: 0;
     pointer-events: none;
     user-select: none;
 }
-.modal-video iframe {
+.modal-video video {
+    display: block;
     border: 0;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+}
+
+.modal-live {
+    background: red;
+    color: white;
+    display: inline-flex;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: .5rem 1rem;
+    border-radius: 1rem;
+    position: absolute;
+    top: -4rem;
+    left: 1rem;
+}
+
+.modal-close {
+    cursor: pointer;
+    background: #000;
+    color: #fff;
+    font-size: 2.5rem;
+    border-radius: 50%;
+    font-weight: 700;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: -2rem;
+    top: -2rem;
+    z-index: 200;
+}
+
+.modal-body {
+    position: relative;
+    color: #fff;
+    padding: 2rem;
 }

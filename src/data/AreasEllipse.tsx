@@ -181,5 +181,5 @@ export const AREAS_ELLIPSE = [{
     color: "#FFF",
     symbol: policeCrowdControl,
     scale: 12
-},
+}
 ]

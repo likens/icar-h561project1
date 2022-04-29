@@ -1,5 +1,6 @@
 import { FIRE_RED, getRandomNumber } from "../Utils";
 import { FIRE_RANKS, FIRE_STATUS } from "./FirePersonnel";
+import fireWarning from "../assets/img/napsg/fire-warning.svg";
 
 export const LANDMARK_CENTER_OUTLINE = [
     -86.156992, 39.782069,
@@ -186,4 +187,71 @@ export const LANDMARK_CENTER_WINDOWS = [
         -86.156983, 39.781648
     ]
     
+]
+
+export const LANDMARK_CENTER_FIRES = [
+    {
+        lng: -86.156913,
+        lat: 39.781671,
+        name: "Fire Detected",
+        color: "#e59824",
+        symbol: fireWarning,
+        scale: 4
+    },
+    {
+        lng: -86.157175,
+        lat: 39.781746,
+        name: "Fire Detected",
+        color: "#e59824",
+        symbol: fireWarning,
+        scale: 4
+    },
+    {
+        lng: -86.157084,
+        lat: 39.781670,
+        name: "Fire Detected",
+        color: "#e59824",
+        symbol: fireWarning,
+        scale: 4
+    },
+    {
+        lng: -86.157250,
+        lat: 39.781811,
+        name: "Fire Detected",
+        color: "#e59824",
+        symbol: fireWarning,
+        scale: 4
+    },
+    {
+        lng: -86.157246,
+        lat: 39.781943,
+        name: "Fire Detected",
+        color: "#e59824",
+        symbol: fireWarning,
+        scale: 4
+    },
+    {
+        lng: -86.157193,
+        lat: 39.781880,
+        name: "Fire Detected",
+        color: "#e59824",
+        symbol: fireWarning,
+        scale: 4
+    },
+    {
+        lng: -86.157132,
+        lat: 39.781823,
+        name: "Fire Detected",
+        color: "#e59824",
+        symbol: fireWarning,
+        scale: 4
+    },
+    {
+        lng: -86.157003,
+        lat: 39.781701,
+        name: "Fire Detected",
+        color: "#e59824",
+        symbol: fireWarning,
+        scale: 4
+    },
 ]
