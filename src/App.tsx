@@ -386,10 +386,10 @@ function App() {
 
     function updateModal(resource: any) {
         setActiveName(resource.name);
-        setActiveVideo(resource.video);
         setActiveImage(resource.name);
         setActiveSub(resource.sub);
         setActiveBubble(resource.bubble);
+        setTimeout(() => setActiveVideo(resource.video), 1000);
     }
 
     function clearState() {
