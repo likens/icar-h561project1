@@ -1,5 +1,4 @@
-import { FIRE_RED, getRandomNumber } from "../Utils";
-import { FIRE_RANKS, FIRE_STATUS } from "./FirePersonnel";
+import { FIRE_RED, getRandomBubble, getRandomNumber, getRandomSub, getRandomStatus } from "../Utils";
 import fireWarning from "../assets/img/napsg/fire-warning.svg";
 
 export const LANDMARK_CENTER_OUTLINE = [
@@ -18,27 +17,31 @@ export const LANDMARK_CENTER_OUTLINE = [
 ]
 
 export const LANDMARK_CENTER_PERSONNEL = [{
-    lng: -86.157127,
+    lng: -86.157068,
     lat: 39.781875,
-    brng: getRandomNumber(0, 360),
+    brng: 225,
     fname: "Tim",
     lname: "Allens",
     name: "Allens",
-    sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-    status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `fire${getRandomNumber(1,2)}`,
     loc: "Floor 5, The Landmark Center",
     symbol: "",
     color: FIRE_RED
 },
 {
-    lng: -86.156945,
-    lat: 39.781868,
-    brng: getRandomNumber(0, 360),
+    lng: -86.156969,
+    lat: 39.781760,
+    brng: 200,
     fname: "Dave",
     lname: "Murphy",
     name: "Murphy",
-    sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-    status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `fire${getRandomNumber(1,2)}`,
     loc: "Floor 5, The Landmark Center",
     symbol: "",
     color: FIRE_RED
@@ -46,25 +49,29 @@ export const LANDMARK_CENTER_PERSONNEL = [{
 {
     lng: -86.157035,
     lat: 39.781810,
-    brng: getRandomNumber(0, 360),
+    brng: 270,
     fname: "Ethan",
     lname: "Williams",
     name: "Williams",
-    sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-    status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `fire${getRandomNumber(1,2)}`,
     loc: "Floor 5, The Landmark Center",
     symbol: "",
     color: FIRE_RED
 },
 {
-    lng: -86.157045,
-    lat: 39.781915,
-    brng: getRandomNumber(0, 360),
+    lng: -86.157114,
+    lat: 39.781932,
+    brng: 275,
     fname: "Frank",
     lname: "Wood",
     name: "Wood",
-    sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-    status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `fire${getRandomNumber(1,2)}`,
     loc: "Floor 5, The Landmark Center",
     symbol: "",
     color: FIRE_RED

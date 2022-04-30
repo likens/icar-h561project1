@@ -1,4 +1,4 @@
-import { getRandomNumber, POLICE_BLUE } from "../Utils";
+import { getRandomBubble, getRandomNumber, POLICE_BLUE } from "../Utils";
 
 export const POLICE_VEHICLES = [{
     lng: -86.157446,
@@ -7,7 +7,10 @@ export const POLICE_VEHICLES = [{
     name: "PD12",
     sub: "Patrol Car",
     status: "Moving",
+    bubble: getRandomBubble(),
     loc: "Traveling South, North Meridian St.",
+    image: "/image/PoliceVehicle.png",
+    video: `chase1`,
     color: POLICE_BLUE,
     symbol: ""
 },
@@ -18,7 +21,9 @@ export const POLICE_VEHICLES = [{
     name: "PD21",
     sub: "Patrol Car",
     status: "Idle",
+    bubble: getRandomBubble(),
     loc: "Barricade - Northwest",
+    image: "/image/PoliceVehicle.png",
     color: POLICE_BLUE,
     symbol: ""
 },
@@ -29,7 +34,9 @@ export const POLICE_VEHICLES = [{
     name: "PD87",
     sub: "Patrol Car",
     status: "Idle",
+    bubble: getRandomBubble(),
     loc: "Barricade - Southwest",
+    image: "/image/PoliceVehicle.png",
     color: POLICE_BLUE,
     symbol: ""
 },
@@ -40,7 +47,9 @@ export const POLICE_VEHICLES = [{
     name: "PD101",
     sub: "Patrol Car",
     status: "Idle",
+    bubble: getRandomBubble(),
     loc: "Barricade - Northeast",
+    image: "/image/PoliceVehicle.png",
     color: POLICE_BLUE,
     symbol: ""
 },
@@ -51,7 +60,9 @@ export const POLICE_VEHICLES = [{
     name: "PD23",
     sub: "Patrol Car",
     status: "Idle",
+    bubble: getRandomBubble(),
     loc: "Barricade - Southeast",
+    image: "/image/PoliceVehicle.png",
     color: POLICE_BLUE,
     symbol: ""
 },
@@ -62,7 +73,9 @@ export const POLICE_VEHICLES = [{
     name: "PD55",
     sub: "Patrol Car",
     status: "Idle",
+    bubble: getRandomBubble(),
     loc: "Barricade - Southeast",
+    image: "/image/PoliceVehicle.png",
     color: POLICE_BLUE,
     symbol: ""
 },
@@ -73,7 +86,9 @@ export const POLICE_VEHICLES = [{
     name: "PD04",
     sub: "Patrol Car",
     status: "Idle",
-    loc: "Police Staging Area, South of The Landmark Center",
+    bubble: getRandomBubble(),
+    loc: "Police Staging Area",
+    image: "/image/PoliceVehicle.png",
     color: POLICE_BLUE,
     symbol: ""
 },
@@ -84,7 +99,9 @@ export const POLICE_VEHICLES = [{
     name: "PD99",
     sub: "Patrol Car",
     status: "Idle",
-    loc: "Police Staging Area, South of The Landmark Center",
+    bubble: getRandomBubble(),
+    loc: "Police Staging Area",
+    image: "/image/PoliceVehicle.png",
     color: POLICE_BLUE,
     symbol: ""
 },

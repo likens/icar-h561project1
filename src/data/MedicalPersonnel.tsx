@@ -1,25 +1,4 @@
-import { MED_GREEN, getRandomNumber } from "../Utils";
-
-export const MEDICAL_RANKS = [
-    "Paramedic",
-    "Crew Chief",
-    "Supervisor",
-    "Lieutenant",
-    "Captain",
-    "Battalion Chief"
-]
-
-export const MEDICAL_STATUS = [
-    "Idle",
-    "Staging",
-    "Active",
-    "Available",
-    "Unavailable",
-    "Resting",
-    "Rescue",
-    "Triage",
-    "Collection"
-]
+import { MED_GREEN, getRandomNumber, getRandomSub, getRandomStatus, getRandomBubble } from "../Utils";
 
 export const MEDICAL_PERSONNEL = [{
     lng: -86.156478,
@@ -28,9 +7,11 @@ export const MEDICAL_PERSONNEL = [{
     fname: "Cassie",
     lname: "Waletzko",
     name: "Waletzko",
-    sub: MEDICAL_RANKS[getRandomNumber(0, MEDICAL_RANKS.length)],
-    status: MEDICAL_STATUS[getRandomNumber(0, MEDICAL_STATUS.length)],
-    loc: "EMS Staging Area, Southeast of The Landmark Center",
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `medical${getRandomNumber(1,1)}`,
+    loc: "EMS Staging Area",
     color: MED_GREEN,
     symbol: ""
 },
@@ -41,9 +22,11 @@ export const MEDICAL_PERSONNEL = [{
     fname: "Mackenzi",
     lname: "Bowler",
     name: "Bowler",
-    sub: MEDICAL_RANKS[getRandomNumber(0, MEDICAL_RANKS.length)],
-    status: MEDICAL_STATUS[getRandomNumber(0, MEDICAL_STATUS.length)],
-    loc: "EMS Staging Area, Southeast of The Landmark Center",
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `medical${getRandomNumber(1,1)}`,
+    loc: "EMS Staging Area",
     color: MED_GREEN,
     symbol: ""
 },
@@ -54,9 +37,11 @@ export const MEDICAL_PERSONNEL = [{
     fname: "Chance",
     lname: "Callahan",
     name: "Callahan",
-    sub: MEDICAL_RANKS[getRandomNumber(0, MEDICAL_RANKS.length)],
-    status: MEDICAL_STATUS[getRandomNumber(0, MEDICAL_STATUS.length)],
-    loc: "EMS Staging Area, Southeast of The Landmark Center",
+    sub: getRandomSub(),
+    bubble: getRandomBubble(),
+    status: getRandomStatus(),
+    video: `medical${getRandomNumber(1,1)}`,
+    loc: "EMS Staging Area",
     color: MED_GREEN,
     symbol: ""
 },
@@ -67,9 +52,11 @@ export const MEDICAL_PERSONNEL = [{
     fname: "Marisha",
     lname: "Mercer",
     name: "Mercer",
-    sub: MEDICAL_RANKS[getRandomNumber(0, MEDICAL_RANKS.length)],
-    status: MEDICAL_STATUS[getRandomNumber(0, MEDICAL_STATUS.length)],
-    loc: "EMS Staging Area, Southeast of The Landmark Center",
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `medical${getRandomNumber(1,1)}`,
+    loc: "EMS Staging Area",
     color: MED_GREEN,
     symbol: ""
 },
@@ -80,9 +67,11 @@ export const MEDICAL_PERSONNEL = [{
     fname: "Ashley",
     lname: "Jaffee",
     name: "Jaffee",
-    sub: MEDICAL_RANKS[getRandomNumber(0, MEDICAL_RANKS.length)],
-    status: MEDICAL_STATUS[getRandomNumber(0, MEDICAL_STATUS.length)],
-    loc: "Triage Area, East-Southeast of The Landmark Center",
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `medical${getRandomNumber(1,1)}`,
+    loc: "Triage Area",
     color: MED_GREEN,
     symbol: ""
 },
@@ -93,9 +82,11 @@ export const MEDICAL_PERSONNEL = [{
     fname: "June",
     lname: "Turner",
     name: "Turner",
-    sub: MEDICAL_RANKS[getRandomNumber(0, MEDICAL_RANKS.length)],
-    status: MEDICAL_STATUS[getRandomNumber(0, MEDICAL_STATUS.length)],
-    loc: "Casualty Collection Area, East-Southeast of The Landmark Center",
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `medical${getRandomNumber(1,1)}`,
+    loc: "Casualty Collection Point",
     color: MED_GREEN,
     symbol: ""
 },

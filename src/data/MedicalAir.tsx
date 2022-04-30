@@ -1,4 +1,4 @@
-import { MED_GREEN, getRandomNumber } from "../Utils";
+import { MED_GREEN, getRandomNumber, getRandomBubble } from "../Utils";
 import emsAir from "../assets/img/napsg/ems-air.svg";
 
 export const MEDICAL_AIR = [
@@ -9,6 +9,8 @@ export const MEDICAL_AIR = [
         alt: getRandomNumber(40, 60),
         symbol: emsAir,
         color: MED_GREEN,
+        bubble: getRandomBubble(),
+        video: "air1",
         locations: [{
             lng: -86.155625,
             lat: 39.781596,

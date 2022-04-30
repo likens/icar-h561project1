@@ -1,4 +1,4 @@
-import { FIRE_RED, getRandomNumber } from "../Utils";
+import { FIRE_RED, getRandomBubble, getRandomNumber, getRandomStatus } from "../Utils";
 
 export const FIRE_VEHICLES = [
     {
@@ -6,8 +6,11 @@ export const FIRE_VEHICLES = [
         lat: 39.781358,
         brng: getRandomNumber(0, 360),
         sub: "Engine",
-        status: "Idle",
-        loc: "Fire Staging Area, South of The Landmark Center",
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `vehicle${getRandomNumber(1,2)}`,
+        loc: "Fire Staging Area",
+        image: "/image/FireVehicle.png",
         name: "EG24",
         symbol: "",
         color: FIRE_RED
@@ -16,8 +19,11 @@ export const FIRE_VEHICLES = [
         lat: 39.781606,
         brng: getRandomNumber(0, 360),
         sub: "Engine",
-        status: "In Progress",
-        loc: "Southwest, Outside, The Landmark Center, 10 meters",
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `vehicle${getRandomNumber(1,2)}`,
+        loc: "Outside The Landmark Center",
+        image: "/image/FireVehicle.png",
         name: "EG03",
         symbol: "",
         color: FIRE_RED
@@ -26,8 +32,11 @@ export const FIRE_VEHICLES = [
         lat: 39.781664,
         brng: getRandomNumber(0, 360),
         sub: "Ladder",
-        status: "In Progress",
-        loc: "Southeast, Outside, The Landmark Center, 20 meters",
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `vehicle${getRandomNumber(1,2)}`,
+        loc: "Outside The Landmark Center",
+        image: "/image/FireVehicle.png",
         name: "LD10",
         symbol: "",
         color: FIRE_RED
@@ -36,8 +45,11 @@ export const FIRE_VEHICLES = [
         lat: 39.781927,
         brng: getRandomNumber(0, 360),
         sub: "Ladder",
-        status: "In Progress",
-        loc: "Northwest, Outside, The Landmark Center, 20 meters",
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `vehicle${getRandomNumber(1,2)}`,
+        loc: "Outside The Landmark Center",
+        image: "/image/FireVehicle.png",
         name: "LD07",
         symbol: "",
         color: FIRE_RED

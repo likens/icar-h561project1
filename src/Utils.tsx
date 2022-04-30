@@ -1,7 +1,23 @@
 import { Cartesian2, Cartesian3, Cartographic, Color, HeightReference, HorizontalOrigin, ImageMaterialProperty, JulianDate, LabelStyle, LagrangePolynomialApproximation, Math as CesiumMath, NearFarScalar, PolylineGlowMaterialProperty, Rectangle, SampledPositionProperty, TimeInterval, TimeIntervalCollection, VelocityOrientationProperty, VerticalOrigin } from "cesium";
-import { viewer } from "./App";
+import { viewer, scene } from "./App";
 
-export const PERSONNEL_STATUS = [
+export const RESOURCE_STATUS = [
+    "Idle",
+    "Staging",
+    "Active",
+    "Available",
+    "Unavailable",
+    "Resting",
+    "Idle",
+    "Staging",
+    "Active",
+    "Available",
+    "Unavailable",
+    "Resting",
+    "Rescue",
+    "Triage",
+    "Collection",
+    "Idle",
     "Staging",
     "Active",
     "Available",
@@ -10,6 +26,52 @@ export const PERSONNEL_STATUS = [
     "Patrolling",
     "Guarding"
 ]
+
+export function getRandomStatus() {
+    return RESOURCE_STATUS[getRandomNumber(0, RESOURCE_STATUS.length - 1)];
+}
+
+export const RESOURCE_SUB = [
+    "Firefighter",
+    "Driver",
+    "Engineer",
+    "Lieutenant",
+    "Captain",
+    "Battalion Chief",
+    "Assistant Chief",
+    "Fire Chief",
+    "Paramedic",
+    "Crew Chief",
+    "Supervisor",
+    "Lieutenant",
+    "Captain",
+    "Battalion Chief",
+    "Patrolman",
+    "Detective",
+    "Sergeant",
+    "Lieutenant",
+    "Captain",
+    "Major",
+    "Commander",
+    "Deputy Chief",
+    "Assistant Chief",
+    "Chief of Police"
+]
+
+export function getRandomSub() {
+    return RESOURCE_SUB[getRandomNumber(0, RESOURCE_SUB.length - 1)];
+}
+
+export const RESOURCE_BUBBLES = [
+    "check",
+    "sleep",
+    "idle",
+    "alert"
+];
+
+export function getRandomBubble() {
+    return RESOURCE_BUBBLES[getRandomNumber(0, RESOURCE_BUBBLES.length - 1)];
+}
 
 export const FIRE_RED = `rgba(215, 48, 39)`;
 export const MED_GREEN = `rgba(127, 188, 65)`;
@@ -376,7 +438,7 @@ export function generateAnimatedPoint(positions: any[], text: string, line = tru
 }
 
 export function getRandomNumber(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min) + min);
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 export const basicPoint = {

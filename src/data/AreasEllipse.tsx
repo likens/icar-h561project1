@@ -111,8 +111,8 @@ export const AREAS_ELLIPSE = [{
     scale: 12
 },
 {
-    lng: -86.158282,
-    lat: 39.782283,
+    lng: -86.157990,
+    lat: 39.782558,
     name: "Large Crowd",
     color: "#FFF",
     symbol: policeCrowdControl,
@@ -151,35 +151,11 @@ export const AREAS_ELLIPSE = [{
     scale: 12
 },
 {
-    lng: -86.158028,
-    lat: 39.780939,
+    lng: -86.157867, 
+    lat: 39.780935,
     name: "Large Crowd",
     color: "#FFF",
     symbol: policeCrowdControl,
     scale: 12
 },
-{
-    lng: -86.157704,
-    lat: 39.780713,
-    name: "Large Crowd",
-    color: "#FFF",
-    symbol: policeCrowdControl,
-    scale: 12
-},
-{
-    lng: -86.157997,
-    lat: 39.780698,
-    name: "Large Crowd",
-    color: "#FFF",
-    symbol: policeCrowdControl,
-    scale: 12
-},
-{
-    lng: -86.157798,
-    lat: 39.780930,
-    name: "Large Crowd",
-    color: "#FFF",
-    symbol: policeCrowdControl,
-    scale: 12
-}
 ]

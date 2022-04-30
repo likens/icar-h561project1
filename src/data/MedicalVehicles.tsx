@@ -1,4 +1,4 @@
-import { MED_GREEN, getRandomNumber } from "../Utils";
+import { MED_GREEN, getRandomNumber, getRandomBubble } from "../Utils";
 
 export const MEDICAL_VEHICLES = [{
     lng: -86.156092,
@@ -7,7 +7,10 @@ export const MEDICAL_VEHICLES = [{
     name: "EMS33",
     sub: "Ambulance",
     status: "Idle",
-    loc: "EMS Staging Area, Southeast of The Landmark Center",
+    bubble: getRandomBubble(),
+    video: `vehicle${getRandomNumber(1,2)}`,
+    loc: "EMS Staging Area",
+    image: "/image/MedicalVehicle.png",
     color: MED_GREEN,
     symbol: ""
 },
@@ -18,7 +21,10 @@ export const MEDICAL_VEHICLES = [{
     name: "EMS71",
     sub: "Ambulance",
     status: "Idle",
-    loc: "EMS Staging Area, Southeast of The Landmark Center",
+    bubble: getRandomBubble(),
+    video: `vehicle${getRandomNumber(1,2)}`,
+    loc: "EMS Staging Area",
+    image: "/image/MedicalVehicle.png",
     color: MED_GREEN,
     symbol: ""
 },
@@ -29,7 +35,10 @@ export const MEDICAL_VEHICLES = [{
     name: "EMS36",
     sub: "Ambulance",
     status: "Idle",
-    loc: "Casualty Collection Area, East-Southeast of The Landmark Center",
+    bubble: getRandomBubble(),
+    video: `vehicle${getRandomNumber(1,2)}`,
+    loc: "Casualty Collection Point",
+    image: "/image/MedicalVehicle.png",
     color: MED_GREEN,
     symbol: ""
 }

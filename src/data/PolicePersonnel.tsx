@@ -1,28 +1,4 @@
-import { getRandomNumber, POLICE_BLUE } from "../Utils";
-
-export const POLICE_RANKS = [
-    "Patrolman",
-    "Detective",
-    "Sergeant",
-    "Lieutenant",
-    "Captain",
-    "Major",
-    "Commander",
-    "Deputy Chief",
-    "Assistant Chief",
-    "Chief of Police"
-]
-
-export const POLICE_STATUS = [
-    "Idle",
-    "Staging",
-    "Active",
-    "Available",
-    "Unavailable",
-    "Resting",
-    "Patrolling",
-    "Guarding"
-]
+import { getRandomBubble, getRandomNumber, getRandomSub, getRandomStatus, POLICE_BLUE } from "../Utils";
 
 export const POLICE_PERSONNEL = [{
     lng: -86.157523,
@@ -31,8 +7,10 @@ export const POLICE_PERSONNEL = [{
     fname: "Ian",
     lname: "Miller",
     name: "Miller",
-    sub: POLICE_RANKS[getRandomNumber(0, POLICE_RANKS.length)],
-    status: POLICE_STATUS[getRandomNumber(0, POLICE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `police${getRandomNumber(1,1)}`,
     loc: "Barricade - Northwest",
     color: POLICE_BLUE,
     symbol: ""
@@ -44,8 +22,10 @@ export const POLICE_PERSONNEL = [{
     fname: "Sam",
     lname: "Brian",
     name: "Brian",
-    sub: POLICE_RANKS[getRandomNumber(0, POLICE_RANKS.length)],
-    status: POLICE_STATUS[getRandomNumber(0, POLICE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `police${getRandomNumber(1,1)}`,
     loc: "Barricade - Northwest",
     color: POLICE_BLUE,
     symbol: ""
@@ -57,8 +37,10 @@ export const POLICE_PERSONNEL = [{
     fname: "Matt",
     lname: "Ray",
     name: "Ray",
-    sub: POLICE_RANKS[getRandomNumber(0, POLICE_RANKS.length)],
-    status: POLICE_STATUS[getRandomNumber(0, POLICE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `police${getRandomNumber(1,1)}`,
     loc: "Barricade - Northwest",
     color: POLICE_BLUE,
     symbol: ""
@@ -70,8 +52,10 @@ export const POLICE_PERSONNEL = [{
     fname: "Laura",
     lname: "Willingham",
     name: "Willingham",
-    sub: POLICE_RANKS[getRandomNumber(0, POLICE_RANKS.length)],
-    status: POLICE_STATUS[getRandomNumber(0, POLICE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `police${getRandomNumber(1,1)}`,
     loc: "Barricade - Southwest",
     color: POLICE_BLUE,
     symbol: ""
@@ -83,8 +67,10 @@ export const POLICE_PERSONNEL = [{
     fname: "Nathan",
     lname: "Blankenship",
     name: "Blankenship",
-    sub: POLICE_RANKS[getRandomNumber(0, POLICE_RANKS.length)],
-    status: POLICE_STATUS[getRandomNumber(0, POLICE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `police${getRandomNumber(1,1)}`,
     loc: "Barricade - Southwest",
     color: POLICE_BLUE,
     symbol: ""
@@ -96,8 +82,10 @@ export const POLICE_PERSONNEL = [{
     fname: "Vicky",
     lname: "Lawson",
     name: "Lawson",
-    sub: POLICE_RANKS[getRandomNumber(0, POLICE_RANKS.length)],
-    status: POLICE_STATUS[getRandomNumber(0, POLICE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `police${getRandomNumber(1,1)}`,
     loc: "Barricade - Northeast",
     color: POLICE_BLUE,
     symbol: ""
@@ -109,8 +97,10 @@ export const POLICE_PERSONNEL = [{
     fname: "Travis",
     lname: "Bailey",
     name: "Bailey",
-    sub: POLICE_RANKS[getRandomNumber(0, POLICE_RANKS.length)],
-    status: POLICE_STATUS[getRandomNumber(0, POLICE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `police${getRandomNumber(1,1)}`,
     loc: "Barricade - Northeast",
     color: POLICE_BLUE,
     symbol: ""
@@ -122,8 +112,10 @@ export const POLICE_PERSONNEL = [{
     fname: "Leo",
     lname: "Taylor",
     name: "Taylor",
-    sub: POLICE_RANKS[getRandomNumber(0, POLICE_RANKS.length)],
-    status: POLICE_STATUS[getRandomNumber(0, POLICE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `police${getRandomNumber(1,1)}`,
     loc: "Barricade - Southeast",
     color: POLICE_BLUE,
     symbol: ""
@@ -135,8 +127,10 @@ export const POLICE_PERSONNEL = [{
     fname: "Zach",
     lname: "Irving",
     name: "Irving",
-    sub: POLICE_RANKS[getRandomNumber(0, POLICE_RANKS.length)],
-    status: POLICE_STATUS[getRandomNumber(0, POLICE_STATUS.length)],
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `police${getRandomNumber(1,1)}`,
     loc: "Barricade - Southeast",
     color: POLICE_BLUE,
     symbol: ""
@@ -148,9 +142,11 @@ export const POLICE_PERSONNEL = [{
     fname: "Christine",
     lname: "Jefferson",
     name: "Jefferson",
-    sub: POLICE_RANKS[getRandomNumber(0, POLICE_RANKS.length)],
-    status: POLICE_STATUS[getRandomNumber(0, POLICE_STATUS.length)],
-    loc: "Police Staging Area, South of The Landmark Center",
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `police${getRandomNumber(1,1)}`,
+    loc: "Police Staging Area",
     color: POLICE_BLUE,
     symbol: ""
 },
@@ -161,9 +157,11 @@ export const POLICE_PERSONNEL = [{
     fname: "Tanner",
     lname: "Johnson",
     name: "Johnson",
-    sub: POLICE_RANKS[getRandomNumber(0, POLICE_RANKS.length)],
-    status: POLICE_STATUS[getRandomNumber(0, POLICE_STATUS.length)],
-    loc: "Police Staging Area, South of The Landmark Center",
+    sub: getRandomSub(),
+    status: getRandomStatus(),
+    bubble: getRandomBubble(),
+    video: `police${getRandomNumber(1,1)}`,
+    loc: "Police Staging Area",
     color: POLICE_BLUE,
     symbol: ""
 },

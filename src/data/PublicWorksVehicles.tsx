@@ -6,5 +6,6 @@ export const PUBLIC_WORKS_VEHICLES = [{
     brng: getRandomNumber(0, 360),
     name: "PUBWORX05",
     color: PUB_YELLOW,
+    image: "/image/PublicVehicle.png",
     symbol: ""
 }, ]

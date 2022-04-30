@@ -1,4 +1,4 @@
-import { FIRE_RED, getRandomNumber } from "../Utils";
+import { FIRE_RED, getRandomBubble, getRandomNumber } from "../Utils";
 import fireDrone from "../assets/img/napsg/fire-drone.png";
 
 export const FIRE_AIR = [
@@ -9,6 +9,7 @@ export const FIRE_AIR = [
         alt: getRandomNumber(30, 40),
         symbol: fireDrone,
         color: FIRE_RED,
+        bubble: getRandomBubble(),
         video: "drone1",
         locations: [{
             lng: -86.156534,

@@ -1,24 +1,4 @@
-import { FIRE_RED, getRandomNumber } from "../Utils";
-
-export const FIRE_RANKS = [
-    "Firefighter",
-    "Driver",
-    "Engineer",
-    "Lieutenant",
-    "Captain",
-    "Battalion Chief",
-    "Assistant Chief",
-    "Fire Chief"
-]
-
-export const FIRE_STATUS = [
-    "Idle",
-    "Staging",
-    "Active",
-    "Available",
-    "Unavailable",
-    "Resting"
-]
+import { FIRE_RED, getRandomBubble, getRandomNumber, getRandomSub, getRandomStatus } from "../Utils";
 
 export const FIRE_PERSONNEL = [
     {
@@ -28,9 +8,11 @@ export const FIRE_PERSONNEL = [
         fname: "Allison",
         lname: "Kenneth",
         name: "Kenneth",
-        sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-        status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
-        loc: "Fire Staging Area, South of The Landmark Center",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(3,4)}`,
+        loc: "Fire Staging Area",
         symbol: "",
         color: FIRE_RED
     }, {
@@ -40,9 +22,11 @@ export const FIRE_PERSONNEL = [
         fname: "Bret",
         lname: "Stevenson",
         name: "Stevenson",
-        sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-        status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
-        loc: "Fire Staging Area, South of The Landmark Center",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(3,4)}`,
+        loc: "Fire Staging Area",
         symbol: "",
         color: FIRE_RED
     }, {
@@ -52,9 +36,11 @@ export const FIRE_PERSONNEL = [
         fname: "JoAnna",
         lname: "Muniz",
         name: "Muniz",
-        sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-        status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
-        loc: "Fire Staging Area, South of The Landmark Center",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(3,4)}`,
+        loc: "Fire Staging Area",
         symbol: "",
         color: FIRE_RED
     }, {
@@ -64,9 +50,11 @@ export const FIRE_PERSONNEL = [
         fname: "Kayleigh",
         lname: "Jones",
         name: "Jones",
-        sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-        status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
-        loc: "Northwest, Outside, The Landmark Center, 10 meters",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(3,4)}`,
+        loc: "Outside The Landmark Center",
         symbol: "",
         color: FIRE_RED
     }, {
@@ -76,9 +64,11 @@ export const FIRE_PERSONNEL = [
         fname: "Caleb",
         lname: "Likens",
         name: "Likens",
-        sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-        status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
-        loc: "Northwest, Outside, The Landmark Center, 10 meters",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(3,4)}`,
+        loc: "Outside The Landmark Center",
         symbol: "",
         color: FIRE_RED
     }, {
@@ -88,9 +78,11 @@ export const FIRE_PERSONNEL = [
         fname: "Julia",
         lname: "Ottaway",
         name: "Ottaway",
-        sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-        status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
-        loc: "Southwest, Outside, The Landmark Center, 10 meters",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(3,4)}`,
+        loc: "Outside The Landmark Center",
         symbol: "",
         color: FIRE_RED
     }, {
@@ -100,9 +92,11 @@ export const FIRE_PERSONNEL = [
         fname: "Howard",
         lname: "Flemming",
         name: "Flemming",
-        sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-        status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
-        loc: "Southwest, Outside, The Landmark Center, 10 meters",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(3,4)}`,
+        loc: "Outside The Landmark Center",
         symbol: "",
         color: FIRE_RED
     }, {
@@ -112,9 +106,11 @@ export const FIRE_PERSONNEL = [
         fname: "Tara",
         lname: "Hodson",
         name: "Hodson",
-        sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-        status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
-        loc: "Southeast, Outside, The Landmark Center, 10 meters",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(3,4)}`,
+        loc: "Outside The Landmark Center",
         symbol: "",
         color: FIRE_RED
     }, {
@@ -124,9 +120,11 @@ export const FIRE_PERSONNEL = [
         fname: "Krystal",
         lname: "Nolasco",
         name: "Nolasco",
-        sub: FIRE_RANKS[getRandomNumber(0, FIRE_RANKS.length)],
-        status: FIRE_STATUS[getRandomNumber(0, FIRE_STATUS.length)],
-        loc: "Southeast, Outside, The Landmark Center, 10 meters",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(3,4)}`,
+        loc: "Outside The Landmark Center",
         symbol: "",
         color: FIRE_RED
     },
