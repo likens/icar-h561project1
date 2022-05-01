@@ -546,6 +546,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-shadow: 0 0 .5rem #000;
 }
 
 .modal-bubble {
@@ -959,4 +960,68 @@ body {
     fill: #fff;
     width: 2.4rem;
     height: 2.4rem;
+}
+
+.logo {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,.9);
+    z-index: 200;
+    width: auto;
+}
+
+.logo svg {
+    width: 97px;
+    height: 44.5px;
+}
+
+.alerts {
+    position: absolute;
+    top: 20rem;
+    right: 2rem;
+    display: grid;
+    grid-gap: 1rem;
+    z-index: 200;
+}
+
+.alert {
+    background: rgba(0,0,0,.9);
+    color: #fff;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.alert-top {
+    display: grid;
+    grid-gap: .5rem;
+    align-items: center;
+    padding:0 0 .5rem;
+    grid-template-columns: 3rem 1fr;
+}
+
+.alert-title {
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+}
+
+.alert-icon {
+    background: #d73027;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.alert-icon svg {
+    width: 1rem;
+    height: 1rem;
+    fill: #fff;
+}
+
+.alert-icon--info {
+    background: #0082ca;
 }

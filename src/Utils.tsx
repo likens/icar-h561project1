@@ -527,24 +527,3 @@ export function vincentyDirection(lng: number, lat: number, brng: number, dist: 
     const revAz = Math.atan2(sinAlpha, -tmp); // final bearing
     return { lng: lng + toDeg(L), lat: toDeg(latitude) };
 };
-
-// const osmBuildings = createOsmBuildings();
-// scene.primitives.add(osmBuildings);
-// scene.globe.depthTestAgainstTerrain = true;
-
-// osmBuildings.style = new Cesium3DTileStyle({
-//     color: {
-//         conditions: [
-//             // ["${feature['building']} === 'apartments' || ${feature['building']} === 'residential'", "color('cyan', 1)",],
-//             // ["${feature['building']} === 'civic'","color('blue', 1)",],
-//             // ["${feature['building']} === 'office'","color('yellow', 1)",],
-//             // ["${feature['building']} === 'commercial' || ${feature['building']} === 'retail'","color('green', 1)",],
-//             // ["${feature['building']} === 'hospital'","color('red', 1)",],
-//             // ["${feature['building']} === 'construction'","color('orange', 1)",],
-//             // ["${feature['building']} === 'school'","color('purple', 1)",],
-//             // ["${feature['building']} === 'parking'","color('pink', 1)",],
-//             ["${feature['name']} === 'The Landmark Center'", "color('white', 0)"],
-//             [true, "color('white', 1)"],
-//         ],
-//     }
-// });
