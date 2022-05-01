@@ -533,6 +533,7 @@ body {
     border-color: #d73027;
 }
 
+.modal-bubble,
 .list-bubble {
     width: 3rem;
     height: 3rem;
@@ -541,6 +542,32 @@ body {
     border-radius: 50%;
     top: -.5rem;
     right: -.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-bubble {
+    top: 0;
+    right: 0;
+}
+
+.modal-bubble svg,
+.list-bubble svg {
+    width: 2rem;
+    height: 2rem;
+    fill: #fff;
+}
+
+.modal-bubble sup,
+.list-bubble sup {
+    margin-top: -12px;
+}
+
+.modal-bubble sub,
+.list-bubble sub {
+    margin-bottom: -6px;
 }
 
 .modal-bubble--check,
@@ -687,10 +714,10 @@ body {
     bottom: 8rem;
     z-index: 100;
     margin-right: 4rem;
-    width: 55rem;
+    width: 60rem;
     background: rgba(0,0,0,.75);
     transition: all .4s ease;
-    transform: translateX(59rem);
+    transform: translateX(64rem);
     border: .5rem solid rgba(0,0,0,.9);
     border-radius: 1rem;
 }
@@ -845,10 +872,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    grid-gap: 1rem;
+    grid-gap: .5rem;
 }
 
-.modal-stat-icon,
+/* .modal-stat-icon,
 .modal-block-icon,
 .modal-contact-icon {
     width: .5rem;
@@ -857,6 +884,12 @@ body {
     border-radius: 50%;
     grid-area: icon;
     align-self: center;
+} */
+
+.modal-stat-icon svg {
+    fill: #fff;
+    width: 2.4rem;
+    height: 2.4rem;
 }
 
 .modal-blocks {
@@ -878,10 +911,25 @@ body {
                          "icon value";
 }
 
+.modal-block-icon {
+    align-self: center;
+    grid-row: 1 / -1;
+}
+
+.modal-block-icon svg {
+    fill: #fff;
+    width: 1.6rem;
+    height: 1.6rem;
+}
+
 .modal-block-title {
     font-weight: 700;
     grid-area: title;
     align-self: flex-end;
+}
+
+.modal-block-value {
+    grid-area: value;
 }
 
 .modal-contact {
@@ -904,4 +952,11 @@ body {
     border-radius: 1rem;
     min-width: 15rem;
     justify-content: center;
+    cursor: pointer;
+}
+
+.modal-contact-icon {
+    fill: #fff;
+    width: 2.4rem;
+    height: 2.4rem;
 }
