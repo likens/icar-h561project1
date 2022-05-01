@@ -68,43 +68,5 @@ export const QUICK_LINKS = [
                 url: "https://drive.google.com/drive/u/3/folders/1C_9-DqTvghlnMvnskpW4YguiLDM7VXpu"
             }
         ]
-    },
-    {
-        text: "TODO:",
-        url: "",
-        children: [
-            {
-                text: "Finish Left Unit Panel, functionality, content, and design",
-                url: ""
-            },
-            {
-                text: "Fix Compass integration",
-                url: ""
-            },
-            {
-                text: "Add Drawing tools",
-                url: ""
-            },
-            {
-                text: "Add Popup windows on unit click, design, content, and functionality",
-                url: ""
-            },
-            {
-                text: "Create 3D polygon renders of air units (no animation)",
-                url: ""
-            },
-            {
-                text: "Add 2D animations to all pointers when toggled",
-                url: ""
-            },
-            {
-                text: "Windows/doors/walls in structure",
-                url: ""
-            },
-            {
-                text: "Something else I can't think",
-                url: ""
-            }
-        ]
-    },
+    }
 ]

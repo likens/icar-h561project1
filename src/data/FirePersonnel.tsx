@@ -1,6 +1,72 @@
-import { FIRE_RED, getRandomBubble, getRandomNumber, getRandomSub, getRandomStatus } from "../Utils";
+import { FIRE_RED, getRandomBubble, getRandomNumber, getRandomSub, getRandomStatus, getRandomBlock, getRandomStat } from "../Utils";
 
 export const FIRE_PERSONNEL = [
+    {
+        lng: -86.157068,
+        lat: 39.781875,
+        brng: 225,
+        fname: "Tim",
+        lname: "Allens",
+        name: "Allens",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(1,2)}`,
+        loc: "Floor 5, The Landmark Center",
+        symbol: "",
+        color: FIRE_RED,
+        landmark: true,
+        stats: [getRandomStat(), getRandomStat(), getRandomStat()],
+        blocks: [getRandomBlock(), getRandomBlock(), getRandomBlock(), getRandomBlock()]
+    },
+    {
+        lng: -86.156969,
+        lat: 39.781760,
+        brng: 200,
+        fname: "Dave",
+        lname: "Murphy",
+        name: "Murphy",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(1,2)}`,
+        loc: "Floor 5, The Landmark Center",
+        symbol: "",
+        color: FIRE_RED,
+        landmark: true
+    },
+    {
+        lng: -86.157035,
+        lat: 39.781810,
+        brng: 270,
+        fname: "Ethan",
+        lname: "Williams",
+        name: "Williams",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(1,2)}`,
+        loc: "Floor 5, The Landmark Center",
+        symbol: "",
+        color: FIRE_RED,
+        landmark: true
+    },
+    {
+        lng: -86.157114,
+        lat: 39.781932,
+        brng: 275,
+        fname: "Frank",
+        lname: "Wood",
+        name: "Wood",
+        sub: getRandomSub(),
+        status: getRandomStatus(),
+        bubble: getRandomBubble(),
+        video: `fire${getRandomNumber(1,2)}`,
+        loc: "Floor 5, The Landmark Center",
+        symbol: "",
+        color: FIRE_RED,
+        landmark: true
+    },
     {
         lng: -86.156922,
         lat: 39.781387,

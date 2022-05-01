@@ -2,11 +2,8 @@ import { Fragment } from 'react'
 
 function Resource(props: any) {
 
-    let image = props.resource.image;
+    let image = props.resource.image ? props.resource.image : `/image/${props.resource.name}.jpg`;
 
-    if (!image) {
-        props.resource.symbol ? image = props.resource.symbol : image = `/image/${props.resource.name}.jpg`;
-    }
 	return (
        <Fragment>
             <div className={`list-image list-image--${props.resource.bubble}`}>

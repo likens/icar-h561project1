@@ -73,6 +73,15 @@ export function getRandomBubble() {
     return RESOURCE_BUBBLES[getRandomNumber(0, RESOURCE_BUBBLES.length - 1)];
 }
 
+export function getRandomStat() {
+    return "";
+}
+
+export function getRandomBlock() {
+    return "";
+}
+
+
 export const FIRE_RED = `rgba(215, 48, 39)`;
 export const MED_GREEN = `rgba(127, 188, 65)`;
 export const POLICE_BLUE = `rgba(116, 173, 209)`;
@@ -148,7 +157,7 @@ export function generatePointer(unit: boolean, name: string, symbol: string, lng
         label: {
             text: name,
             ...basicLabel,
-            show: true,
+            // show: true,
             backgroundColor: Color.BLACK.withAlpha(.5)
             // backgroundColor: Color.fromCssColorString(color).withAlpha(.5)
         },
@@ -228,6 +237,7 @@ export function generateAnimatedBillboard(symbol: string, label: string, positio
     })
 
     viewer.entities.add({
+        id: label,
         position: property,
         availability: new TimeIntervalCollection([
             new TimeInterval({
@@ -521,21 +531,6 @@ export function vincentyDirection(lng: number, lat: number, brng: number, dist: 
 // const osmBuildings = createOsmBuildings();
 // scene.primitives.add(osmBuildings);
 // scene.globe.depthTestAgainstTerrain = true;
-
-// osmBuildings.tileLoad.addEventListener((tile: Cesium3DTile) => {
-//     const content = tile.content;
-//     const featuresLength = content.featuresLength;
-//     for (let i = 0; i < featuresLength; i++) {
-//         const name = content.getFeature(i).getProperty("name");
-//         if (name === "The Landmark Center") {
-//             console.log(content.getFeature(i));
-//             const lng = content.getFeature(i).getProperty("cesium#longitude");
-//             const lat = content.getFeature(i).getProperty("cesium#latitude");
-//             const alt = parseInt(content.getFeature(i).getProperty("cesium#estimatedHeight"));
-//             const str = `${lng}:${lat}:${alt}`;
-//             const ent = viewer.entities.getById(str);
-//     }
-// });
 
 // osmBuildings.style = new Cesium3DTileStyle({
 //     color: {

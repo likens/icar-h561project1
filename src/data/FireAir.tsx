@@ -8,6 +8,7 @@ export const FIRE_AIR = [
         lat: 39.782132, 
         alt: getRandomNumber(30, 40),
         symbol: fireDrone,
+        image: fireDrone,
         color: FIRE_RED,
         bubble: getRandomBubble(),
         video: "drone1",

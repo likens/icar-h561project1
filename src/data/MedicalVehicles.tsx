@@ -1,4 +1,5 @@
 import { MED_GREEN, getRandomNumber, getRandomBubble } from "../Utils";
+import emsAmbulance from "../assets/img/napsg/ems-ambulance.svg";
 
 export const MEDICAL_VEHICLES = [{
     lng: -86.156092,
@@ -11,8 +12,7 @@ export const MEDICAL_VEHICLES = [{
     video: `vehicle${getRandomNumber(1,2)}`,
     loc: "EMS Staging Area",
     image: "/image/MedicalVehicle.png",
-    color: MED_GREEN,
-    symbol: ""
+    color: MED_GREEN
 },
 {
     lng: -86.155975,
@@ -25,8 +25,7 @@ export const MEDICAL_VEHICLES = [{
     video: `vehicle${getRandomNumber(1,2)}`,
     loc: "EMS Staging Area",
     image: "/image/MedicalVehicle.png",
-    color: MED_GREEN,
-    symbol: ""
+    color: MED_GREEN
 },
 {
     lng: -86.155980,
@@ -39,7 +38,6 @@ export const MEDICAL_VEHICLES = [{
     video: `vehicle${getRandomNumber(1,2)}`,
     loc: "Casualty Collection Point",
     image: "/image/MedicalVehicle.png",
-    color: MED_GREEN,
-    symbol: ""
+    color: MED_GREEN
 }
 ]

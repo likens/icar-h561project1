@@ -8,6 +8,7 @@ export const MEDICAL_AIR = [
         lat: 39.781596, 
         alt: getRandomNumber(40, 60),
         symbol: emsAir,
+        image: emsAir,
         color: MED_GREEN,
         bubble: getRandomBubble(),
         video: "air1",
