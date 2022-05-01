@@ -1,6 +1,6 @@
 import { Key, useCallback, useEffect, useState } from 'react'
 import { Cartesian3, createWorldTerrain, Math as CesiumMath, Viewer, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, ScreenSpaceEventType, Entity, Cartesian2, Cartographic, ClockRange, Ion, Scene, HeadingPitchRange, defined, Rectangle, IonImageryProvider, createOsmBuildings, Cesium3DTileStyle, Cesium3DTile } from "cesium";
-import CesiumNavigation from 'cesium-navigation-es6';
+// import CesiumNavigation from 'cesium-navigation-es6';
 import { generateRectangle, generateEllipse, generatePointer, generateAnimatedBillboard, getStartTime, getStopTime, FIRE_RED } from "./Utils";
 import { LANDMARK_CENTER_OUTLINE, LANDMARK_CENTER_WALLS, LANDMARK_CENTER_DOORS, LANDMARK_CENTER_WINDOWS, LANDMARK_CENTER_FIRES } from "./data/LandmarkCenter";
 import fireCommercial from "./assets/img/napsg/hazard-fire-commercial.svg";
@@ -58,7 +58,7 @@ function App() {
                 zoomOutTooltip: "Zoom Out"
             }
         
-            new CesiumNavigation(viewer, cesiumNavigationOptions);
+            // new CesiumNavigation(viewer, cesiumNavigationOptions);
         
             // Make sure viewer is at the desired time.
             viewer.clock.startTime = getStartTime().clone();
