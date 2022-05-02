@@ -395,19 +395,6 @@ function App() {
 
     const resetResource = useCallback((val) => clearState(), []);
 
-    // function toggleFloors() {
-    //     viewer?.entities?.values?.forEach((entity: Entity) => {
-    //         const id = entity.id;
-    //         if (id.includes("_full")) {
-    //             entity.show = floors;
-    //         } else if (id.includes("landmark_")) {
-    //             entity.show = !floors;
-    //         }
-    //     });
-    //     viewer.scene.requestRender();
-    //     setFloors(!floors);
-    // }
-
     function toggleQuickLinks() {
         setQuickLinks(!quickLinks)
     }
@@ -454,7 +441,7 @@ function App() {
         <div className='app'>
             <div className={`cesium${quickLinks ? ` cesium--ql` : ``}`}>
 
-                <div className='logo'>
+                <div className='logo' onClick={() => toggleQuickLinks()}>
 
                     <svg width="1732" height="795" viewBox="0 0 1732 795" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clipPath="url(#clip0_6_23)">
@@ -466,14 +453,11 @@ function App() {
 
                 </div>
 
-                <div className='actions'>
+                {/* <div className='actions'>
                     <div className='action'>
                         <button onClick={() => toggleQuickLinks()}>{quickLinks ? 'Hide' : 'View'} Quick Links</button>
                     </div>
-                    {/* <div className='action'>
-                        <button onClick={() => toggleFloors()}>View {floors ? `Full Structure` : `Structure Floors`}</button>
-                    </div> */}
-                </div>
+                </div> */}
 
                 <div className='alerts'>
                     <div className='alert'>
@@ -483,13 +467,13 @@ function App() {
                         </div>
                         <div className='alert-bot'><em>Dave Murphy</em> is sending out a distress call!</div>
                     </div>
-                    {/* <div className='alert'>
+                    <div className='alert'>
                         <div className='alert-top'>
                             <div className='alert-icon alert-icon--info'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M511.1 63.1v287.1c0 35.25-28.75 63.1-64 63.1h-144l-124.9 93.68c-7.875 5.75-19.12 .0497-19.12-9.7v-83.98h-96c-35.25 0-64-28.75-64-63.1V63.1c0-35.25 28.75-63.1 64-63.1h384C483.2 0 511.1 28.75 511.1 63.1z"/></svg></div>
                             <div className='alert-title'>New Message</div>
                         </div>
                         <div className='alert-bot'><em>Ian Miller</em> has sent you a message</div>
-                    </div> */}
+                    </div>
                 </div>
 
                 <div className={`tab-buttons ${activeTab != '' ? `tab-buttons--active` : ``}`}>
