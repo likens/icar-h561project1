@@ -1,6 +1,6 @@
 import { Key, useCallback, useEffect, useState } from 'react'
 import { Cartesian3, createWorldTerrain, Math as CesiumMath, Viewer, HorizontalOrigin, VerticalOrigin, HeightReference, Color, ScreenSpaceEventHandler, ScreenSpaceEventType, Entity, Cartesian2, Cartographic, ClockRange, Ion, Scene, HeadingPitchRange, defined, Rectangle, IonImageryProvider, createOsmBuildings, Cesium3DTileStyle, Cesium3DTile } from "cesium";
-// import CesiumNavigation from 'cesium-navigation-es6';
+import CesiumNavigation from 'cesium-navigation-es6';
 import { generateRectangle, generateEllipse, generatePointer, generateAnimatedBillboard, getStartTime, getStopTime, FIRE_RED } from "./Utils";
 import { LANDMARK_CENTER_OUTLINE, LANDMARK_CENTER_WALLS, LANDMARK_CENTER_DOORS, LANDMARK_CENTER_WINDOWS, LANDMARK_CENTER_FIRES } from "./data/LandmarkCenter";
 import fireCommercial from "./assets/img/napsg/hazard-fire-commercial.svg";
@@ -58,7 +58,7 @@ function App() {
                 zoomOutTooltip: "Zoom Out"
             }
         
-            // new CesiumNavigation(viewer, cesiumNavigationOptions);
+            new CesiumNavigation(viewer, cesiumNavigationOptions);
         
             // Make sure viewer is at the desired time.
             viewer.clock.startTime = getStartTime().clone();
@@ -453,12 +453,6 @@ function App() {
 
                 </div>
 
-                {/* <div className='actions'>
-                    <div className='action'>
-                        <button onClick={() => toggleQuickLinks()}>{quickLinks ? 'Hide' : 'View'} Quick Links</button>
-                    </div>
-                </div> */}
-
                 <div className='alerts'>
                     <div className='alert'>
                         <div className='alert-top'>
@@ -579,34 +573,12 @@ function App() {
                 bubble={activeBubble} />
 
             <div className='quick-links'>
-                <div className="title">AR in COP for ICS Quick Links</div>
+                <div className="title">Conceptualizing the Design and Use of Augmented Reality Within a Common Operating Picture for Incident Command Systems - Artifacts and Deliverables</div>
                 <div className="links">
                     {QUICK_LINKS.map((link: any, i: Key) => {
                         return (
                             <div key={i} className="section">
-                                <a href={link.url}>{link.text}</a>
-                                {link.children ?
-                                    <ul>
-                                        {link.children.map((child: any, i: Key) => {
-                                            return (
-                                                <li key={i}>
-                                                    <a href={child.url}>{child.text}</a>
-                                                    {child.children ?
-                                                        <ul>
-                                                            {child.children.map((grandchild: any, i: Key) => {
-                                                                return (
-                                                                    <li key={i}>
-                                                                        <a href={grandchild.url}>{grandchild.text}</a>
-                                                                    </li>
-                                                                )
-                                                            })}
-                                                        </ul>
-                                                    : undefined}
-                                                </li>
-                                            )
-                                        })}
-                                    </ul>
-                                : undefined}
+                                <a href={link.url} target="_blank">{link.text}</a>
                             </div>
                         );
                     })}

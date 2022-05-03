@@ -73,15 +73,16 @@ body {
 .quick-links {
     width: 50rem;
     font-size: 2rem;
-    grid-gap: 2rem;
+    grid-gap: 4rem;
     display: grid;
-    padding-top: 4rem;
+    padding: 4rem 4rem 4rem 0;
     height: 100vh;
     position: absolute;
     top: 0;
     right: 0;
     z-index: 20;
     align-content: flex-start;
+    overflow: auto;
 }
 .quick-links a {
     color: #000;
@@ -98,7 +99,7 @@ body {
 }
 .links {
     display: grid;
-    grid-gap: 2rem;
+    grid-gap: 1rem;
 }
 .prototype {
     position: fixed;
@@ -712,7 +713,7 @@ body {
 .modal {
     position: absolute;
     right: 0;
-    bottom: 8rem;
+    bottom: 12rem;
     z-index: 100;
     margin-right: 4rem;
     width: 60rem;
@@ -980,7 +981,7 @@ body {
 
 .alerts {
     position: absolute;
-    bottom: 9rem;
+    top: 19.5rem;
     right: 2rem;
     display: grid;
     grid-gap: 1rem;
