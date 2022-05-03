@@ -977,6 +977,15 @@ body {
 .logo svg {
     width: 154px;
     height: 59px;
+    margin: 0 auto;
+}
+
+.logo strong {
+    display: block;
+    color: #fff;
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 0 0 1rem;
 }
 
 .alerts {
