@@ -3,7 +3,7 @@
 GitHub repository located @ https://github.com/likens/h561project1 \
 View prototype live @ https://h561project1.netlify.app \
 
-To run for yourself:\
+To run for yourself:
 - First, install packages with `npm install`
 - Then, update if necessary with `npm update`
 - Finally, to run locally with `npm run dev` OR build for production with `npm run build`
