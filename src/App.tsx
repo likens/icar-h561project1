@@ -20,7 +20,8 @@ import { PUBLIC_WORKS_VEHICLES } from './data/PublicWorksVehicles';
 import Tab from './components/Tab';
 import Modal from './components/Modal';
 
-Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwZWI3MDRlMi1hMGMyLTQzYjUtYTYxMy0zOGNlYjViOTdjMGIiLCJpZCI6ODM5MjksImlhdCI6MTY0OTExOTQ3MX0.j_tC4ZO5-0FDV4_n-edMAlcQK5EyuV9WyRhfv_4yjEU";
+const accessToken: any = import.meta.env.VITE_CESIUM_ION_ACCESS_TOKEN;
+Ion.defaultAccessToken = accessToken;
 
 export let viewer: Viewer;
 export let scene: Scene;
