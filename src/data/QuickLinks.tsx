@@ -45,7 +45,7 @@ export const QUICK_LINKS = [
     },
     {
         text: "Journey Map - Old System",
-        url: "/resources/Journey Map - New System.png"
+        url: "/resources/Journey Map - Old System.png"
     },
     {
         text: "Persona - The New Guy",
