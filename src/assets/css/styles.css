@@ -120,9 +120,11 @@ body {
 .cesium-viewer-toolbar,
 .cesium-viewer-fullscreenContainer,
 .cesium-viewer-animationContainer,
-.cesium-viewer-timelineContainer,
-.cesium-viewer-bottom {
+.cesium-viewer-timelineContainer {
     display: none !important;
+}
+.cesium-viewer-bottom {
+    left: 1rem !important;
 }
 .view button,
 .legend {
